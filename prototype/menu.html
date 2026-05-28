@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>เมนู | LiLa Cafe — ลีลา คาเฟ่</title>
+<meta name="description" content="เมนูครบทุกหมวด — กาแฟ ชา ขนมไทย กับข้าว เบเกอรี่ และเครื่องดื่ม Signature ที่ลีลา คาเฟ่" />
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<script>
+  tailwind.config = {
+    theme: { extend: {
+      colors: {
+        cream: { 50:'#FBF7EF', 100:'#F5EFE4', 200:'#EDE3D2', 300:'#E0D2B8' },
+        sage:  { 400:'#8FA08F', 500:'#7A8D7A', 600:'#6B8174', 700:'#556B5C', 800:'#3F5246' },
+        teak:  { 400:'#C8A077', 500:'#B8895A', 600:'#A06B3F', 700:'#7E5530' },
+        terracotta: { 500:'#B86A3D', 600:'#A0522D', 700:'#854422' },
+        ink:   { 900:'#2A2520', 700:'#4A4138', 500:'#6B6055' },
+      },
+      fontFamily: {
+        serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+        sans:  ['"IBM Plex Sans Thai"', 'system-ui', 'sans-serif'],
+      },
+    }},
+  }
+</script>
+
+<style>
+  html { scroll-behavior: smooth; }
+  body { font-family: 'IBM Plex Sans Thai', system-ui, sans-serif; background:#F5EFE4; color:#2A2520; }
+  h1,h2,h3,.font-serif { font-family:'Cormorant Garamond', Georgia, serif; }
+  .thai-heading { font-family:'IBM Plex Sans Thai', system-ui, sans-serif; font-weight:500; }
+  .arch-image { border-top-left-radius:9999px; border-top-right-radius:9999px; overflow:hidden; }
+  .cat-anchor { scroll-margin-top: 140px; }
+
+  /* === GLOSSY THEME LAYER === */
+  body {
+    background:
+      radial-gradient(circle at 12% 8%, rgba(184, 137, 90, 0.10), transparent 42%),
+      radial-gradient(circle at 88% 92%, rgba(122, 141, 122, 0.10), transparent 42%),
+      linear-gradient(180deg, #FBF7EF 0%, #F5EFE4 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+  a, button { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+  .rounded-full {
+    background-image: linear-gradient(180deg,
+      rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.04) 45%, rgba(0,0,0,0.06) 100%);
+  }
+  .bg-terracotta-600, .bg-terracotta-700 {
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.28), inset 0 -1px 0 rgba(0,0,0,0.15),
+      0 6px 18px rgba(160,82,45,0.22), 0 2px 6px rgba(42,37,32,0.10);
+  }
+  .bg-terracotta-600:hover, .bg-terracotta-700:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15),
+      0 12px 30px rgba(160,82,45,0.30), 0 4px 10px rgba(42,37,32,0.12);
+  }
+  .bg-sage-700, .bg-sage-800 {
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.22), inset 0 -1px 0 rgba(0,0,0,0.15),
+      0 6px 18px rgba(85,107,92,0.22), 0 2px 6px rgba(42,37,32,0.10);
+  }
+  .bg-sage-700:hover, .bg-sage-800:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -1px 0 rgba(0,0,0,0.15),
+      0 12px 30px rgba(85,107,92,0.28), 0 4px 10px rgba(42,37,32,0.12);
+  }
+  .bg-cream-50, .bg-cream-100, .bg-cream-200 {
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 2px 8px rgba(42,37,32,0.05);
+  }
+  .rounded-2xl, .rounded-3xl {
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.5),
+      0 10px 32px rgba(42,37,32,0.08), 0 4px 10px rgba(42,37,32,0.04);
+  }
+  .arch-image { position: relative; isolation: isolate; }
+  .arch-image::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg,
+      rgba(255,255,255,0.32) 0%, rgba(255,255,255,0.10) 22%, transparent 50%);
+    pointer-events: none;
+    border-top-left-radius: 9999px; border-top-right-radius: 9999px;
+    z-index: 2;
+  }
+  header {
+    background: linear-gradient(180deg, rgba(245, 239, 228, 0.82), rgba(245, 239, 228, 0.68)) !important;
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 4px 24px rgba(42,37,32,0.06);
+  }
+  .sticky.top-16 {
+    background: linear-gradient(180deg, rgba(251, 247, 239, 0.9), rgba(245, 239, 228, 0.82)) !important;
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+  }
+  iframe { box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 12px 36px rgba(42,37,32,0.12); }
+  footer {
+    background: radial-gradient(ellipse at top, rgba(160,82,45,0.12), transparent 50%), #2A2520 !important;
+  }
+</style>
+</head>
+<body class="antialiased">
+
+<!-- NAV -->
+<header class="sticky top-0 z-50 bg-cream-100/90 backdrop-blur border-b border-cream-300/50">
+  <nav class="max-w-7xl mx-auto px-5 lg:px-8 h-16 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2">
+      <div class="w-9 h-9 rounded-full bg-cream-200 flex items-center justify-center"><span class="text-terracotta-600 text-xl">🐘</span></div>
+      <div class="leading-tight">
+        <div class="font-serif text-xl font-semibold tracking-wide text-terracotta-700">LILA CAFE</div>
+        <div class="text-[10px] tracking-[0.25em] text-ink-500 uppercase">Thai Dessert & Drink</div>
+      </div>
+    </a>
+    <ul class="hidden md:flex items-center gap-7 text-sm text-ink-700">
+      <li><a href="menu.html" class="text-terracotta-600 font-medium">เมนู</a></li>
+      <li><a href="facility.html" class="hover:text-terracotta-600 transition">มุมในร้าน</a></li>
+      <li><a href="index.html#reviews" class="hover:text-terracotta-600 transition">รีวิว</a></li>
+      <li><a href="index.html#visit" class="hover:text-terracotta-600 transition">มาที่ร้าน</a></li>
+    </ul>
+    <a href="tel:0840531494" class="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-sage-700 text-cream-50 text-sm hover:bg-sage-800 transition"><span>📞</span> 084 053 1494</a>
+    <a href="index.html#visit" class="md:hidden text-sm px-3 py-1.5 rounded-full bg-sage-700 text-cream-50">มาที่ร้าน</a>
+  </nav>
+</header>
+
+<!-- PAGE HEADER -->
+<section class="bg-cream-200 py-16 lg:py-20">
+  <div class="max-w-5xl mx-auto px-5 lg:px-8 text-center">
+    <p class="text-sm tracking-[0.3em] text-sage-700 uppercase mb-3">— Our Menu —</p>
+    <h1 class="font-serif text-5xl lg:text-6xl text-ink-900 mb-4">เมนูทั้งหมด</h1>
+    <p class="text-ink-700 max-w-2xl mx-auto">ขนมไทย กาแฟสด เครื่องดื่มซิกเนเจอร์ กับข้าวฝีมือบ้าน และเบเกอรี่ใหม่ๆ ทุกวัน</p>
+  </div>
+</section>
+
+<!-- CATEGORY NAV (sticky) -->
+<div class="sticky top-16 z-40 bg-cream-100/95 backdrop-blur border-b border-cream-300/50">
+  <div class="max-w-7xl mx-auto px-5 lg:px-8 py-3 overflow-x-auto">
+    <div class="flex gap-2 text-sm whitespace-nowrap">
+      <a href="#coffee" class="px-4 py-2 rounded-full bg-cream-200 hover:bg-sage-700 hover:text-cream-50 transition">☕ Coffee</a>
+      <a href="#noncoffee" class="px-4 py-2 rounded-full bg-cream-200 hover:bg-sage-700 hover:text-cream-50 transition">🥤 Non-Coffee</a>
+      <a href="#matcha" class="px-4 py-2 rounded-full bg-cream-200 hover:bg-sage-700 hover:text-cream-50 transition">🍵 Matcha & Tea</a>
+      <a href="#signature" class="px-4 py-2 rounded-full bg-cream-200 hover:bg-sage-700 hover:text-cream-50 transition">🌟 Signature</a>
+      <a href="#soft" class="px-4 py-2 rounded-full bg-cream-200 hover:bg-sage-700 hover:text-cream-50 transition">🥤 Soft Drinks</a>
+      <a href="#bakery" class="px-4 py-2 rounded-full bg-cream-200 hover:bg-sage-700 hover:text-cream-50 transition">🥐 เบเกอรี่</a>
+      <a href="#thaifood" class="px-4 py-2 rounded-full bg-cream-200 hover:bg-sage-700 hover:text-cream-50 transition">🍛 กับข้าว</a>
+      <a href="#inter" class="px-4 py-2 rounded-full bg-cream-200 hover:bg-sage-700 hover:text-cream-50 transition">🍝 อาหาร Inter</a>
+      <a href="#other" class="px-4 py-2 rounded-full bg-cream-200 hover:bg-sage-700 hover:text-cream-50 transition">🍽️ อื่นๆ</a>
+      <a href="#thaidessert" class="px-4 py-2 rounded-full bg-terracotta-600 text-cream-50 hover:bg-terracotta-700 transition">🍡 ขนมไทย</a>
+    </div>
+  </div>
+</div>
+
+<main class="max-w-7xl mx-auto px-5 lg:px-8 py-12 lg:py-16 space-y-20">
+
+<!-- ============ COFFEE ============ -->
+<section id="coffee" class="cat-anchor">
+  <div class="flex items-end justify-between mb-8 border-b border-cream-300 pb-4">
+    <h2 class="font-serif text-3xl lg:text-4xl">☕ Coffee</h2>
+    <span class="text-xs text-ink-500">16 รายการ</span>
+  </div>
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 lg:gap-8">
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&q=80" alt="คาราเมลลาเต้" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">คาราเมลลาเต้</h3>
+      <p class="text-xs text-ink-500 mt-1">Caramel Latte</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿100</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1517959105821-eaf2591984ca?w=600&q=80" alt="Es-yen" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">Es-yen</h3>
+      <p class="text-xs text-ink-500 mt-1">เอสเย็น</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿95</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1551030173-122aabc4489c?w=600&q=80" alt="อเมริกาโน่" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">อเมริกาโน่</h3>
+      <p class="text-xs text-ink-500 mt-1">Americano</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿80</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?w=600&q=80" alt="ลาเต้" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">ลาเต้</h3>
+      <p class="text-xs text-ink-500 mt-1">Latte</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿90</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=600&q=80" alt="คาปูชิโน่" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">คาปูชิโน่</h3>
+      <p class="text-xs text-ink-500 mt-1">Cappuccino</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿—</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1571805341302-f857841abfff?w=600&q=80" alt="มอคค่า" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">มอคค่า</h3>
+      <p class="text-xs text-ink-500 mt-1">Mocha</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿—</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?w=600&q=80" alt="เอสเปรสโซ่" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">เอสเปรสโซ่</h3>
+      <p class="text-xs text-ink-500 mt-1">Espresso</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿—</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=600&q=80" alt="แอฟโฟกาโต้" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">แอฟโฟกาโต้</h3>
+      <p class="text-xs text-ink-500 mt-1">Affogato</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿—</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1559925393-8be0ec4767c8?w=600&q=80" alt="Black Orange" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">Black Orange</h3>
+      <p class="text-xs text-ink-500 mt-1">กาแฟส้ม signature</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿—</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1485808191679-5f86510681a2?w=600&q=80" alt="มะนาวเอสเปรสโซ่" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">มะนาวเอสเปรสโซ่</h3>
+      <p class="text-xs text-ink-500 mt-1">Lemon Espresso</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿—</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1545665225-b23b99e4d45e?w=600&q=80" alt="ไอริช" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">ไอริช</h3>
+      <p class="text-xs text-ink-500 mt-1">Irish Coffee</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿—</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=80" alt="กาแฟร้อน" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">กาแฟร้อน (รวม)</h3>
+      <p class="text-xs text-ink-500 mt-1">Hot Coffee Series</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿—</p>
+    </article>
+  </div>
+</section>
+
+<!-- ============ NON-COFFEE ============ -->
+<section id="noncoffee" class="cat-anchor">
+  <div class="flex items-end justify-between mb-8 border-b border-cream-300 pb-4">
+    <h2 class="font-serif text-3xl lg:text-4xl">🥤 Non-Coffee</h2>
+    <span class="text-xs text-ink-500">12 รายการ</span>
+  </div>
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 lg:gap-8">
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1542990253-0b8be3915bba?w=600&q=80" alt="ดาร์กช็อกโกแลต" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">ดาร์กช็อกโกแลต</h3>
+      <p class="text-xs text-ink-500 mt-1">Dark Chocolate</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿120</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=600&q=80" alt="ช็อกมินต์" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">ช็อกมินต์</h3>
+      <p class="text-xs text-ink-500 mt-1">Chocolate Mint</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿100</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&q=80" alt="นมสด" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">นมสด</h3>
+      <p class="text-xs text-ink-500 mt-1">Fresh Milk</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿85</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&q=80" alt="นมชมพู" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">นมชมพู</h3>
+      <p class="text-xs text-ink-500 mt-1">Pink Milk</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿—</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=600&q=80" alt="นมสตรอเบอร์รี่" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">นมสตรอเบอร์รี่</h3>
+      <p class="text-xs text-ink-500 mt-1">Strawberry Milk</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿—</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1437418747212-8d9709afab22?w=600&q=80" alt="เลม่อน" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">เลม่อนโซดา</h3>
+      <p class="text-xs text-ink-500 mt-1">Lemon Soda</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿—</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1546039907-7fa05f864c02?w=600&q=80" alt="น้ำผึ้งมะนาว" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">น้ำผึ้งมะนาว</h3>
+      <p class="text-xs text-ink-500 mt-1">Honey Lemon</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿—</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1556679343-c1c1c9308e4e?w=600&q=80" alt="ดอกอัญชัน" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">ดอกอัญชันปั่น</h3>
+      <p class="text-xs text-ink-500 mt-1">Butterfly Pea Blended</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿—</p>
+    </article>
+  </div>
+</section>
+
+<!-- ============ MATCHA & TEA ============ -->
+<section id="matcha" class="cat-anchor">
+  <div class="flex items-end justify-between mb-8 border-b border-cream-300 pb-4">
+    <h2 class="font-serif text-3xl lg:text-4xl">🍵 Matcha & Tea</h2>
+    <span class="text-xs text-ink-500">7 รายการ</span>
+  </div>
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 lg:gap-8">
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1578321709520-d51f3d5e30bd?w=600&q=80" alt="ชามัตฉะ" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">ชามัตฉะ</h3>
+      <p class="text-xs text-ink-500 mt-1">Matcha</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿140</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1515823064-d6e0c04616a7?w=600&q=80" alt="มัตฉะลาเต้" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">มัตฉะลาเต้</h3>
+      <p class="text-xs text-ink-500 mt-1">Matcha Latte</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿—</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=600&q=80" alt="มัตฉะยุซุ" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">มัตฉะยุซุ</h3>
+      <p class="text-xs text-ink-500 mt-1">Matcha Yuzu</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿140</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1597481499750-3e6b22637e12?w=600&q=80" alt="ชาตอง" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">ชาตอง</h3>
+      <p class="text-xs text-ink-500 mt-1">Cha Tong</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿—</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1556679343-c1c1c9308e4e?w=600&q=80" alt="ชายุซุ" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">ชายุซุ</h3>
+      <p class="text-xs text-ink-500 mt-1">Yuzu Tea</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿—</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1597481499666-9d2a78aebd84?w=600&q=80" alt="ขิงมะนาวร้อน" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">ขิงมะนาวร้อน</h3>
+      <p class="text-xs text-ink-500 mt-1">Hot Ginger Lemon</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿—</p>
+    </article>
+  </div>
+</section>
+
+<!-- ============ SIGNATURE ============ -->
+<section id="signature" class="cat-anchor">
+  <div class="flex items-end justify-between mb-8 border-b border-cream-300 pb-4">
+    <h2 class="font-serif text-3xl lg:text-4xl">🌟 Signature</h2>
+    <span class="text-xs text-ink-500">หลายรายการ</span>
+  </div>
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 lg:gap-8">
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1597481499750-3e6b22637e12?w=600&q=80" alt="ชาไทยเย็น" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">ชาไทยเย็น</h3>
+      <p class="text-xs text-ink-500 mt-1">Thai Tea</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿—</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600&q=80" alt="ลีลามะนาว" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">ลีลามะนาวปั่น</h3>
+      <p class="text-xs text-ink-500 mt-1">LiLa Lemon</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿—</p>
+    </article>
+  </div>
+  <p class="text-xs text-ink-500 italic mt-6">* รายการ Signature เพิ่มเติม รอ confirm จากเจ้าของร้าน</p>
+</section>
+
+<!-- ============ SOFT DRINKS ============ -->
+<section id="soft" class="cat-anchor">
+  <div class="flex items-end justify-between mb-8 border-b border-cream-300 pb-4">
+    <h2 class="font-serif text-3xl lg:text-4xl">🥤 Soft Drinks</h2>
+    <span class="text-xs text-ink-500">รอ confirm</span>
+  </div>
+  <div class="bg-cream-200 rounded-2xl p-8 text-center text-ink-500">
+    <p>น้ำดื่ม / น้ำส้ม / น้ำมะพร้าว และเครื่องดื่มอื่นๆ</p>
+    <p class="text-xs italic mt-2">* รอข้อมูลและรูปจากเจ้าของร้าน</p>
+  </div>
+</section>
+
+<!-- ============ BAKERY ============ -->
+<section id="bakery" class="cat-anchor">
+  <div class="flex items-end justify-between mb-8 border-b border-cream-300 pb-4">
+    <h2 class="font-serif text-3xl lg:text-4xl">🥐 เบเกอรี่</h2>
+    <span class="text-xs text-ink-500">หลายรายการ</span>
+  </div>
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 lg:gap-8">
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=600&q=80" alt="ครัวซองต์" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">ครัวซองต์</h3>
+      <p class="text-xs text-ink-500 mt-1">Croissant</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿—</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600&q=80" alt="เค้กช็อกโกแลต" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">เค้กช็อกโกแลต</h3>
+      <p class="text-xs text-ink-500 mt-1">Chocolate Cake</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿—</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=600&q=80" alt="เค้กสตรอเบอร์รี่" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">เค้กสตรอเบอร์รี่</h3>
+      <p class="text-xs text-ink-500 mt-1">Strawberry Cake</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿—</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=600&q=80" alt="คุกกี้" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">คุกกี้</h3>
+      <p class="text-xs text-ink-500 mt-1">Cookies</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿—</p>
+    </article>
+  </div>
+</section>
+
+<!-- ============ THAI FOOD ============ -->
+<section id="thaifood" class="cat-anchor">
+  <div class="flex items-end justify-between mb-8 border-b border-cream-300 pb-4">
+    <h2 class="font-serif text-3xl lg:text-4xl">🍛 กับข้าว</h2>
+    <span class="text-xs text-ink-500">7 รายการ</span>
+  </div>
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 lg:gap-8">
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&q=80" alt="น้ำพริกโจรกุ้งสด" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">น้ำพริกโจรกุ้งสด</h3>
+      <p class="text-xs text-ink-500 mt-1">+ ปลาทูทอด</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿195</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1626844131082-256783844137?w=600&q=80" alt="แกงพริกกระดูกหมู" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">แกงพริกกระดูกหมู</h3>
+      <p class="text-xs text-ink-500 mt-1">Spicy Pork Rib Curry</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿125</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1583032015879-e5022cb87c3b?w=600&q=80" alt="ต้มจืดเต้าหู้" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">ต้มจืดเต้าหู้หมูสับ</h3>
+      <p class="text-xs text-ink-500 mt-1">Tofu & Pork Soup</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿90</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1612874742237-6526221588e3?w=600&q=80" alt="ไข่เจียวหมูสับ" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">ไข่เจียวหมูสับ</h3>
+      <p class="text-xs text-ink-500 mt-1">Pork Omelette w/ Rice</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿85</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1640719028782-8230eee0b193?w=600&q=80" alt="ไข่เจียวฟู" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">ไข่เจียวฟู</h3>
+      <p class="text-xs text-ink-500 mt-1">Fluffy Omelette w/ Rice</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿70</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=600&q=80" alt="แกงส้มปลากะพง" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">แกงส้มปลากะพง</h3>
+      <p class="text-xs text-ink-500 mt-1">Sour Curry w/ Sea Bass</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿250</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=600&q=80" alt="ใบเหลียงผัดไข่" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">ใบเหลียงผัดไข่</h3>
+      <p class="text-xs text-ink-500 mt-1">Stir-fried Bai Liang w/ Egg</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿100</p>
+    </article>
+  </div>
+</section>
+
+<!-- ============ INTER ============ -->
+<section id="inter" class="cat-anchor">
+  <div class="flex items-end justify-between mb-8 border-b border-cream-300 pb-4">
+    <h2 class="font-serif text-3xl lg:text-4xl">🍝 อาหาร Inter</h2>
+    <span class="text-xs text-ink-500">~3 รายการ</span>
+  </div>
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 lg:gap-8">
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=600&q=80" alt="สปาเก็ตตี้ขี้เมาทะเล" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">สปาเก็ตตี้ขี้เมาทะเล</h3>
+      <p class="text-xs text-ink-500 mt-1">Spicy Seafood Spaghetti</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿—</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1612874742237-6526221588e3?w=600&q=80" alt="สปาเก็ตตี้คลาสสิก" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">สปาเก็ตตี้คลาสสิก</h3>
+      <p class="text-xs text-ink-500 mt-1">Classic Spaghetti</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿175</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=600&q=80" alt="สปาเก็ตตี้เนื้อตุ๋น" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">สปาเก็ตตี้เนื้อตุ๋น</h3>
+      <p class="text-xs text-ink-500 mt-1">Braised Beef Spaghetti</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿—</p>
+    </article>
+  </div>
+</section>
+
+<!-- ============ OTHER ============ -->
+<section id="other" class="cat-anchor">
+  <div class="flex items-end justify-between mb-8 border-b border-cream-300 pb-4">
+    <h2 class="font-serif text-3xl lg:text-4xl">🍽️ อื่นๆ</h2>
+    <span class="text-xs text-ink-500">รอ confirm</span>
+  </div>
+  <div class="bg-cream-200 rounded-2xl p-8 text-center text-ink-500">
+    <p>ขนมจีน · ส้มตำชาวเล · ข้าวต้ม · ขนมจีบ · โปเก ฯลฯ</p>
+    <p class="text-xs italic mt-2">* รอข้อมูลและรูปจากเจ้าของร้าน</p>
+  </div>
+</section>
+
+<!-- ============ THAI DESSERT ============ -->
+<section id="thaidessert" class="cat-anchor">
+  <div class="flex items-end justify-between mb-8 border-b border-cream-300 pb-4">
+    <div>
+      <p class="text-sm tracking-[0.3em] text-terracotta-600 uppercase">— Signature ของฝาก —</p>
+      <h2 class="font-serif text-3xl lg:text-4xl mt-2">🍡 ขนมไทย</h2>
+    </div>
+    <span class="text-xs text-ink-500">หลายเซ็ต</span>
+  </div>
+  <p class="text-ink-700 max-w-3xl mb-8">ขนมไทยจัดเซ็ตในกล่องสวย เหมาะกับการสั่งเป็นของฝาก ของไหว้ งานบุญ และโอกาสพิเศษ</p>
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 lg:gap-8">
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1606312619070-d48b4c652a52?w=600&q=80" alt="SET 2 ขนมรวม" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">SET 2 ขนมรวม</h3>
+      <p class="text-xs text-ink-500 mt-1">Thai Dessert Set #2</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿240</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1567337710282-00832b415979?w=600&q=80" alt="SET 3 ขนมรวม + โกสนัค" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">SET 3 ขนมรวม + โกสนัค</h3>
+      <p class="text-xs text-ink-500 mt-1">Thai Dessert Set #3</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿250</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1564834744159-ff0ea41ba4b9?w=600&q=80" alt="ลูกชุบ" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">ลูกชุบ</h3>
+      <p class="text-xs text-ink-500 mt-1">Look Choop</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿—</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1606471191009-63994c53433b?w=600&q=80" alt="ข้าวต้มมัด" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">ข้าวต้มมัด (เย็น)</h3>
+      <p class="text-xs text-ink-500 mt-1">Kao Tom Mud</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿75</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1606312619070-d48b4c652a52?w=600&q=80" alt="ขนมมงคล" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">ขนมมงคล (รวมเซ็ต)</h3>
+      <p class="text-xs text-ink-500 mt-1">Auspicious Thai Sweets</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿—</p>
+    </article>
+    <article class="group">
+      <div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1606471191009-63994c53433b?w=600&q=80" alt="ขนม 4 หลุม" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+      </div>
+      <h3 class="thai-heading text-lg">ขนม 4 หลุม</h3>
+      <p class="text-xs text-ink-500 mt-1">4-Box Mixed Set</p>
+      <p class="text-terracotta-600 font-medium mt-2">฿—</p>
+    </article>
+  </div>
+  <div class="mt-10 bg-terracotta-600 text-cream-50 rounded-2xl p-8 text-center">
+    <h3 class="font-serif text-2xl mb-2">สั่งขนมไทยเป็นของฝาก</h3>
+    <p class="text-cream-200 mb-4">สั่งล่วงหน้าได้ — โทรหรือทักเฟซบุ๊กเพื่อเช็คเซ็ตและจำนวน</p>
+    <div class="flex flex-wrap justify-center gap-3">
+      <a href="tel:0840531494" class="px-5 py-2.5 rounded-full bg-cream-50 text-terracotta-700 hover:bg-cream-100 transition">📞 084 053 1494</a>
+      <a href="https://www.facebook.com/profile.php?id=61584007161540" target="_blank" rel="noopener" class="px-5 py-2.5 rounded-full bg-cream-50 text-terracotta-700 hover:bg-cream-100 transition">👍 Facebook</a>
+    </div>
+  </div>
+</section>
+
+<p class="text-xs text-ink-500 italic text-center pt-4">* ราคาและรูปภาพหลายรายการเป็น preview — รออัปเดตข้อมูลจริงและรูปคุณภาพสูงจากเจ้าของร้าน</p>
+</main>
+
+<!-- FOOTER -->
+<footer class="bg-ink-900 text-cream-200 py-12 mt-12">
+  <div class="max-w-7xl mx-auto px-5 lg:px-8 grid md:grid-cols-3 gap-8">
+    <div>
+      <div class="font-serif text-2xl text-cream-50">LILA CAFE</div>
+      <p class="text-xs tracking-[0.25em] uppercase text-cream-300/70 mt-1">Thai Dessert & Drink</p>
+      <p class="text-sm text-cream-300 mt-4 leading-relaxed">คาเฟ่ขนมไทย เครื่องดื่ม กับข้าวไทย พร้อมหลายมุมให้คุณเลือกใช้เวลา</p>
+    </div>
+    <div>
+      <div class="text-cream-50 font-medium mb-3">ลิงก์</div>
+      <ul class="space-y-2 text-sm text-cream-300">
+        <li><a href="menu.html" class="hover:text-cream-50">เมนู</a></li>
+        <li><a href="facility.html" class="hover:text-cream-50">มุมในร้าน</a></li>
+        <li><a href="index.html#reviews" class="hover:text-cream-50">รีวิว</a></li>
+        <li><a href="index.html#visit" class="hover:text-cream-50">มาที่ร้าน</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="text-cream-50 font-medium mb-3">ติดต่อ</div>
+      <ul class="space-y-2 text-sm text-cream-300">
+        <li>📞 084 053 1494</li>
+        <li>📍 29 ถ. 01, สายไหม กรุงเทพฯ</li>
+        <li>🕐 จ-ศ 7:30-18:30 · ส-อา 8:30-19:30</li>
+      </ul>
+    </div>
+  </div>
+  <div class="max-w-7xl mx-auto px-5 lg:px-8 mt-10 pt-6 border-t border-cream-300/10 text-xs text-cream-300/60 flex flex-col md:flex-row gap-2 md:justify-between">
+    <div>© 2026 LiLa Cafe. All rights reserved.</div>
+    <div class="italic">⚠️ Prototype version — รูปและข้อมูลบางส่วนเป็น placeholder</div>
+  </div>
+</footer>
+
+</body>
+</html>

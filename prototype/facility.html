@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>มุมในร้าน | LiLa Cafe — ลีลา คาเฟ่</title>
+<meta name="description" content="5 มุมในร้านสำหรับทุกลีลา — มุมจิบกาแฟ มุมทำงาน มุมสวน สนามเด็กเล่น และมุมครอบครัว ที่ลีลา คาเฟ่" />
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<script>
+  tailwind.config = {
+    theme: { extend: {
+      colors: {
+        cream: { 50:'#FBF7EF', 100:'#F5EFE4', 200:'#EDE3D2', 300:'#E0D2B8' },
+        sage:  { 400:'#8FA08F', 500:'#7A8D7A', 600:'#6B8174', 700:'#556B5C', 800:'#3F5246' },
+        teak:  { 400:'#C8A077', 500:'#B8895A', 600:'#A06B3F', 700:'#7E5530' },
+        terracotta: { 500:'#B86A3D', 600:'#A0522D', 700:'#854422' },
+        ink:   { 900:'#2A2520', 700:'#4A4138', 500:'#6B6055' },
+      },
+      fontFamily: {
+        serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+        sans:  ['"IBM Plex Sans Thai"', 'system-ui', 'sans-serif'],
+      },
+    }},
+  }
+</script>
+
+<style>
+  html { scroll-behavior: smooth; }
+  body { font-family: 'IBM Plex Sans Thai', system-ui, sans-serif; background:#F5EFE4; color:#2A2520; }
+  h1,h2,h3,.font-serif { font-family:'Cormorant Garamond', Georgia, serif; }
+  .thai-heading { font-family:'IBM Plex Sans Thai', system-ui, sans-serif; font-weight:500; }
+  .arch-image { border-top-left-radius:9999px; border-top-right-radius:9999px; overflow:hidden; }
+  .facility-anchor { scroll-margin-top: 140px; }
+
+  /* === GLOSSY THEME LAYER === */
+  body {
+    background:
+      radial-gradient(circle at 12% 8%, rgba(184, 137, 90, 0.10), transparent 42%),
+      radial-gradient(circle at 88% 92%, rgba(122, 141, 122, 0.10), transparent 42%),
+      linear-gradient(180deg, #FBF7EF 0%, #F5EFE4 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+  a, button { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+  .rounded-full {
+    background-image: linear-gradient(180deg,
+      rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.04) 45%, rgba(0,0,0,0.06) 100%);
+  }
+  .bg-terracotta-600, .bg-terracotta-700 {
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.28), inset 0 -1px 0 rgba(0,0,0,0.15),
+      0 6px 18px rgba(160,82,45,0.22), 0 2px 6px rgba(42,37,32,0.10);
+  }
+  .bg-terracotta-600:hover, .bg-terracotta-700:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15),
+      0 12px 30px rgba(160,82,45,0.30), 0 4px 10px rgba(42,37,32,0.12);
+  }
+  .bg-sage-700, .bg-sage-800 {
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.22), inset 0 -1px 0 rgba(0,0,0,0.15),
+      0 6px 18px rgba(85,107,92,0.22), 0 2px 6px rgba(42,37,32,0.10);
+  }
+  .bg-sage-700:hover, .bg-sage-800:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -1px 0 rgba(0,0,0,0.15),
+      0 12px 30px rgba(85,107,92,0.28), 0 4px 10px rgba(42,37,32,0.12);
+  }
+  .bg-cream-50, .bg-cream-100, .bg-cream-200 {
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 2px 8px rgba(42,37,32,0.05);
+  }
+  .rounded-2xl, .rounded-3xl {
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.5),
+      0 10px 32px rgba(42,37,32,0.08), 0 4px 10px rgba(42,37,32,0.04);
+  }
+  .arch-image { position: relative; isolation: isolate; }
+  .arch-image::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg,
+      rgba(255,255,255,0.32) 0%, rgba(255,255,255,0.10) 22%, transparent 50%);
+    pointer-events: none;
+    border-top-left-radius: 9999px; border-top-right-radius: 9999px;
+    z-index: 2;
+  }
+  header {
+    background: linear-gradient(180deg, rgba(245, 239, 228, 0.82), rgba(245, 239, 228, 0.68)) !important;
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 4px 24px rgba(42,37,32,0.06);
+  }
+  .sticky.top-16 {
+    background: linear-gradient(180deg, rgba(251, 247, 239, 0.9), rgba(245, 239, 228, 0.82)) !important;
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+  }
+  footer {
+    background: radial-gradient(ellipse at top, rgba(160,82,45,0.12), transparent 50%), #2A2520 !important;
+  }
+</style>
+</head>
+<body class="antialiased">
+
+<!-- NAV -->
+<header class="sticky top-0 z-50 bg-cream-100/90 backdrop-blur border-b border-cream-300/50">
+  <nav class="max-w-7xl mx-auto px-5 lg:px-8 h-16 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2">
+      <div class="w-9 h-9 rounded-full bg-cream-200 flex items-center justify-center"><span class="text-terracotta-600 text-xl">🐘</span></div>
+      <div class="leading-tight">
+        <div class="font-serif text-xl font-semibold tracking-wide text-terracotta-700">LILA CAFE</div>
+        <div class="text-[10px] tracking-[0.25em] text-ink-500 uppercase">Thai Dessert & Drink</div>
+      </div>
+    </a>
+    <ul class="hidden md:flex items-center gap-7 text-sm text-ink-700">
+      <li><a href="menu.html" class="hover:text-terracotta-600 transition">เมนู</a></li>
+      <li><a href="facility.html" class="text-terracotta-600 font-medium">มุมในร้าน</a></li>
+      <li><a href="index.html#reviews" class="hover:text-terracotta-600 transition">รีวิว</a></li>
+      <li><a href="index.html#visit" class="hover:text-terracotta-600 transition">มาที่ร้าน</a></li>
+    </ul>
+    <a href="tel:0840531494" class="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-sage-700 text-cream-50 text-sm hover:bg-sage-800 transition"><span>📞</span> 084 053 1494</a>
+    <a href="index.html#visit" class="md:hidden text-sm px-3 py-1.5 rounded-full bg-sage-700 text-cream-50">มาที่ร้าน</a>
+  </nav>
+</header>
+
+<!-- PAGE HEADER -->
+<section class="bg-sage-700 text-cream-50 py-16 lg:py-24 relative overflow-hidden">
+  <div class="absolute -top-10 -right-10 w-72 h-72 rounded-full bg-sage-600/40 blur-3xl"></div>
+  <div class="absolute -bottom-10 -left-10 w-72 h-72 rounded-full bg-teak-600/30 blur-3xl"></div>
+  <div class="relative max-w-5xl mx-auto px-5 lg:px-8 text-center">
+    <p class="text-sm tracking-[0.3em] text-cream-200 uppercase mb-3">— Facilities —</p>
+    <h1 class="font-serif text-5xl lg:text-6xl mb-4">มุมในร้านสำหรับทุกลีลา</h1>
+    <p class="text-cream-200/90 max-w-2xl mx-auto">ออกแบบไว้สำหรับทุก occasion — มาคนเดียว ทำงาน เป็นกลุ่ม หรือพาครอบครัวมาด้วย เลือกมุมที่ใช่กับคุณ</p>
+  </div>
+</section>
+
+<!-- QUICK JUMP -->
+<div class="sticky top-16 z-40 bg-cream-100/95 backdrop-blur border-b border-cream-300/50">
+  <div class="max-w-7xl mx-auto px-5 lg:px-8 py-3 overflow-x-auto">
+    <div class="flex gap-2 text-sm whitespace-nowrap">
+      <a href="#coffee" class="px-4 py-2 rounded-full bg-cream-200 hover:bg-sage-700 hover:text-cream-50 transition">☕ มุมจิบกาแฟ</a>
+      <a href="#work" class="px-4 py-2 rounded-full bg-cream-200 hover:bg-sage-700 hover:text-cream-50 transition">💻 มุมห้องทำงาน</a>
+      <a href="#garden" class="px-4 py-2 rounded-full bg-cream-200 hover:bg-sage-700 hover:text-cream-50 transition">🌿 มุมสวน</a>
+      <a href="#kids" class="px-4 py-2 rounded-full bg-cream-200 hover:bg-sage-700 hover:text-cream-50 transition">🎠 สนามเด็กเล่น</a>
+      <a href="#family" class="px-4 py-2 rounded-full bg-cream-200 hover:bg-sage-700 hover:text-cream-50 transition">👨‍👩‍👧 มุมครอบครัว</a>
+    </div>
+  </div>
+</div>
+
+<main class="max-w-7xl mx-auto px-5 lg:px-8 py-16 lg:py-24 space-y-24">
+
+<!-- 1. COFFEE CORNER -->
+<section id="coffee" class="facility-anchor grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+  <div class="relative order-2 lg:order-1">
+    <div class="arch-image aspect-[4/5] bg-cream-200 shadow-lg max-w-md mx-auto">
+      <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=900&q=80" alt="มุมจิบกาแฟ" class="w-full h-full object-cover" />
+    </div>
+    <div class="hidden lg:block absolute -bottom-8 -right-4 arch-image aspect-square w-40 bg-sage-600 shadow-lg">
+      <img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&q=80" alt="" class="w-full h-full object-cover" />
+    </div>
+  </div>
+  <div class="order-1 lg:order-2">
+    <div class="text-5xl mb-4">☕</div>
+    <p class="text-sm tracking-[0.3em] text-sage-700 uppercase mb-3">— 01 / 05 —</p>
+    <h2 class="font-serif text-4xl lg:text-5xl text-ink-900 mb-5">มุมจิบกาแฟ</h2>
+    <p class="text-lg text-ink-700 leading-relaxed mb-6">เคาน์เตอร์บาริสต้ากลางร้าน พร้อมที่นั่งสบายๆ มองเห็นบรรยากาศการชงกาแฟ เหมาะกับคนรักกาแฟที่อยากใช้เวลาช้าๆ กับเครื่องดื่มแก้วโปรด</p>
+    <ul class="space-y-2 text-ink-700 mb-6">
+      <li class="flex gap-3"><span class="text-sage-700">✓</span> เคาน์เตอร์บาริสต้าและที่นั่งบาร์</li>
+      <li class="flex gap-3"><span class="text-sage-700">✓</span> โต๊ะคู่และโต๊ะเดี่ยวสำหรับนั่งจิบ</li>
+      <li class="flex gap-3"><span class="text-sage-700">✓</span> เหมาะกับ café date / มาคนเดียว</li>
+    </ul>
+    <a href="menu.html#coffee" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-terracotta-600 text-cream-50 hover:bg-terracotta-700 transition">ดูเมนูกาแฟ →</a>
+  </div>
+</section>
+
+<!-- 2. WORK CORNER -->
+<section id="work" class="facility-anchor grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+  <div>
+    <div class="text-5xl mb-4">💻</div>
+    <p class="text-sm tracking-[0.3em] text-sage-700 uppercase mb-3">— 02 / 05 —</p>
+    <h2 class="font-serif text-4xl lg:text-5xl text-ink-900 mb-5">มุมห้องทำงาน</h2>
+    <p class="text-lg text-ink-700 leading-relaxed mb-6">พื้นที่ออกแบบมาสำหรับ remote worker นักเรียน นักศึกษา และ freelancer ที่อยากนั่งทำงานสบายๆ ทั้งวัน บรรยากาศเงียบ มี WiFi เร็ว ปลั๊กไฟเข้าถึงง่าย</p>
+    <ul class="space-y-2 text-ink-700 mb-6">
+      <li class="flex gap-3"><span class="text-sage-700">✓</span> WiFi ฟรี ความเร็วสูง</li>
+      <li class="flex gap-3"><span class="text-sage-700">✓</span> ปลั๊กไฟทุกโต๊ะ</li>
+      <li class="flex gap-3"><span class="text-sage-700">✓</span> โต๊ะกว้าง รองรับโน้ตบุ๊ก + เครื่องดื่ม</li>
+      <li class="flex gap-3"><span class="text-sage-700">✓</span> นั่งได้ทั้งวัน — มีเครื่องดื่ม refill ให้</li>
+    </ul>
+    <a href="menu.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-terracotta-600 text-cream-50 hover:bg-terracotta-700 transition">ดูเครื่องดื่ม / เบเกอรี่ →</a>
+  </div>
+  <div class="relative">
+    <div class="arch-image aspect-[4/5] bg-cream-200 shadow-lg max-w-md mx-auto">
+      <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=900&q=80" alt="มุมห้องทำงาน" class="w-full h-full object-cover" />
+    </div>
+  </div>
+</section>
+
+<!-- 3. GARDEN -->
+<section id="garden" class="facility-anchor grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+  <div class="relative order-2 lg:order-1">
+    <div class="arch-image aspect-[4/5] bg-cream-200 shadow-lg max-w-md mx-auto">
+      <img src="https://images.unsplash.com/photo-1551410224-699683e15636?w=900&q=80" alt="มุมสวน" class="w-full h-full object-cover" />
+    </div>
+  </div>
+  <div class="order-1 lg:order-2">
+    <div class="text-5xl mb-4">🌿</div>
+    <p class="text-sm tracking-[0.3em] text-sage-700 uppercase mb-3">— 03 / 05 —</p>
+    <h2 class="font-serif text-4xl lg:text-5xl text-ink-900 mb-5">มุมสวน</h2>
+    <p class="text-lg text-ink-700 leading-relaxed mb-6">พื้นที่กลางแจ้งกึ่ง outdoor ท่ามกลางต้นไม้และแสงธรรมชาติ เหมาะกับช่วงเช้า-เย็นที่อากาศกำลังดี รู้สึกผ่อนคลายเหมือนนั่งในสวนหลังบ้าน</p>
+    <ul class="space-y-2 text-ink-700 mb-6">
+      <li class="flex gap-3"><span class="text-sage-700">✓</span> ที่นั่งกลางแจ้งร่มรื่น</li>
+      <li class="flex gap-3"><span class="text-sage-700">✓</span> แสงธรรมชาติเข้าถึง — ถ่ายรูปสวย</li>
+      <li class="flex gap-3"><span class="text-sage-700">✓</span> เหมาะกับวันสบายๆ อ่านหนังสือ คุยกับเพื่อน</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 4. KIDS PLAYGROUND -->
+<section id="kids" class="facility-anchor grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+  <div>
+    <div class="text-5xl mb-4">🎠</div>
+    <p class="text-sm tracking-[0.3em] text-sage-700 uppercase mb-3">— 04 / 05 —</p>
+    <h2 class="font-serif text-4xl lg:text-5xl text-ink-900 mb-5">สนามเด็กเล่น</h2>
+    <p class="text-lg text-ink-700 leading-relaxed mb-6">โซนเด็กเล่นปลอดภัย อยู่ใกล้กับที่นั่งของผู้ใหญ่ คุณพ่อคุณแม่นั่งจิบกาแฟ ทานข้าวสบายๆ ขณะมองดูเด็กๆ ได้ตลอดเวลา</p>
+    <ul class="space-y-2 text-ink-700 mb-6">
+      <li class="flex gap-3"><span class="text-sage-700">✓</span> พื้นที่ปลอดภัย เหมาะกับเด็กเล็ก-โต</li>
+      <li class="flex gap-3"><span class="text-sage-700">✓</span> มีจุดให้ผู้ปกครองมองเห็นตลอด</li>
+      <li class="flex gap-3"><span class="text-sage-700">✓</span> ลดความเครียดของพ่อแม่ที่อยากออกมาทานข้าวข้างนอก</li>
+    </ul>
+  </div>
+  <div class="relative">
+    <div class="arch-image aspect-[4/5] bg-cream-200 shadow-lg max-w-md mx-auto">
+      <img src="https://images.unsplash.com/photo-1632686819014-9148ed3da06f?w=900&q=80" alt="สนามเด็กเล่น" class="w-full h-full object-cover" />
+    </div>
+  </div>
+</section>
+
+<!-- 5. FAMILY -->
+<section id="family" class="facility-anchor grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+  <div class="relative order-2 lg:order-1">
+    <div class="arch-image aspect-[4/5] bg-cream-200 shadow-lg max-w-md mx-auto">
+      <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=900&q=80" alt="มุมครอบครัว" class="w-full h-full object-cover" />
+    </div>
+  </div>
+  <div class="order-1 lg:order-2">
+    <div class="text-5xl mb-4">👨‍👩‍👧</div>
+    <p class="text-sm tracking-[0.3em] text-sage-700 uppercase mb-3">— 05 / 05 —</p>
+    <h2 class="font-serif text-4xl lg:text-5xl text-ink-900 mb-5">มุมครอบครัว</h2>
+    <p class="text-lg text-ink-700 leading-relaxed mb-6">โต๊ะใหญ่พื้นที่กว้างขวาง เหมาะกับครอบครัว 4-6 คน หรือกลุ่มเพื่อนที่อยากนั่งทานข้าว แชร์ขนมไทย และพูดคุยกันสบายๆ</p>
+    <ul class="space-y-2 text-ink-700 mb-6">
+      <li class="flex gap-3"><span class="text-sage-700">✓</span> โต๊ะใหญ่ รองรับ 4-6 คน</li>
+      <li class="flex gap-3"><span class="text-sage-700">✓</span> เหมาะกับมื้อกลางวัน / มื้อเย็นกับครอบครัว</li>
+      <li class="flex gap-3"><span class="text-sage-700">✓</span> สามารถจองล่วงหน้าได้ (Hungry Hub)</li>
+    </ul>
+    <a href="https://hungryhub.com" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-terracotta-600 text-cream-50 hover:bg-terracotta-700 transition">📅 จองโต๊ะ Hungry Hub →</a>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="bg-cream-200 rounded-3xl p-10 lg:p-16 text-center">
+  <h2 class="font-serif text-3xl lg:text-4xl text-ink-900 mb-4">มาเลือกมุมที่ใช่กับคุณ</h2>
+  <p class="text-ink-700 max-w-xl mx-auto mb-8">เปิดทุกวัน · ที่ตั้ง: 29 ถ. 01 สายไหม กรุงเทพฯ</p>
+  <div class="flex flex-wrap justify-center gap-3">
+    <a href="https://maps.app.goo.gl/vQiVWGbnxttsCBJk8" target="_blank" rel="noopener" class="px-6 py-3 rounded-full bg-sage-700 text-cream-50 hover:bg-sage-800 transition">🗺️ นำทางมาที่ร้าน</a>
+    <a href="tel:0840531494" class="px-6 py-3 rounded-full bg-cream-50 text-ink-900 hover:bg-white transition">📞 084 053 1494</a>
+    <a href="menu.html" class="px-6 py-3 rounded-full bg-terracotta-600 text-cream-50 hover:bg-terracotta-700 transition">ดูเมนูทั้งหมด</a>
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="bg-ink-900 text-cream-200 py-12">
+  <div class="max-w-7xl mx-auto px-5 lg:px-8 grid md:grid-cols-3 gap-8">
+    <div>
+      <div class="font-serif text-2xl text-cream-50">LILA CAFE</div>
+      <p class="text-xs tracking-[0.25em] uppercase text-cream-300/70 mt-1">Thai Dessert & Drink</p>
+      <p class="text-sm text-cream-300 mt-4 leading-relaxed">คาเฟ่ขนมไทย เครื่องดื่ม กับข้าวไทย พร้อมหลายมุมให้คุณเลือกใช้เวลา</p>
+    </div>
+    <div>
+      <div class="text-cream-50 font-medium mb-3">ลิงก์</div>
+      <ul class="space-y-2 text-sm text-cream-300">
+        <li><a href="menu.html" class="hover:text-cream-50">เมนู</a></li>
+        <li><a href="facility.html" class="hover:text-cream-50">มุมในร้าน</a></li>
+        <li><a href="index.html#reviews" class="hover:text-cream-50">รีวิว</a></li>
+        <li><a href="index.html#visit" class="hover:text-cream-50">มาที่ร้าน</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="text-cream-50 font-medium mb-3">ติดต่อ</div>
+      <ul class="space-y-2 text-sm text-cream-300">
+        <li>📞 084 053 1494</li>
+        <li>📍 29 ถ. 01, สายไหม กรุงเทพฯ</li>
+        <li>🕐 จ-ศ 7:30-18:30 · ส-อา 8:30-19:30</li>
+      </ul>
+    </div>
+  </div>
+  <div class="max-w-7xl mx-auto px-5 lg:px-8 mt-10 pt-6 border-t border-cream-300/10 text-xs text-cream-300/60 flex flex-col md:flex-row gap-2 md:justify-between">
+    <div>© 2026 LiLa Cafe. All rights reserved.</div>
+    <div class="italic">⚠️ Prototype version — รูปและข้อมูลบางส่วนเป็น placeholder</div>
+  </div>
+</footer>
+
+</body>
+</html>
