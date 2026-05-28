@@ -26,6 +26,12 @@ Status: `todo` | `in-progress` | `blocked` | `done`
 | 0.14 | Redesign menu-data schema (table-based + id/type/tags/status) | done | พร้อม parse เป็น JSON ในอนาคต |
 | 0.15 | Owner fills ราคา 54 รายการที่ price-tbc | todo | **blocking** Phase 2.2 |
 | 0.16 | Owner confirms 14 รายการที่ item-tbc (snacks/soft/signature) | todo | |
+| 0.17 | ดาวน์โหลด+resize drink photos จาก Drive (40 ไฟล์, 563MB→5.3MB) | done | gdown + sips, web 1200px/q75 |
+| 0.18 | สร้าง menu-image-mapping.md | done | 18 strong + 19 likely match |
+| 0.19 | แทน Unsplash placeholders ด้วยรูปจริงใน prototype | done | 27/48 (drinks); food/dessert ยังรอรูป |
+| 0.20 | ขอรูปอาหาร/ขนมไทย/เบเกอรี่/พาสต้าเพิ่มจากเจ้าของ | todo | 21 รายการรอ asset |
+| 0.21 | ขอรูป interior/facility (5 มุม) | todo | สำหรับ facility.html + hero |
+| 0.22 | Retry download ~5 ไฟล์ที่ Drive rate-limit | todo | LILA-083/086/087/088/090/091/092/093 |
 
 ---
 
@@ -148,3 +154,4 @@ Status: `todo` | `in-progress` | `blocked` | `done`
 | 2026-05-28 | สร้าง menu.html + facility.html, อัปเดต home ให้ทุกปุ่มและการ์ดคลิกได้ |
 | 2026-05-28 | เพิ่ม glossy theme layer ทั้ง 3 ไฟล์ (sheen, frosted glass, ambient glow) |
 | 2026-05-28 | Initial commit + push GitHub: baompansiri/lilacafe |
+| 2026-05-28 | Drive photos: 40 drink shots downloaded, resized 1200px (563MB→5.3MB), mapped + integrated into prototype |

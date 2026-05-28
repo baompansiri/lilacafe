@@ -32,3 +32,7 @@ yarn-error.log*
 
 # Claude / local config
 .claude/settings.local.json
+
+# Source assets (originals from Drive — huge, web-ready copies live in assets/menu/)
+_downloads/
+assets/preview/
