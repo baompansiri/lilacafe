@@ -22,7 +22,10 @@ Status: `todo` | `in-progress` | `blocked` | `done`
 | 0.10 | ขอข้อความรีวิว 5-10 อันสำหรับ seed | todo | จาก Google/FB |
 | 0.11 | ขอ About/Story ของร้าน | todo | ที่มาของชื่อ "ลีลา" + concept |
 | 0.12 | สร้าง menu-data.md (preliminary) | done | จาก FoodStory POS capture |
-| 0.13 | Confirm menu data จริง (ราคา + EN + รูปต้นฉบับ) | todo | **blocking** Phase 2.2 (Menu page) |
+| 0.13 | Confirm menu data จริง (ราคา + EN + รูปต้นฉบับ) | in-progress | 86 items extracted, 21% confirmed |
+| 0.14 | Redesign menu-data schema (table-based + id/type/tags/status) | done | พร้อม parse เป็น JSON ในอนาคต |
+| 0.15 | Owner fills ราคา 54 รายการที่ price-tbc | todo | **blocking** Phase 2.2 |
+| 0.16 | Owner confirms 14 รายการที่ item-tbc (snacks/soft/signature) | todo | |
 
 ---
 
