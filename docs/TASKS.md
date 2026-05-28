@@ -33,6 +33,9 @@ Status: `todo` | `in-progress` | `blocked` | `done`
 | 0.21 | ขอรูป interior/facility (5 มุม) | todo | สำหรับ facility.html + hero |
 | 0.22 | Retry download ~5 ไฟล์ที่ Drive rate-limit | todo | LILA-083/086/087/088/090/091/092/093 |
 | 0.23 | SEO rename รูป: `LILA-NNN` → `lila-cafe-{slug}.jpg` | done | git mv 40 ไฟล์ + update HTML/docs (74 refs) |
+| 0.24 | Re-map Coffee 4 รายการหลัก (คาราเมลลาเต้/Es-yen/ลาเต้/อเมริกาโน่) | done | สลับ LILA-043/044/049/053 ให้ตรงตาม POS images ใหม่ |
+| 0.25 | Re-map รายการที่เหลือ (~36) | todo | รอ user check verify.html รอบ 2 + ส่ง POS ละเอียดเพิ่ม |
+| 0.26 | Process รูปใหม่ใน _downloads/lila-source (164 ไฟล์) | todo | resize + map หลัง user confirm task 0.25 |
 
 ---
 
@@ -157,3 +160,4 @@ Status: `todo` | `in-progress` | `blocked` | `done`
 | 2026-05-28 | Initial commit + push GitHub: baompansiri/lilacafe |
 | 2026-05-28 | Drive photos: 40 drink shots downloaded, resized 1200px (563MB→5.3MB), mapped + integrated into prototype |
 | 2026-05-28 | SEO rename: `LILA-NNN` → `lila-cafe-{slug}.jpg` ทั้ง 40 ไฟล์ (git mv + bulk refs update) |
+| 2026-05-28 | Re-map Coffee #1-4 หลัง POS images ละเอียดมาใหม่: swap LILA-043↔053, 044↔049 ให้ตรง |

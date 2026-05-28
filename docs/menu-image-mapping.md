@@ -39,13 +39,13 @@
 | lila-cafe-almond-caramel-latte.jpg | coffee | almond-caramel-latte | Almond caramel latte | 🟡 | almond garnish |
 | lila-cafe-biscoff-latte.jpg | noncoffee | biscoff-latte | Biscoff/Lotus latte | 🟡 | biscuit topping |
 | lila-cafe-es-yen-honey.jpg | coffee | es-yen-honey | Es-yen + honeycomb | 🟡 | caramel + honeycomb |
-| lila-cafe-caramel-latte-iced.jpg | coffee | caramel-latte-iced | คาราเมลลาเต้ (เย็น) | ✅ | layered + caramel ribbon |
-| lila-cafe-latte-iced.jpg | coffee | latte-iced | ลาเต้ (เย็น) | ✅ | cream + rosemary |
-| lila-cafe-americano-iced.jpg | coffee | americano-iced | อเมริกาโน่ (เย็น) | ✅ | ดำเข้ม ใส |
+| lila-cafe-latte-iced-floral.jpg | signature | unknown-floral | ⚠️ ไม่ทราบชื่อ — layered + flower + rosemary | 🔵 | (was LILA-043) รอเจ้าของ confirm |
+| lila-cafe-latte-iced.jpg | coffee | latte-iced | ลาเต้ (เย็น) ฿90 | ✅ | layered + rosemary, fluted glass (was LILA-049) |
+| lila-cafe-americano-iced.jpg | coffee | americano-iced | อเมริกาโน่ (เย็น) ฿80 | ✅ | ดำเข้ม + rosemary (was LILA-046) |
 | lila-cafe-berry-smoothie.jpg | signature | berry-smoothie | Berry smoothie | 🟡 | red + cream layer |
-| lila-cafe-es-yen.jpg | coffee | es-yen | Es-yen | ✅ | caramel layered |
+| lila-cafe-es-yen.jpg | coffee | es-yen | Es-yen ฿95 | ✅ | beige + rosemary (was LILA-044) |
 | lila-cafe-pink-milk.jpg | noncoffee | pink-milk | นมชมพู | ✅ | shake + whipped cream |
-| lila-cafe-caramel-macchiato.jpg | coffee | caramel-latte-alt | Caramel latte alt | 🟡 | drizzle prominent |
+| lila-cafe-caramel-latte-iced.jpg | coffee | caramel-latte-iced | คาราเมลลาเต้ ฿100 | ✅ | caramel drip down outside (was LILA-053) |
 | lila-cafe-matcha-tonic.jpg | matcha | matcha-tonic | Matcha tonic | 🟡 | matcha + clear soda |
 | lila-cafe-dirty-matcha.jpg | matcha | dirty-matcha | Dirty matcha | 🟡 | matcha + chocolate drizzle |
 | lila-cafe-matcha-strawberry.jpg | matcha | matcha-strawberry | Matcha strawberry | 🟡 | เขียว-ขาว-แดง |
@@ -117,3 +117,4 @@ lila-cafe-{descriptor}.jpg
 |---|---|
 | 2026-05-28 | Initial mapping: 40 drink photos ระบุประเภทแล้ว, web-resize ครบ |
 | 2026-05-28 | **SEO rename:** `LILA-NNN.jpg` → `lila-cafe-{menu-slug}.jpg` (40 ไฟล์) + update references ใน HTML/docs |
+| 2026-05-28 | **Re-map Coffee #1-4 หลังเห็น POS images ชัดขึ้น:** swap LILA-043/044/049/053 ให้ตรง — คาราเมลลาเต้/Es-yen/ลาเต้ ถูกต้องแล้ว; LILA-043 (floral) ไม่ทราบชื่อ รอ confirm |
