@@ -40,6 +40,22 @@
   .toast.error { background:#ef4444; }
   details > summary { cursor:pointer; list-style:none; }
   details > summary::-webkit-details-marker { display:none; }
+
+  /* Hover-zoom popup */
+  .photo-frame img, #orphan-grid img { cursor: zoom-in; transition: transform .15s; }
+  .photo-frame img:hover, #orphan-grid img:hover { transform: scale(1.05); }
+  #zoom-popup {
+    position: fixed; display: none; z-index: 1000;
+    background: white; border-radius: 16px; padding: 8px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.4), 0 4px 12px rgba(0,0,0,.2);
+    pointer-events: none; max-width: 90vw; max-height: 90vh;
+  }
+  #zoom-popup img { display:block; width:480px; max-width:88vw; max-height:80vh; object-fit:contain; border-radius:10px; }
+  #zoom-popup .caption { text-align:center; font-size:11px; color:#64748b; margin-top:6px; padding:0 8px; }
+  @media (hover: none) {
+    .photo-frame img, #orphan-grid img { cursor: pointer; }
+    .photo-frame img:hover, #orphan-grid img:hover { transform: none; }
+  }
 </style>
 </head>
 <body class="antialiased pb-32">
@@ -102,6 +118,12 @@
 </div>
 
 <div id="toast" class="toast"></div>
+
+<!-- Hover-zoom popup (single instance reused) -->
+<div id="zoom-popup">
+  <img id="zoom-img" alt="" />
+  <div class="caption" id="zoom-caption"></div>
+</div>
 
 <script>
 // =========================
@@ -683,6 +705,85 @@ async function downloadZip() {
   URL.revokeObjectURL(url);
   showToast(`✓ Downloaded ZIP (${imgCount} รูป + review.md + review.json)`);
 }
+
+// =========================
+// HOVER ZOOM
+// =========================
+(function setupZoom() {
+  const popup = document.getElementById("zoom-popup");
+  const zoomImg = document.getElementById("zoom-img");
+  const zoomCap = document.getElementById("zoom-caption");
+  const POP_W = 480, MARGIN = 16;
+  let activeTarget = null;
+  let isTouch = false;
+
+  function positionPopup(evt) {
+    const ww = window.innerWidth, wh = window.innerHeight;
+    // popup may be taller — measure after image loaded
+    const ph = popup.offsetHeight || 540;
+    const pw = popup.offsetWidth || (POP_W + 16);
+    // Prefer right side of cursor; fall back to left if no room
+    let x = evt.clientX + 24;
+    if (x + pw > ww - MARGIN) x = evt.clientX - pw - 24;
+    if (x < MARGIN) x = MARGIN;
+    let y = evt.clientY - ph / 2;
+    if (y + ph > wh - MARGIN) y = wh - ph - MARGIN;
+    if (y < MARGIN) y = MARGIN;
+    popup.style.left = x + "px";
+    popup.style.top  = y + "px";
+  }
+
+  function show(img, evt) {
+    if (!img || !img.src) return;
+    activeTarget = img;
+    zoomImg.src = img.src;
+    zoomImg.alt = img.alt || "";
+    zoomCap.textContent = img.alt || img.src.split("/").pop();
+    popup.style.display = "block";
+    positionPopup(evt);
+  }
+  function hide() {
+    popup.style.display = "none";
+    activeTarget = null;
+  }
+
+  // Delegate at body level so dynamically rendered cards work
+  document.body.addEventListener("mouseover", (e) => {
+    const img = e.target.closest(".photo-frame img, #orphan-grid img");
+    if (img && !isTouch) show(img, e);
+  });
+  document.body.addEventListener("mousemove", (e) => {
+    if (activeTarget && popup.style.display === "block") positionPopup(e);
+  });
+  document.body.addEventListener("mouseout", (e) => {
+    const img = e.target.closest(".photo-frame img, #orphan-grid img");
+    if (img) hide();
+  });
+
+  // Touch fallback — tap to toggle
+  document.body.addEventListener("touchstart", (e) => {
+    isTouch = true;
+    const img = e.target.closest(".photo-frame img, #orphan-grid img");
+    if (img) {
+      e.preventDefault();
+      if (activeTarget === img) { hide(); }
+      else {
+        const r = img.getBoundingClientRect();
+        show(img, { clientX: r.left + r.width/2, clientY: r.top + r.height/2 });
+      }
+    } else {
+      hide();
+    }
+  }, { passive: false });
+
+  // Click anywhere else hides
+  document.body.addEventListener("click", (e) => {
+    if (!e.target.closest(".photo-frame img, #orphan-grid img")) hide();
+  });
+
+  // ESC to close
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") hide(); });
+})();
 
 function showToast(msg, isError = false) {
   const t = document.getElementById("toast");
