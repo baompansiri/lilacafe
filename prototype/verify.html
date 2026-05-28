@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Verify Menu ↔ Image Mapping | LiLa Cafe</title>
+<title>Verify Menu ↔ Image | LiLa Cafe</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
@@ -13,261 +14,681 @@
   .card.status-ok { background:#dcfce7; box-shadow: 0 0 0 2px #22c55e inset; }
   .card.status-fix { background:#fee2e2; box-shadow: 0 0 0 2px #ef4444 inset; }
   .card.status-unsure { background:#fef9c3; box-shadow: 0 0 0 2px #eab308 inset; }
-  .btn-state { font-size: 13px; padding: 5px 10px; border-radius: 8px; transition: all .2s; cursor: pointer; }
+  .card.status-nophoto { background:#f1f5f9; box-shadow: 0 0 0 2px #94a3b8 inset; }
+  .btn-state { font-size: 12px; padding: 4px 8px; border-radius: 6px; transition: all .2s; cursor: pointer; border: none; flex:1; }
   .btn-state.active-ok { background:#22c55e; color:white; }
   .btn-state.active-fix { background:#ef4444; color:white; }
   .btn-state.active-unsure { background:#eab308; color:white; }
-  .btn-state:not(.active) { background:#f1f5f9; color:#475569; }
-  .btn-state:not(.active):hover { background:#e2e8f0; }
-  input[type="text"], textarea { transition: border-color .2s; }
-  input[type="text"]:focus, textarea:focus { outline: none; border-color:#A0522D; box-shadow: 0 0 0 3px rgba(160,82,45,0.15); }
-  .fab {
-    position: fixed; bottom: 20px; right: 20px; z-index: 100;
-    background: #A0522D; color: white; padding: 14px 24px; border-radius: 9999px;
-    box-shadow: 0 8px 24px rgba(160,82,45,.4); cursor: pointer;
-    font-weight: 500; display: flex; gap: 10px; align-items: center;
-    transition: all .2s;
-  }
-  .fab:hover { background:#854422; transform: translateY(-2px); box-shadow: 0 12px 32px rgba(160,82,45,.5); }
-  .toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background:#22c55e; color:white; padding: 12px 24px; border-radius: 9999px; z-index: 200; opacity: 0; transition: opacity .3s; box-shadow: 0 4px 16px rgba(0,0,0,.2); }
-  .toast.show { opacity: 1; }
+  .btn-state:not(.active) { background:#e2e8f0; color:#475569; }
+  .btn-state:not(.active):hover { background:#cbd5e1; }
+  .btn-upload { display:inline-flex; align-items:center; gap:4px; padding:5px 10px; font-size:11px; background:#A0522D; color:white; border-radius:6px; cursor:pointer; transition:all .2s; }
+  .btn-upload:hover { background:#854422; }
+  .btn-upload-replace { background:#64748b; }
+  .btn-upload-replace:hover { background:#475569; }
+  input[type=text], input[type=number], textarea, select { transition: border-color .2s; }
+  input:focus, textarea:focus, select:focus { outline:none; border-color:#A0522D; box-shadow:0 0 0 3px rgba(160,82,45,0.15); }
+  .photo-frame { position:relative; }
+  .photo-frame .badge-new { position:absolute; top:6px; right:6px; background:#A0522D; color:white; font-size:10px; padding:2px 6px; border-radius:9999px; }
+  .photo-frame .no-photo { display:flex; flex-direction:column; align-items:center; justify-content:center; background:#e2e8f0; color:#64748b; text-align:center; font-size:11px; }
+  .fab-group { position:fixed; bottom:20px; right:20px; z-index:100; display:flex; flex-direction:column; gap:10px; }
+  .fab { background:#A0522D; color:white; padding:12px 20px; border-radius:9999px; box-shadow:0 8px 24px rgba(160,82,45,.4); cursor:pointer; font-weight:500; display:flex; gap:8px; align-items:center; transition:all .2s; border:none; font-size:14px; }
+  .fab:hover { background:#854422; transform:translateY(-2px); }
+  .fab-secondary { background:#475569; box-shadow:0 8px 24px rgba(0,0,0,.2); }
+  .fab-secondary:hover { background:#1e293b; }
+  .toast { position:fixed; top:80px; left:50%; transform:translateX(-50%); background:#22c55e; color:white; padding:12px 24px; border-radius:9999px; z-index:200; opacity:0; transition:opacity .3s; box-shadow:0 4px 16px rgba(0,0,0,.2); pointer-events:none; }
+  .toast.show { opacity:1; }
+  .toast.error { background:#ef4444; }
+  details > summary { cursor:pointer; list-style:none; }
+  details > summary::-webkit-details-marker { display:none; }
 </style>
 </head>
 <body class="antialiased pb-32">
 
-<header class="bg-white shadow-sm sticky top-0 z-50">
-  <div class="max-w-7xl mx-auto px-5 py-4 flex flex-wrap items-center justify-between gap-3">
-    <div>
-      <h1 class="text-xl font-semibold">🔍 Verify Menu ↔ Image Mapping</h1>
-      <p class="text-xs text-slate-600 mt-1">กดปุ่ม <b>✓ ตรง / ✗ ผิด / ? ไม่แน่ใจ</b> ที่แต่ละการ์ด · กดเสร็จแล้วกด <b>"Copy ผล"</b> มุมล่างขวาส่งกลับมาได้เลย</p>
-    </div>
-    <div class="flex flex-col items-end gap-1 text-xs">
-      <div class="flex gap-2">
-        <span class="px-2 py-1 rounded bg-green-100 text-green-800">✓ ตรง: <span id="cnt-ok">0</span></span>
-        <span class="px-2 py-1 rounded bg-red-100 text-red-800">✗ ผิด: <span id="cnt-fix">0</span></span>
-        <span class="px-2 py-1 rounded bg-yellow-100 text-yellow-800">? ไม่แน่ใจ: <span id="cnt-unsure">0</span></span>
-        <span class="px-2 py-1 rounded bg-slate-100 text-slate-700">ยังไม่เช็ค: <span id="cnt-pending">40</span></span>
+<!-- ============ HEADER ============ -->
+<header class="bg-white shadow-sm sticky top-0 z-40">
+  <div class="max-w-7xl mx-auto px-5 py-4">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <h1 class="text-xl font-semibold">🔍 LiLa Cafe — Menu Verification</h1>
+        <p class="text-xs text-slate-600 mt-1">86 รายการจาก menu-data.md · เช็ค ✓/✗ · แก้ชื่อ · upload รูป · เพิ่มเมนูใหม่ · เซฟอัตโนมัติ</p>
       </div>
-      <progress id="progress" max="40" value="0" class="w-64 h-2"></progress>
+      <div class="flex flex-col items-end gap-1 text-xs">
+        <div class="flex gap-2 flex-wrap">
+          <span class="px-2 py-1 rounded bg-green-100 text-green-800">✓ <span id="cnt-ok">0</span></span>
+          <span class="px-2 py-1 rounded bg-red-100 text-red-800">✗ <span id="cnt-fix">0</span></span>
+          <span class="px-2 py-1 rounded bg-yellow-100 text-yellow-800">? <span id="cnt-unsure">0</span></span>
+          <span class="px-2 py-1 rounded bg-blue-100 text-blue-800">📷 upload <span id="cnt-upload">0</span></span>
+          <span class="px-2 py-1 rounded bg-purple-100 text-purple-800">➕ ใหม่ <span id="cnt-new">0</span></span>
+        </div>
+        <progress id="progress" max="86" value="0" class="w-72 h-2"></progress>
+      </div>
     </div>
   </div>
 </header>
 
-<main class="max-w-7xl mx-auto px-5 py-8">
-  <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-8 text-sm">
+<main class="max-w-7xl mx-auto px-5 py-6 space-y-8">
+
+  <!-- Instructions -->
+  <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm">
     💡 <b>วิธีใช้:</b>
-    <ol class="list-decimal list-inside mt-2 space-y-1 text-slate-700">
-      <li>กดปุ่ม <b>✓ ตรง</b> ถ้ารูป-ชื่อเมนูตรง — ไม่ต้องทำอะไรเพิ่ม</li>
-      <li>กดปุ่ม <b>✗ ผิด</b> → กล่อง "ชื่อจริง" เปิดขึ้น พิมพ์ชื่อที่ถูกต้องลงไป</li>
-      <li>กดปุ่ม <b>? ไม่แน่ใจ</b> → ใส่ note ในกล่อง comment (เช่น "เหมือนเมนู X แต่ไม่แน่ใจ")</li>
-      <li>การเปลี่ยนแปลง <b>เซฟอัตโนมัติ</b> ใน browser — กลับมาทำต่อได้</li>
-      <li>เสร็จแล้วกด <b>📋 Copy ผล</b> ที่มุมล่างขวา → paste ในแชทส่งให้ Claude</li>
+    <ol class="list-decimal list-inside mt-2 space-y-0.5 text-slate-700">
+      <li>ทุกการ์ดมี <b>3 ปุ่ม</b>: ✓ ตรง · ✗ ผิด · ? ไม่แน่ใจ — กดเลือก state</li>
+      <li><b>✗ ผิด</b> → กล่อง "ชื่อจริง" เปิด พิมพ์ชื่อถูกต้องลงไป</li>
+      <li><b>📷 Upload</b> → เลือกรูปจากเครื่อง · resize อัตโนมัติเป็น 1200px JPEG · เก็บใน browser</li>
+      <li><b>เมนูที่ยังไม่มีรูป</b> (no-photo) → กด upload ใส่ได้เลย</li>
+      <li><b>+ เพิ่มเมนูใหม่</b> ที่ส่วนล่างของแต่ละหมวดถ้ามีเมนูไม่อยู่ใน list</li>
+      <li>เสร็จแล้วกด <b>💾 Download ZIP</b> (มีรูป + JSON) ส่งให้ Claude หรือ <b>📋 Copy Markdown</b> paste ในแชท</li>
     </ol>
   </div>
 
-  <div id="grid" class="space-y-12"></div>
+  <!-- Orphan photos section -->
+  <details id="orphan-section" class="bg-white rounded-2xl border-2 border-blue-200 p-5" open>
+    <summary class="text-lg font-semibold flex items-center justify-between">
+      <span>📷 รูปที่ยังไม่ได้ match กับเมนูใน list (<span id="cnt-orphan">0</span>)</span>
+      <span class="text-xs text-slate-500">เลือกเมนูเพื่อ assign · ถ้าไม่ตรง keep ไว้ก่อน</span>
+    </summary>
+    <div id="orphan-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-4"></div>
+  </details>
+
+  <!-- Menu sections (rendered by JS) -->
+  <div id="grid"></div>
+
 </main>
 
-<!-- Floating action buttons -->
-<div class="fab" onclick="copyReview()">
-  📋 Copy ผล (<span id="fab-count">0</span> รายการ)
+<!-- Floating actions -->
+<div class="fab-group">
+  <button class="fab fab-secondary" onclick="copyMarkdown()">📋 Copy Markdown</button>
+  <button class="fab" onclick="downloadZip()">💾 Download ZIP (<span id="fab-zip-count">0</span>)</button>
 </div>
 
-<div id="toast" class="toast">✓ Copied!</div>
+<div id="toast" class="toast"></div>
 
 <script>
 // =========================
-// DATA: 40 menu items (current mapping)
+// DATA (auto-generated from menu-data.md)
 // =========================
 const ITEMS = [
-  // Coffee — Hot
-  { cat: "☕ Coffee — Hot", slug: "espresso-hot",        name: "เอสเปรสโซ่ (ร้อน)",        en: "Espresso · Hot",                desc: "shot glass" },
-  { cat: "☕ Coffee — Hot", slug: "latte-hot",           name: "ลาเต้ร้อน",                 en: "Hot Latte · ถ้วยเหลือง",        desc: "yellow cup + latte art" },
-  { cat: "☕ Coffee — Hot", slug: "cappuccino-hot",      name: "คาปูชิโน่ร้อน",             en: "Hot Cappuccino · ถ้วยเทา",     desc: "grey cup + latte art" },
-  { cat: "☕ Coffee — Hot", slug: "americano-hot",       name: "อเมริกาโน่ร้อน",            en: "Hot Americano · ถ้วยเหลืองเล็ก", desc: "yellow espresso cup" },
-  { cat: "☕ Coffee — Hot", slug: "flat-white-hot",      name: "Flat White (?)",            en: "ถ้วยเทาอีกใบ — ไม่แน่ใจ",        desc: "grey cup, simpler art" },
+  // Coffee (16)
+  { cat:"coffee", id:"caramel-latte-iced", name_th:"คาราเมลลาเต้", name_en:"Caramel Latte (Iced)", price:100, type:"cold" },
+  { cat:"coffee", id:"es-yen",             name_th:"Es-yen", name_en:"Es-Yen (Thai Cold Coffee)", price:95, type:"cold" },
+  { cat:"coffee", id:"americano-iced",     name_th:"อเมริกาโน่", name_en:"Americano (Iced)", price:80, type:"cold" },
+  { cat:"coffee", id:"latte-iced",         name_th:"ลาเต้", name_en:"Latte (Iced)", price:90, type:"cold" },
+  { cat:"coffee", id:"mocha-iced",         name_th:"มอคค่า", name_en:"Mocha (Iced)", price:null, type:"cold" },
+  { cat:"coffee", id:"cappuccino-iced",    name_th:"คาปูชิโน่", name_en:"Cappuccino (Iced)", price:null, type:"cold" },
+  { cat:"coffee", id:"espresso",           name_th:"เอสเปรสโซ่", name_en:"Espresso", price:null, type:"hot" },
+  { cat:"coffee", id:"latte-hot",          name_th:"ลาเต้ร้อน", name_en:"Hot Latte", price:null, type:"hot" },
+  { cat:"coffee", id:"cappuccino-hot",     name_th:"คาปูชิโน่ร้อน", name_en:"Hot Cappuccino", price:null, type:"hot" },
+  { cat:"coffee", id:"caramel-latte-hot",  name_th:"คาราเมลลาเต้ร้อน", name_en:"Hot Caramel Latte", price:null, type:"hot" },
+  { cat:"coffee", id:"mocha-hot",          name_th:"มอคค่าร้อน", name_en:"Hot Mocha", price:null, type:"hot" },
+  { cat:"coffee", id:"americano-hot",      name_th:"อเมริกาโน่ร้อน", name_en:"Hot Americano", price:null, type:"hot" },
+  { cat:"coffee", id:"irish-coffee",       name_th:"ไอริช", name_en:"Irish Coffee", price:null, type:"cold" },
+  { cat:"coffee", id:"affogato",           name_th:"แอฟโฟกาโต้", name_en:"Affogato", price:null, type:"cold" },
+  { cat:"coffee", id:"lemon-espresso",     name_th:"มะนาวเอสเปรสโซ่", name_en:"Lemon Espresso", price:null, type:"cold" },
+  { cat:"coffee", id:"black-orange",       name_th:"Black Orange", name_en:"Black Orange", price:null, type:"cold" },
 
-  // Coffee — Iced
-  { cat: "☕ Coffee — Iced", slug: "caramel-latte-iced", name: "คาราเมลลาเต้ ฿100",         en: "Caramel Latte Iced",            desc: "caramel หยดด้านนอกแก้วใส" },
-  { cat: "☕ Coffee — Iced", slug: "es-yen",             name: "Es-yen ฿95",                en: "เอสเย็น",                       desc: "beige + rosemary, fluted glass" },
-  { cat: "☕ Coffee — Iced", slug: "americano-iced",     name: "อเมริกาโน่ ฿80",            en: "Americano Iced",                desc: "ดำเข้ม + rosemary" },
-  { cat: "☕ Coffee — Iced", slug: "latte-iced",         name: "ลาเต้ ฿90",                 en: "Latte Iced",                    desc: "layered + rosemary, fluted glass" },
-  { cat: "☕ Coffee — Iced", slug: "cappuccino-iced",    name: "คาปูชิโน่ (เย็น)",          en: "Cappuccino Iced",               desc: "cinnamon dust" },
-  { cat: "☕ Coffee — Iced", slug: "es-yen-honey",       name: "Es-yen + Honey (?)",        en: "ไม่แน่ใจชื่อ",                  desc: "caramel + honeycomb garnish" },
-  { cat: "☕ Coffee — Iced", slug: "dirty-chocolate",    name: "Dirty Chocolate (?)",       en: "ไม่แน่ใจชื่อ",                  desc: "ดำ-ขาว layered" },
-  { cat: "☕ Coffee — Iced", slug: "biscoff-latte",      name: "Biscoff Latte (?)",         en: "ไม่แน่ใจชื่อ",                  desc: "cream + biscuit topping" },
-  { cat: "☕ Coffee — Iced", slug: "butterfly-pea-latte",name: "Butterfly Pea Latte (?)",   en: "ไม่แน่ใจชื่อ",                  desc: "tan + ดอกอัญชัน garnish" },
-  { cat: "☕ Coffee — Iced", slug: "almond-caramel-latte", name: "Almond Caramel Latte (?)",en: "ไม่แน่ใจชื่อ",                  desc: "caramel + almond topping" },
-  { cat: "☕ Coffee — Iced", slug: "latte-iced-floral",  name: "⚠️ ไม่ทราบชื่อ",            en: "เมนูพิเศษอะไร?",                desc: "layered + flower + rosemary" },
+  // Non-Coffee (12)
+  { cat:"noncoffee", id:"dark-chocolate-iced", name_th:"ดาร์กช็อกโกแลต", name_en:"Dark Chocolate (Iced)", price:120, type:"cold" },
+  { cat:"noncoffee", id:"choco-mint-iced",     name_th:"ช็อกมินต์", name_en:"Chocolate Mint (Iced)", price:100, type:"cold" },
+  { cat:"noncoffee", id:"dark-chocolate-hot",  name_th:"ดาร์กช็อกร้อน", name_en:"Hot Dark Chocolate", price:null, type:"hot" },
+  { cat:"noncoffee", id:"choco-mint-hot",      name_th:"ช็อกมินต์ร้อน", name_en:"Hot Chocolate Mint", price:null, type:"hot" },
+  { cat:"noncoffee", id:"fresh-milk",          name_th:"นมสด", name_en:"Fresh Milk", price:85, type:"cold" },
+  { cat:"noncoffee", id:"pink-milk",           name_th:"นมชมพู", name_en:"Pink Milk", price:null, type:"cold" },
+  { cat:"noncoffee", id:"strawberry-milk",     name_th:"นมสตรอเบอร์รี่", name_en:"Strawberry Milk", price:null, type:"cold" },
+  { cat:"noncoffee", id:"lemon-soda",          name_th:"เลม่อนโซดา", name_en:"Lemon Soda", price:null, type:"cold" },
+  { cat:"noncoffee", id:"honey-lemon",         name_th:"น้ำผึ้งมะนาว", name_en:"Honey Lemon", price:null, type:"cold" },
+  { cat:"noncoffee", id:"butterfly-pea-blended", name_th:"ดอกอัญชันปั่น", name_en:"Butterfly Pea (Blended)", price:null, type:"blended" },
+  { cat:"noncoffee", id:"cinnamon-apple-peach", name_th:"ชิมาเนเปิ้ลพีช", name_en:"Cinnamon Apple Peach", price:null, type:"cold" },
+  { cat:"noncoffee", id:"lila-lemon-blended",  name_th:"ลีลามะนาวปั่น", name_en:"LiLa Lemon (Blended)", price:null, type:"blended" },
 
-  // Matcha & Tea
-  { cat: "🍵 Matcha & Tea", slug: "matcha-iced",        name: "ชามัตฉะ (เย็น) ฿140",      en: "Matcha Iced",                   desc: "เขียวเข้ม ribbed" },
-  { cat: "🍵 Matcha & Tea", slug: "matcha-latte-iced",  name: "มัตฉะลาเต้ (เย็น)",         en: "Matcha Latte",                  desc: "layered เขียว-ขาว" },
-  { cat: "🍵 Matcha & Tea", slug: "matcha-yuzu",        name: "มัตฉะยุซุ ฿140",            en: "Matcha Yuzu",                   desc: "เขียว-ขาว-ส้ม" },
-  { cat: "🍵 Matcha & Tea", slug: "thai-tea-iced",      name: "ชาไทยเย็น",                 en: "Thai Tea",                      desc: "ส้ม + butterfly pea garnish" },
-  { cat: "🍵 Matcha & Tea", slug: "matcha-latte-cream", name: "มัตฉะลาเต้ (ไม่ layered)?", en: "ไม่แน่ใจ variant ไหน",          desc: "เขียวล้วน ribbed glass" },
-  { cat: "🍵 Matcha & Tea", slug: "matcha-shot",        name: "Matcha Shot (?)",           en: "ไม่แน่ใจชื่อ",                  desc: "เขียวล้วน แก้วสั้น" },
-  { cat: "🍵 Matcha & Tea", slug: "matcha-strawberry",  name: "Matcha Strawberry (?)",     en: "ไม่แน่ใจชื่อ",                  desc: "เขียว-ขาว-แดง layered" },
-  { cat: "🍵 Matcha & Tea", slug: "matcha-tonic",       name: "Matcha Tonic (?)",          en: "ไม่แน่ใจชื่อ",                  desc: "matcha + clear soda" },
-  { cat: "🍵 Matcha & Tea", slug: "dirty-matcha",       name: "Dirty Matcha (?)",          en: "ไม่แน่ใจชื่อ",                  desc: "matcha + chocolate drizzle" },
+  // Matcha & Tea (8)
+  { cat:"matcha", id:"matcha-iced",       name_th:"ชามัตฉะ", name_en:"Matcha (Iced)", price:140, type:"cold" },
+  { cat:"matcha", id:"matcha-yuzu",       name_th:"มัตฉะยุซุ", name_en:"Matcha Yuzu", price:140, type:"cold" },
+  { cat:"matcha", id:"matcha-cola",       name_th:"มัตฉะโคล่า", name_en:"Matcha Cola", price:null, type:"cold" },
+  { cat:"matcha", id:"matcha-latte",      name_th:"มัตฉะลาเต้", name_en:"Matcha Latte", price:null, type:"cold" },
+  { cat:"matcha", id:"cha-tong",          name_th:"ชาตอง", name_en:"Cha Tong", price:null, type:"cold" },
+  { cat:"matcha", id:"yuzu-tea",          name_th:"ชายุซุ", name_en:"Yuzu Tea", price:null, type:"cold" },
+  { cat:"matcha", id:"hot-ginger-lemon",  name_th:"ขิงมะนาวร้อน", name_en:"Hot Ginger Lemon", price:null, type:"hot" },
+  { cat:"matcha", id:"extra-shot",        name_th:"เพิ่มช็อต", name_en:"Extra Shot", price:null, type:"n/a" },
 
-  // Non-Coffee
-  { cat: "🥤 Non-Coffee",   slug: "dark-chocolate-iced",name: "ดาร์กช็อกโกแลต ฿120",       en: "Dark Chocolate Iced",           desc: "chocolate drizzle + whipped cream" },
-  { cat: "🥤 Non-Coffee",   slug: "strawberry-milk",    name: "นมสตรอเบอร์รี่",            en: "Strawberry Milk",               desc: "สตรอว์เบอร์รีจริง" },
-  { cat: "🥤 Non-Coffee",   slug: "pink-milk",          name: "นมชมพู",                    en: "Pink Milk",                     desc: "shake + whipped cream" },
-  { cat: "🥤 Non-Coffee",   slug: "honey-lemon",        name: "น้ำผึ้งมะนาว",              en: "Honey Lemon",                   desc: "honeycomb garnish" },
-  { cat: "🥤 Non-Coffee",   slug: "butterfly-pea-soda", name: "โซดาดอกอัญชัน",             en: "Butterfly Pea Soda",            desc: "สีฟ้าใส" },
+  // Signature (2)
+  { cat:"signature", id:"thai-tea-iced",  name_th:"ชาไทยเย็น", name_en:"Thai Tea (Iced)", price:null, type:"cold" },
+  { cat:"signature", id:"lila-orange",    name_th:"ลีลาส้มซ่า", name_en:"LiLa Orange Soda", price:null, type:"cold" },
 
-  // Signature / Mocktails
-  { cat: "🌟 Signature / Mocktails", slug: "lila-lemon-soda",       name: "ลีลามะนาวซ่า",          en: "LiLa Lemon Soda",         desc: "ชมพู-แดง + ดอกไม้" },
-  { cat: "🌟 Signature / Mocktails", slug: "lychee-mocktail",       name: "Lychee Mocktail (?)",   en: "ไม่แน่ใจชื่อ",            desc: "pink + ลูกชุบ garnish" },
-  { cat: "🌟 Signature / Mocktails", slug: "butterfly-pea-orange",  name: "Butterfly Pea + ส้ม (?)", en: "ไม่แน่ใจชื่อ",          desc: "ไล่สีม่วง→ส้ม" },
-  { cat: "🌟 Signature / Mocktails", slug: "watermelon-mocktail",   name: "Watermelon Mocktail (?)", en: "ไม่แน่ใจชื่อ",          desc: "hurricane glass + แตงโม" },
-  { cat: "🌟 Signature / Mocktails", slug: "passion-peach",         name: "Passion Peach (?)",     en: "ไม่แน่ใจชื่อ",            desc: "ส้ม + passion fruit" },
-  { cat: "🌟 Signature / Mocktails", slug: "rainbow-layered",       name: "Rainbow Layered (?)",   en: "ไม่แน่ใจชื่อ",            desc: "ชมพู-ขาว-ฟ้า cotton candy" },
-  { cat: "🌟 Signature / Mocktails", slug: "berry-smoothie",        name: "Berry Smoothie (?)",    en: "ไม่แน่ใจชื่อ",            desc: "red + cream layer" },
-  { cat: "🌟 Signature / Mocktails", slug: "red-mocktail",          name: "⚠️ ไม่ทราบชื่อ",        en: "Red iced",                desc: "red ribbed glass" },
+  // Soft Drinks (3)
+  { cat:"soft", id:"water",         name_th:"น้ำดื่ม", name_en:"Drinking Water", price:null, type:"n/a" },
+  { cat:"soft", id:"orange-juice",  name_th:"น้ำส้ม", name_en:"Orange Juice", price:null, type:"cold" },
+  { cat:"soft", id:"coconut-water", name_th:"น้ำมะพร้าว", name_en:"Coconut Water", price:null, type:"cold" },
 
-  // Soft Drinks
-  { cat: "🥛 Soft Drinks",  slug: "orange-juice",       name: "น้ำส้ม",                    en: "Orange Juice",                  desc: "สีส้มล้วน" },
-  { cat: "🥛 Soft Drinks",  slug: "sparkling-water",    name: "น้ำโซดา / น้ำเปล่า",       en: "Sparkling Water",               desc: "clear glass" },
+  // Bakery (8)
+  { cat:"bakery", id:"croissant",        name_th:"ครัวซองต์", name_en:"Croissant", price:100, type:"n/a" },
+  { cat:"bakery", id:"croissant-cream",  name_th:"ครัวซองต์ไส้ครีม", name_en:"Croissant w/ Cream", price:110, type:"n/a" },
+  { cat:"bakery", id:"croissant-tuna",   name_th:"ครัวซองต์ทูน่า", name_en:"Tuna Croissant", price:115, type:"n/a" },
+  { cat:"bakery", id:"chocolate-cake",   name_th:"เค้กช็อกโกแลต", name_en:"Chocolate Cake", price:null, type:"n/a" },
+  { cat:"bakery", id:"strawberry-cake",  name_th:"เค้กสตรอเบอร์รี่", name_en:"Strawberry Cake", price:null, type:"n/a" },
+  { cat:"bakery", id:"sandwich",         name_th:"แซนวิช", name_en:"Sandwich", price:null, type:"n/a" },
+  { cat:"bakery", id:"cookies",          name_th:"คุกกี้", name_en:"Cookies", price:null, type:"n/a" },
+  { cat:"bakery", id:"pie",              name_th:"พาย", name_en:"Pie", price:null, type:"n/a" },
+
+  // Snacks (5)
+  { cat:"snack", id:"fried-mackerel",   name_th:"ปลาทูทอด", name_en:"Fried Mackerel", price:null, type:"n/a" },
+  { cat:"snack", id:"fried-chicken",    name_th:"ไก่ทอด", name_en:"Fried Chicken", price:null, type:"n/a" },
+  { cat:"snack", id:"dim-sum",          name_th:"ขนมจีบ", name_en:"Dim Sum", price:null, type:"n/a" },
+  { cat:"snack", id:"spring-roll",      name_th:"ปอเปี๊ยะ", name_en:"Spring Roll", price:null, type:"n/a" },
+  { cat:"snack", id:"fried-fish-cake",  name_th:"ทอดมัน", name_en:"Thai Fish Cake", price:null, type:"n/a" },
+
+  // Thai Mains (7)
+  { cat:"thaifood", id:"namprik-jorn-shrimp",   name_th:"น้ำพริกโจรกุ้งสด + ปลาทูทอด", name_en:"Nam Prik Jorn w/ Shrimp & Fried Mackerel", price:195, type:"n/a" },
+  { cat:"thaifood", id:"spicy-pork-rib-curry",  name_th:"แกงพริกกระดูกหมู", name_en:"Spicy Pork Rib Curry", price:125, type:"n/a" },
+  { cat:"thaifood", id:"tofu-pork-soup",        name_th:"ต้มจืดเต้าหู้หมูสับ", name_en:"Tofu & Minced Pork Soup", price:90, type:"n/a" },
+  { cat:"thaifood", id:"pork-omelette-rice",    name_th:"ไข่เจียวหมูสับ (กับข้าว)", name_en:"Pork Omelette w/ Rice", price:85, type:"n/a" },
+  { cat:"thaifood", id:"fluffy-omelette-rice",  name_th:"ไข่เจียวฟู (กับข้าว)", name_en:"Fluffy Omelette w/ Rice", price:70, type:"n/a" },
+  { cat:"thaifood", id:"sour-curry-seabass",    name_th:"แกงส้มปลากะพง", name_en:"Sour Curry w/ Sea Bass", price:250, type:"n/a" },
+  { cat:"thaifood", id:"bailiang-egg",          name_th:"ใบเหลียงผัดไข่", name_en:"Stir-fried Bai Liang w/ Egg", price:100, type:"n/a" },
+
+  // Inter (3)
+  { cat:"inter", id:"spaghetti-classic",        name_th:"สปาเก็ตตี้คลาสสิก", name_en:"Classic Spaghetti", price:175, type:"n/a" },
+  { cat:"inter", id:"spaghetti-seafood-spicy",  name_th:"สปาเก็ตตี้ขี้เมาทะเล", name_en:"Spicy Seafood Spaghetti", price:179, type:"n/a" },
+  { cat:"inter", id:"spaghetti-braised-beef",   name_th:"สปาเก็ตตี้เนื้อตุ๋น", name_en:"Braised Beef Spaghetti", price:null, type:"n/a" },
+
+  // Other (7)
+  { cat:"other", id:"mango",              name_th:"มะม่วง", name_en:"Mango", price:55, type:"n/a" },
+  { cat:"other", id:"orange-lemon-fresh", name_th:"ส้ม/มะนาวสด", name_en:"Fresh Orange/Lemon", price:35, type:"n/a" },
+  { cat:"other", id:"rice-porridge",      name_th:"ข้าวต้ม", name_en:"Rice Porridge", price:15, type:"n/a" },
+  { cat:"other", id:"boiled-egg",         name_th:"ไข่ต้ม", name_en:"Boiled Egg", price:null, type:"n/a" },
+  { cat:"other", id:"poke",               name_th:"โปเก", name_en:"Poke", price:null, type:"n/a" },
+  { cat:"other", id:"khanom-jeen",        name_th:"ขนมจีน", name_en:"Khanom Jeen", price:null, type:"n/a" },
+  { cat:"other", id:"somtum-chaole",      name_th:"ส้มตำชาวเล", name_en:"Seafood Som Tum", price:null, type:"n/a" },
+
+  // Thai Dessert (15)
+  { cat:"thaidessert", id:"set-1",              name_th:"SET 1 ขนมรวม", name_en:"Thai Dessert Set #1", price:null, type:"n/a" },
+  { cat:"thaidessert", id:"set-2",              name_th:"SET 2 ขนมรวม", name_en:"Thai Dessert Set #2", price:240, type:"n/a" },
+  { cat:"thaidessert", id:"set-3-kosanak",      name_th:"SET 3 ขนมรวม + โกสนัค", name_en:"Set #3 + Khanom Kosanak", price:250, type:"n/a" },
+  { cat:"thaidessert", id:"box-4-small",        name_th:"ขนม 4 หลุม (เล็ก)", name_en:"4-Box Set (Small)", price:null, type:"n/a" },
+  { cat:"thaidessert", id:"box-4-large",        name_th:"ขนม 4 หลุม (ใหญ่)", name_en:"4-Box Set (Large)", price:null, type:"n/a" },
+  { cat:"thaidessert", id:"mongkol-set",        name_th:"ขนมมงคล (รวมเซ็ต)", name_en:"Auspicious Sweets Set", price:null, type:"n/a" },
+  { cat:"thaidessert", id:"mixed-set-small",    name_th:"รวมเซ็ต (เล็ก)", name_en:"Mixed Set (Small)", price:null, type:"n/a" },
+  { cat:"thaidessert", id:"mixed-set-large",    name_th:"รวมเซ็ต (ใหญ่)", name_en:"Mixed Set (Large)", price:null, type:"n/a" },
+  { cat:"thaidessert", id:"prig-small",         name_th:"พริก (เล็ก)", name_en:"Prik (Small)", price:null, type:"n/a" },
+  { cat:"thaidessert", id:"prig-large",         name_th:"พริก (ใหญ่)", name_en:"Prik (Large)", price:null, type:"n/a" },
+  { cat:"thaidessert", id:"look-choop",         name_th:"ลูกชุบ", name_en:"Look Choop", price:null, type:"n/a" },
+  { cat:"thaidessert", id:"khanom-jeeb-sweet",  name_th:"ขนมจีบน้ำพริกหวาน", name_en:"Sweet Dim Sum", price:null, type:"n/a" },
+  { cat:"thaidessert", id:"khanom-jeeb-spicy",  name_th:"ขนมจีบน้ำพริกเผ็ด", name_en:"Spicy Dim Sum", price:null, type:"n/a" },
+  { cat:"thaidessert", id:"kao-tom-mud-fresh",  name_th:"ข้าวต้มมัด (สด)", name_en:"Kao Tom Mud (Fresh)", price:null, type:"n/a" },
+  { cat:"thaidessert", id:"kao-tom-mud-cold",   name_th:"ข้าวต้มมัด (เย็น)", name_en:"Kao Tom Mud (Chilled)", price:75, type:"n/a" },
 ];
 
-const STORAGE_KEY = "lila-verify-v1";
+const CATEGORIES = {
+  coffee:      { label:"☕ Coffee", order:1 },
+  noncoffee:   { label:"🥤 Non-Coffee", order:2 },
+  matcha:      { label:"🍵 Matcha & Tea", order:3 },
+  signature:   { label:"🌟 Signature", order:4 },
+  soft:        { label:"🥛 Soft Drinks", order:5 },
+  bakery:      { label:"🥐 เบเกอรี่", order:6 },
+  snack:       { label:"🍟 อาหารทานเล่น", order:7 },
+  thaifood:    { label:"🍛 กับข้าว", order:8 },
+  inter:       { label:"🍝 อาหาร Inter", order:9 },
+  other:       { label:"🍽️ อื่นๆ", order:10 },
+  thaidessert: { label:"🍡 ขนมไทย (Sets)", order:11 },
+};
 
-// Load existing review state
+// Map menu_id → image file slug (when name differs)
+const SLUG_ALIASES = {
+  "espresso": "espresso-hot",
+  "butterfly-pea-blended": "butterfly-pea-soda",
+  "matcha-latte": "matcha-latte-iced",
+  "water": "sparkling-water",
+  "lila-lemon-blended": "lila-lemon-soda",
+};
+
+// Images in assets/menu/ that don't correspond to any menu_id above
+// (will appear in "orphan photos" section for re-assignment)
+const ORPHAN_PHOTOS = [
+  "butterfly-pea-orange",
+  "rainbow-layered",
+  "red-mocktail",
+  "watermelon-mocktail",
+  "passion-peach",
+  "lychee-mocktail",
+  "berry-smoothie",
+  "biscoff-latte",
+  "butterfly-pea-latte",
+  "almond-caramel-latte",
+  "dirty-chocolate",
+  "dirty-matcha",
+  "matcha-tonic",
+  "matcha-strawberry",
+  "matcha-latte-cream",
+  "matcha-shot",
+  "flat-white-hot",
+  "latte-iced-floral",
+  "es-yen-honey",
+];
+
+// =========================
+// STATE (localStorage)
+// =========================
+const STORAGE_KEY = "lila-verify-v2";
 let state = {};
 try { state = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch(e) {}
+state.items = state.items || {};       // { menu_id: { status, correct, comment, uploadedDataUrl, orphanFile } }
+state.newItems = state.newItems || []; // user-added: [{ cat, name_th, name_en, price, uploadedDataUrl }]
 
-function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function save() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+  catch(e) { showToast("⚠️ Browser storage เต็ม — ลอง Download ZIP ก่อนเพิ่มรูปใหม่", true); }
+}
 
-function setStatus(slug, status) {
-  if (!state[slug]) state[slug] = {};
-  state[slug].status = status;
+// =========================
+// IMAGE HELPERS
+// =========================
+function getPhotoUrl(menuId) {
+  const slug = SLUG_ALIASES[menuId] || menuId;
+  return `../assets/menu/lila-cafe-${slug}.jpg`;
+}
+
+async function resizeImage(file, maxW = 1200, quality = 0.75) {
+  const img = await new Promise((res, rej) => {
+    const i = new Image();
+    i.onload = () => res(i);
+    i.onerror = () => rej(new Error("Cannot load image"));
+    i.src = URL.createObjectURL(file);
+  });
+  const scale = Math.min(1, maxW / img.width);
+  const w = Math.round(img.width * scale);
+  const h = Math.round(img.height * scale);
+  const c = document.createElement("canvas");
+  c.width = w; c.height = h;
+  c.getContext("2d").drawImage(img, 0, 0, w, h);
+  return await new Promise(res => c.toBlob(res, "image/jpeg", quality));
+}
+
+function blobToDataURL(blob) {
+  return new Promise(res => {
+    const r = new FileReader();
+    r.onload = () => res(r.result);
+    r.readAsDataURL(blob);
+  });
+}
+
+async function handleUpload(menuId, file) {
+  try {
+    const blob = await resizeImage(file);
+    const dataUrl = await blobToDataURL(blob);
+    if (!state.items[menuId]) state.items[menuId] = {};
+    state.items[menuId].uploadedDataUrl = dataUrl;
+    state.items[menuId].uploadedAt = new Date().toISOString();
+    save();
+    render();
+    showToast(`✓ Upload สำเร็จ (${(blob.size/1024).toFixed(0)} KB)`);
+  } catch (e) {
+    showToast("❌ Upload error: " + e.message, true);
+  }
+}
+
+async function handleNewItemUpload(idx, file) {
+  try {
+    const blob = await resizeImage(file);
+    const dataUrl = await blobToDataURL(blob);
+    state.newItems[idx].uploadedDataUrl = dataUrl;
+    save();
+    render();
+  } catch (e) {
+    showToast("❌ Upload error: " + e.message, true);
+  }
+}
+
+// =========================
+// STATE MUTATIONS
+// =========================
+function setStatus(menuId, status) {
+  if (!state.items[menuId]) state.items[menuId] = {};
+  state.items[menuId].status = status;
   save();
   render();
 }
+function setCorrect(menuId, v) { (state.items[menuId] ||= {}).correct = v; save(); }
+function setComment(menuId, v) { (state.items[menuId] ||= {}).comment = v; save(); }
 
-function setCorrect(slug, value) {
-  if (!state[slug]) state[slug] = {};
-  state[slug].correct = value;
+function addNewItem(cat) {
+  state.newItems.push({ cat, name_th:"", name_en:"", price:"", uploadedDataUrl:null });
+  save();
+  render();
+}
+function delNewItem(idx) {
+  if (confirm("ลบเมนูใหม่นี้?")) {
+    state.newItems.splice(idx, 1);
+    save();
+    render();
+  }
+}
+function updateNewItem(idx, field, value) {
+  state.newItems[idx][field] = value;
   save();
 }
 
-function setComment(slug, value) {
-  if (!state[slug]) state[slug] = {};
-  state[slug].comment = value;
+function assignOrphan(orphanFile, menuId) {
+  if (!menuId) return;
+  if (!state.items[menuId]) state.items[menuId] = {};
+  state.items[menuId].orphanAssignment = orphanFile; // tells Claude: use this orphan file for this menu
+  state.items[menuId].status = "fix"; // mark as needing fix (so it shows in export)
+  if (!state.items[menuId].comment) {
+    state.items[menuId].comment = `รูปคือ orphan: ${orphanFile}`;
+  }
   save();
+  render();
+  showToast(`Assigned ${orphanFile} → ${menuId}`);
 }
 
+// =========================
+// RENDERING
+// =========================
 function render() {
-  // Group by category
+  renderOrphans();
+  renderGrid();
+  renderCounters();
+}
+
+function renderOrphans() {
+  const grid = document.getElementById("orphan-grid");
+  const allMenuIds = [...ITEMS.map(i => i.id), ...state.newItems.map((_,idx) => `__new${idx}`)];
+  grid.innerHTML = "";
+  let count = 0;
+  for (const slug of ORPHAN_PHOTOS) {
+    // Skip if already assigned
+    const assigned = Object.entries(state.items).find(([_, v]) => v.orphanAssignment === slug);
+    const isAssigned = !!assigned;
+
+    const card = document.createElement("div");
+    card.className = "bg-slate-50 rounded-xl overflow-hidden border " + (isAssigned ? "opacity-50 border-green-400" : "border-slate-200");
+    card.innerHTML = `
+      <img src="../assets/menu/lila-cafe-${slug}.jpg" class="w-full aspect-square object-cover"
+        onerror="this.style.display='none'" />
+      <div class="p-2 space-y-1">
+        <code class="text-[10px] text-slate-600 block truncate">${slug}</code>
+        ${isAssigned
+          ? `<div class="text-xs text-green-700">✓ assigned → ${assigned[0]}</div>`
+          : `<select class="w-full text-xs px-1 py-1 border rounded" onchange="assignOrphan('${slug}', this.value)">
+              <option value="">— เป็นเมนูอะไร? —</option>
+              ${ITEMS.map(i => `<option value="${i.id}">${i.name_th} (${i.id})</option>`).join("")}
+            </select>`
+        }
+      </div>
+    `;
+    grid.appendChild(card);
+    count++;
+  }
+  document.getElementById("cnt-orphan").textContent = count;
+}
+
+function renderGrid() {
   const grid = document.getElementById("grid");
   grid.innerHTML = "";
-  const cats = [...new Set(ITEMS.map(i => i.cat))];
-
-  let cnt = { ok: 0, fix: 0, unsure: 0, pending: 0 };
+  const cats = Object.keys(CATEGORIES).sort((a,b) => CATEGORIES[a].order - CATEGORIES[b].order);
 
   for (const cat of cats) {
-    const section = document.createElement("section");
     const catItems = ITEMS.filter(i => i.cat === cat);
-    section.innerHTML = `<h2 class="text-2xl font-semibold mb-4 border-b border-slate-300 pb-2">${cat} (${catItems.length})</h2>`;
+    const catNewItems = state.newItems.map((it, idx) => ({...it, _idx:idx})).filter(it => it.cat === cat);
+    if (catItems.length === 0 && catNewItems.length === 0) continue;
+
+    const section = document.createElement("section");
+    section.className = "bg-white rounded-2xl p-5 shadow-sm";
+    section.innerHTML = `
+      <div class="flex items-center justify-between mb-4 border-b border-slate-200 pb-2">
+        <h2 class="text-xl font-semibold">${CATEGORIES[cat].label} <span class="text-sm text-slate-400 font-normal">(${catItems.length + catNewItems.length})</span></h2>
+        <button onclick="addNewItem('${cat}')" class="text-xs px-3 py-1.5 bg-purple-600 text-white rounded-full hover:bg-purple-700">+ เพิ่มเมนูใหม่</button>
+      </div>
+    `;
     const wrap = document.createElement("div");
-    wrap.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8";
-
-    for (const item of catItems) {
-      const s = state[item.slug] || {};
-      const status = s.status || "pending";
-      cnt[status]++;
-
-      const card = document.createElement("div");
-      card.className = `card bg-white rounded-2xl overflow-hidden shadow status-${status}`;
-      card.innerHTML = `
-        <div class="flex gap-4 p-4">
-          <img src="../assets/menu/lila-cafe-${item.slug}.jpg" class="w-32 h-32 object-cover rounded-xl flex-shrink-0" />
-          <div class="flex-1 min-w-0">
-            <div class="font-medium text-sm">${item.name}</div>
-            <div class="text-xs text-slate-500 mt-0.5">${item.en}</div>
-            <div class="text-[11px] text-slate-400 mt-1 italic">${item.desc}</div>
-            <code class="text-[10px] text-slate-400 block mt-1 truncate">${item.slug}</code>
-          </div>
-        </div>
-        <div class="bg-slate-50 p-3 space-y-2 border-t">
-          <div class="flex gap-2">
-            <button class="btn-state flex-1 ${status==='ok'?'active active-ok':''}" onclick="setStatus('${item.slug}','ok')">✓ ตรง</button>
-            <button class="btn-state flex-1 ${status==='fix'?'active active-fix':''}" onclick="setStatus('${item.slug}','fix')">✗ ผิด</button>
-            <button class="btn-state flex-1 ${status==='unsure'?'active active-unsure':''}" onclick="setStatus('${item.slug}','unsure')">? ไม่แน่ใจ</button>
-          </div>
-          ${status === 'fix' ? `
-            <input type="text" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg"
-              placeholder="✏️ ชื่อจริง (TH) เช่น 'มัตฉะลาเต้ส้ม'"
-              value="${(s.correct||'').replace(/"/g,'&quot;')}"
-              oninput="setCorrect('${item.slug}', this.value)" />
-          ` : ''}
-          ${(status === 'fix' || status === 'unsure') ? `
-            <textarea class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg" rows="2"
-              placeholder="💬 comment (ถ้ามี) — เช่น 'รูปนี้เหมือนของหวานมากกว่า' หรือ 'ลบเมนูนี้ทิ้ง'"
-              oninput="setComment('${item.slug}', this.value)">${(s.comment||'')}</textarea>
-          ` : ''}
-        </div>
-      `;
-      wrap.appendChild(card);
-    }
+    wrap.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4";
+    catItems.forEach(item => wrap.appendChild(renderItemCard(item)));
+    catNewItems.forEach(item => wrap.appendChild(renderNewItemCard(item)));
     section.appendChild(wrap);
     grid.appendChild(section);
   }
-
-  // Update counters
-  document.getElementById("cnt-ok").textContent = cnt.ok;
-  document.getElementById("cnt-fix").textContent = cnt.fix;
-  document.getElementById("cnt-unsure").textContent = cnt.unsure;
-  document.getElementById("cnt-pending").textContent = cnt.pending;
-  document.getElementById("progress").value = cnt.ok + cnt.fix + cnt.unsure;
-  document.getElementById("fab-count").textContent = cnt.fix + cnt.unsure;
 }
 
-function copyReview() {
-  const fix = [];
-  const unsure = [];
+function renderItemCard(item) {
+  const s = state.items[item.id] || {};
+  const status = s.status || "pending";
+  const uploaded = !!s.uploadedDataUrl;
+  const assigned = !!s.orphanAssignment;
+
+  const card = document.createElement("div");
+  card.className = `card bg-white rounded-xl overflow-hidden border border-slate-200 status-${status}`;
+
+  // Image source priority: uploaded > orphan assignment > default slug
+  const imgSrc = uploaded
+    ? s.uploadedDataUrl
+    : (assigned ? `../assets/menu/lila-cafe-${s.orphanAssignment}.jpg` : getPhotoUrl(item.id));
+
+  card.innerHTML = `
+    <div class="flex gap-3 p-3">
+      <div class="photo-frame w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden bg-slate-100">
+        <img src="${imgSrc}" class="w-full h-full object-cover"
+          onerror="this.parentElement.innerHTML='<div class=\\'no-photo h-full\\'><div>📷</div><div>no photo</div></div>'" />
+        ${uploaded ? '<span class="badge-new">NEW</span>' : ''}
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="font-medium text-sm">${item.name_th}</div>
+        <div class="text-xs text-slate-500 mt-0.5">${item.name_en}</div>
+        <div class="text-xs text-slate-400 mt-0.5">${item.price ? `฿${item.price}` : 'ราคา ?'} · ${item.type}</div>
+        <code class="text-[10px] text-slate-400 block mt-1 truncate">${item.id}</code>
+      </div>
+    </div>
+    <div class="bg-slate-50 p-2 space-y-2 border-t">
+      <div class="flex gap-1.5">
+        <button class="btn-state ${status==='ok'?'active active-ok':''}" onclick="setStatus('${item.id}','ok')">✓ ตรง</button>
+        <button class="btn-state ${status==='fix'?'active active-fix':''}" onclick="setStatus('${item.id}','fix')">✗ ผิด</button>
+        <button class="btn-state ${status==='unsure'?'active active-unsure':''}" onclick="setStatus('${item.id}','unsure')">? ไม่แน่ใจ</button>
+      </div>
+      <div class="flex gap-1.5">
+        <label class="btn-upload ${uploaded ? 'btn-upload-replace' : ''}">
+          📷 ${uploaded ? 'Replace' : 'Upload'}
+          <input type="file" accept="image/*" class="hidden" onchange="handleUpload('${item.id}', this.files[0])" />
+        </label>
+        ${uploaded ? `<button class="text-xs px-2 py-1 text-red-600 hover:bg-red-50 rounded" onclick="clearUpload('${item.id}')">ลบ</button>` : ''}
+      </div>
+      ${status === 'fix' ? `
+        <input type="text" class="w-full px-2 py-1.5 text-sm border border-slate-300 rounded"
+          placeholder="✏️ ชื่อจริง (TH)" value="${(s.correct||'').replace(/"/g,'&quot;')}"
+          oninput="setCorrect('${item.id}', this.value)" />
+      ` : ''}
+      ${(status === 'fix' || status === 'unsure') ? `
+        <textarea class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded" rows="2"
+          placeholder="💬 comment"
+          oninput="setComment('${item.id}', this.value)">${s.comment||''}</textarea>
+      ` : ''}
+    </div>
+  `;
+  return card;
+}
+
+function renderNewItemCard(item) {
+  const idx = item._idx;
+  const card = document.createElement("div");
+  card.className = "card bg-purple-50 rounded-xl overflow-hidden border-2 border-purple-300";
+  card.innerHTML = `
+    <div class="flex gap-3 p-3">
+      <div class="photo-frame w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden bg-slate-100">
+        ${item.uploadedDataUrl
+          ? `<img src="${item.uploadedDataUrl}" class="w-full h-full object-cover" /><span class="badge-new">NEW</span>`
+          : `<div class="no-photo h-full"><div>📷</div><div>no photo</div></div>`}
+      </div>
+      <div class="flex-1 min-w-0 space-y-1.5">
+        <div class="text-[10px] text-purple-700 font-semibold">➕ NEW ITEM</div>
+        <input type="text" class="w-full px-2 py-1 text-sm border border-purple-300 rounded" placeholder="ชื่อไทย *" value="${item.name_th||''}" oninput="updateNewItem(${idx}, 'name_th', this.value)" />
+        <input type="text" class="w-full px-2 py-1 text-xs border border-purple-300 rounded" placeholder="ชื่อ EN" value="${item.name_en||''}" oninput="updateNewItem(${idx}, 'name_en', this.value)" />
+        <div class="flex gap-1">
+          <input type="number" class="w-20 px-2 py-1 text-xs border border-purple-300 rounded" placeholder="ราคา" value="${item.price||''}" oninput="updateNewItem(${idx}, 'price', this.value)" />
+          <button onclick="delNewItem(${idx})" class="text-xs px-2 text-red-600 hover:bg-red-50 rounded">ลบเมนู</button>
+        </div>
+      </div>
+    </div>
+    <div class="bg-purple-100 p-2 border-t border-purple-200">
+      <label class="btn-upload">
+        📷 ${item.uploadedDataUrl ? 'Replace' : 'Upload'}
+        <input type="file" accept="image/*" class="hidden" onchange="handleNewItemUpload(${idx}, this.files[0])" />
+      </label>
+    </div>
+  `;
+  return card;
+}
+
+function clearUpload(menuId) {
+  if (state.items[menuId]) {
+    delete state.items[menuId].uploadedDataUrl;
+    delete state.items[menuId].uploadedAt;
+    save();
+    render();
+  }
+}
+
+function renderCounters() {
+  let c = { ok:0, fix:0, unsure:0, upload:0 };
   for (const item of ITEMS) {
-    const s = state[item.slug];
-    if (!s) continue;
-    if (s.status === 'fix') {
-      let line = `- **${item.slug}** (ตอนนี้: "${item.name}")`;
-      if (s.correct) line += ` → ชื่อจริง: **"${s.correct}"**`;
-      if (s.comment) line += `\n  💬 ${s.comment}`;
-      fix.push(line);
-    } else if (s.status === 'unsure') {
-      let line = `- **${item.slug}** (ตอนนี้: "${item.name}")`;
-      if (s.comment) line += `\n  💬 ${s.comment}`;
-      unsure.push(line);
+    const s = state.items[item.id]||{};
+    if (s.status === 'ok') c.ok++;
+    else if (s.status === 'fix') c.fix++;
+    else if (s.status === 'unsure') c.unsure++;
+    if (s.uploadedDataUrl) c.upload++;
+  }
+  const cNew = state.newItems.length;
+  document.getElementById("cnt-ok").textContent = c.ok;
+  document.getElementById("cnt-fix").textContent = c.fix;
+  document.getElementById("cnt-unsure").textContent = c.unsure;
+  document.getElementById("cnt-upload").textContent = c.upload;
+  document.getElementById("cnt-new").textContent = cNew;
+  document.getElementById("progress").value = c.ok + c.fix + c.unsure;
+  document.getElementById("fab-zip-count").textContent = c.upload + cNew + Object.values(state.items).filter(v => v.status === 'fix' || v.status === 'unsure').length;
+}
+
+// =========================
+// EXPORT
+// =========================
+function buildMarkdown() {
+  let md = `# 📋 LiLa Cafe — Menu Verification Review\n\n`;
+  md += `**Date:** ${new Date().toLocaleString('th-TH')}\n\n`;
+
+  let c = { ok:0, fix:0, unsure:0, upload:0 };
+  for (const item of ITEMS) {
+    const s = state.items[item.id]||{};
+    if (s.status === 'ok') c.ok++;
+    else if (s.status === 'fix') c.fix++;
+    else if (s.status === 'unsure') c.unsure++;
+    if (s.uploadedDataUrl) c.upload++;
+  }
+  md += `**สรุป:** ✓ ${c.ok} | ✗ ${c.fix} | ? ${c.unsure} | 📷 uploaded ${c.upload} | ➕ ใหม่ ${state.newItems.length}\n\n`;
+
+  // Fixes
+  const fixes = ITEMS.filter(i => (state.items[i.id]||{}).status === 'fix');
+  if (fixes.length) {
+    md += `## ✗ ผิด — ต้องแก้ (${fixes.length})\n\n`;
+    for (const it of fixes) {
+      const s = state.items[it.id];
+      md += `- **${it.id}** (ตอนนี้: "${it.name_th}")`;
+      if (s.correct) md += ` → ชื่อจริง: **"${s.correct}"**`;
+      if (s.orphanAssignment) md += `\n  📷 ใช้ orphan: \`${s.orphanAssignment}\``;
+      if (s.uploadedDataUrl) md += `\n  📷 มีรูปใหม่ใน ZIP: \`lila-cafe-${it.id}.jpg\``;
+      if (s.comment) md += `\n  💬 ${s.comment}`;
+      md += `\n\n`;
     }
   }
 
-  let cnt = { ok: 0, fix: 0, unsure: 0, pending: 0 };
-  for (const item of ITEMS) {
-    const s = state[item.slug]||{};
-    cnt[s.status || 'pending']++;
+  // Unsures
+  const unsures = ITEMS.filter(i => (state.items[i.id]||{}).status === 'unsure');
+  if (unsures.length) {
+    md += `## ? ไม่แน่ใจ (${unsures.length})\n\n`;
+    for (const it of unsures) {
+      const s = state.items[it.id];
+      md += `- **${it.id}** ("${it.name_th}")`;
+      if (s.comment) md += `\n  💬 ${s.comment}`;
+      md += `\n\n`;
+    }
   }
 
-  const out = `# 📋 Verify Review — LiLa Cafe Menu Images
-
-**สรุป:** ✓ ตรง ${cnt.ok} | ✗ ผิด ${cnt.fix} | ? ไม่แน่ใจ ${cnt.unsure} | ยังไม่เช็ค ${cnt.pending} (จาก ${ITEMS.length} รายการ)
-
-${fix.length > 0 ? `## ✗ ผิด — ต้องแก้ (${fix.length})\n\n${fix.join('\n\n')}\n` : ''}
-${unsure.length > 0 ? `\n## ? ไม่แน่ใจ — รอ confirm (${unsure.length})\n\n${unsure.join('\n\n')}\n` : ''}
-${(fix.length === 0 && unsure.length === 0) ? '\n✅ ไม่มีอะไรต้องแก้ — mapping ทั้งหมดถูกแล้ว!' : ''}
-
-_(สร้างจาก verify.html — paste ในแชทให้ Claude แก้ต่อ)_`;
-
-  navigator.clipboard.writeText(out).then(() => {
-    const t = document.getElementById("toast");
-    t.textContent = `✓ Copied ${fix.length + unsure.length} รายการ — paste ในแชทได้เลย`;
-    t.classList.add("show");
-    setTimeout(() => t.classList.remove("show"), 3000);
-  }).catch(err => {
-    alert("Copy ไม่สำเร็จ — ลอง browser อื่น\n\nข้อความ:\n\n" + out);
+  // Uploads (separately tracked)
+  const uploadsOnly = ITEMS.filter(i => {
+    const s = state.items[i.id]||{};
+    return s.uploadedDataUrl && s.status !== 'fix';
   });
+  if (uploadsOnly.length) {
+    md += `## 📷 รูปใหม่ที่ upload (${uploadsOnly.length})\n\n`;
+    for (const it of uploadsOnly) {
+      md += `- **${it.id}** ("${it.name_th}") — \`lila-cafe-${it.id}.jpg\`\n`;
+    }
+    md += `\n`;
+  }
+
+  // New items
+  if (state.newItems.length) {
+    md += `## ➕ เมนูใหม่ที่เพิ่ม (${state.newItems.length})\n\n`;
+    for (let i = 0; i < state.newItems.length; i++) {
+      const it = state.newItems[i];
+      md += `- หมวด **${it.cat}** · ${it.name_th || '(ไม่ระบุชื่อ)'} ${it.name_en ? `/ ${it.name_en}` : ''} ${it.price ? `· ฿${it.price}` : ''}`;
+      if (it.uploadedDataUrl) md += `\n  📷 มีรูปใน ZIP: \`new-${i}.jpg\``;
+      md += `\n\n`;
+    }
+  }
+
+  md += `\n_(สร้างจาก verify.html v2 — ดู ZIP แนบสำหรับรูปและ JSON data)_\n`;
+  return md;
+}
+
+function copyMarkdown() {
+  const md = buildMarkdown();
+  navigator.clipboard.writeText(md).then(() => {
+    showToast("✓ Copied markdown ไป clipboard — paste ในแชทได้เลย");
+  }).catch(() => {
+    alert(md);
+  });
+}
+
+async function downloadZip() {
+  const zip = new JSZip();
+  zip.file("review.md", buildMarkdown());
+  zip.file("review.json", JSON.stringify({
+    date: new Date().toISOString(),
+    state: state,
+    aliases: SLUG_ALIASES,
+  }, null, 2));
+
+  const imgs = zip.folder("images");
+  let imgCount = 0;
+
+  // Uploaded photos for existing items
+  for (const item of ITEMS) {
+    const s = state.items[item.id];
+    if (s?.uploadedDataUrl) {
+      const blob = await (await fetch(s.uploadedDataUrl)).blob();
+      imgs.file(`lila-cafe-${item.id}.jpg`, blob);
+      imgCount++;
+    }
+  }
+  // Uploaded photos for new items
+  for (let i = 0; i < state.newItems.length; i++) {
+    const it = state.newItems[i];
+    if (it.uploadedDataUrl) {
+      const blob = await (await fetch(it.uploadedDataUrl)).blob();
+      imgs.file(`new-${i}-${(it.name_th||'untitled').replace(/[^a-zA-Z0-9ก-๙]+/g,'-')}.jpg`, blob);
+      imgCount++;
+    }
+  }
+
+  const content = await zip.generateAsync({type:"blob"});
+  const url = URL.createObjectURL(content);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `lila-cafe-verify-${new Date().toISOString().slice(0,10)}.zip`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast(`✓ Downloaded ZIP (${imgCount} รูป + review.md + review.json)`);
+}
+
+function showToast(msg, isError = false) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.className = "toast show" + (isError ? " error" : "");
+  setTimeout(() => t.classList.remove("show"), 3500);
 }
 
 render();

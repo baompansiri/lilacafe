@@ -37,6 +37,7 @@ Status: `todo` | `in-progress` | `blocked` | `done`
 | 0.25 | Re-map รายการที่เหลือ (~36) | todo | รอ user check verify.html รอบ 2 + ส่ง POS ละเอียดเพิ่ม |
 | 0.26 | Process รูปใหม่ใน _downloads/lila-source (164 ไฟล์) | todo | resize + map หลัง user confirm task 0.25 |
 | 0.27 | Upgrade verify.html: interactive checkboxes + edit + copy review | done | 3-state buttons + auto-save localStorage + clipboard export markdown |
+| 0.28 | Verify v2: list ครบ 86 เมนู + upload + orphan re-assign + add-new + ZIP export | done | client-side resize 1200px JPEG q75 + JSZip; เมนูที่ไม่มีรูป upload ได้, รูป orphan re-assign ได้ |
 
 ---
 
@@ -162,3 +163,4 @@ Status: `todo` | `in-progress` | `blocked` | `done`
 | 2026-05-28 | Drive photos: 40 drink shots downloaded, resized 1200px (563MB→5.3MB), mapped + integrated into prototype |
 | 2026-05-28 | SEO rename: `LILA-NNN` → `lila-cafe-{slug}.jpg` ทั้ง 40 ไฟล์ (git mv + bulk refs update) |
 | 2026-05-28 | Re-map Coffee #1-4 หลัง POS images ละเอียดมาใหม่: swap LILA-043↔053, 044↔049 ให้ตรง |
+| 2026-05-28 | verify.html v2: full 86-item list + upload-replace + orphan assign + add-new + ZIP export (JSZip + Canvas resize) |
