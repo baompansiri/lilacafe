@@ -39,6 +39,7 @@ Status: `todo` | `in-progress` | `blocked` | `done`
 | 0.27 | Upgrade verify.html: interactive checkboxes + edit + copy review | done | 3-state buttons + auto-save localStorage + clipboard export markdown |
 | 0.28 | Verify v2: list ครบ 86 เมนู + upload + orphan re-assign + add-new + ZIP export | done | client-side resize 1200px JPEG q75 + JSZip; เมนูที่ไม่มีรูป upload ได้, รูป orphan re-assign ได้ |
 | 0.29 | Verify v2: hover-zoom preview popup | done | floating 480px preview ตามเคอร์เซอร์, touch tap toggle, ESC ปิด |
+| 0.30 | Verify v2: เพิ่มช่องแก้ราคา (priceCorrection) | done | numeric input โผล่เมื่อ ✗ ผิด / ? ไม่แน่ใจ — รวมใน markdown + ZIP export |
 
 ---
 

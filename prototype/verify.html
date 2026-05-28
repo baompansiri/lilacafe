@@ -369,6 +369,7 @@ function setStatus(menuId, status) {
   render();
 }
 function setCorrect(menuId, v) { (state.items[menuId] ||= {}).correct = v; save(); }
+function setPrice(menuId, v)   { (state.items[menuId] ||= {}).priceCorrection = v; save(); }
 function setComment(menuId, v) { (state.items[menuId] ||= {}).comment = v; save(); }
 
 function addNewItem(cat) {
@@ -512,10 +513,19 @@ function renderItemCard(item) {
       </div>
       ${status === 'fix' ? `
         <input type="text" class="w-full px-2 py-1.5 text-sm border border-slate-300 rounded"
-          placeholder="✏️ ชื่อจริง (TH)" value="${(s.correct||'').replace(/"/g,'&quot;')}"
+          placeholder="✏️ ชื่อจริง (TH) — ปล่อยว่างถ้าชื่อถูกแล้ว"
+          value="${(s.correct||'').replace(/"/g,'&quot;')}"
           oninput="setCorrect('${item.id}', this.value)" />
       ` : ''}
       ${(status === 'fix' || status === 'unsure') ? `
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-slate-500 whitespace-nowrap">💰 ราคาจริง:</span>
+          <input type="number" inputmode="numeric" class="flex-1 px-2 py-1.5 text-sm border border-slate-300 rounded"
+            placeholder="${item.price ? `ปัจจุบัน ฿${item.price}` : 'ใส่ราคา (THB)'}"
+            value="${s.priceCorrection ?? ''}"
+            oninput="setPrice('${item.id}', this.value)" />
+          <span class="text-xs text-slate-400">฿</span>
+        </div>
         <textarea class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded" rows="2"
           placeholder="💬 comment"
           oninput="setComment('${item.id}', this.value)">${s.comment||''}</textarea>
@@ -607,8 +617,9 @@ function buildMarkdown() {
     md += `## ✗ ผิด — ต้องแก้ (${fixes.length})\n\n`;
     for (const it of fixes) {
       const s = state.items[it.id];
-      md += `- **${it.id}** (ตอนนี้: "${it.name_th}")`;
+      md += `- **${it.id}** (ตอนนี้: "${it.name_th}"${it.price ? ` · ฿${it.price}` : ''})`;
       if (s.correct) md += ` → ชื่อจริง: **"${s.correct}"**`;
+      if (s.priceCorrection !== undefined && s.priceCorrection !== '') md += ` · 💰 ราคา: **฿${s.priceCorrection}**`;
       if (s.orphanAssignment) md += `\n  📷 ใช้ orphan: \`${s.orphanAssignment}\``;
       if (s.uploadedDataUrl) md += `\n  📷 มีรูปใหม่ใน ZIP: \`lila-cafe-${it.id}.jpg\``;
       if (s.comment) md += `\n  💬 ${s.comment}`;
@@ -622,7 +633,8 @@ function buildMarkdown() {
     md += `## ? ไม่แน่ใจ (${unsures.length})\n\n`;
     for (const it of unsures) {
       const s = state.items[it.id];
-      md += `- **${it.id}** ("${it.name_th}")`;
+      md += `- **${it.id}** ("${it.name_th}"${it.price ? ` · ฿${it.price}` : ''})`;
+      if (s.priceCorrection !== undefined && s.priceCorrection !== '') md += ` · 💰 ราคา: **฿${s.priceCorrection}**`;
       if (s.comment) md += `\n  💬 ${s.comment}`;
       md += `\n\n`;
     }
