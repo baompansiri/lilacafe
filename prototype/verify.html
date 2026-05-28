@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Verify Menu ↔ Image Mapping | LiLa Cafe</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  body { font-family: 'IBM Plex Sans Thai', system-ui, sans-serif; background:#F5EFE4; color:#2A2520; }
+  .card { transition: transform .2s; }
+  .card:hover { transform: translateY(-4px); }
+  .badge { font-size: 11px; padding: 2px 8px; border-radius: 9999px; }
+  .strong { background:#86efac; color:#14532d; }
+  .likely { background:#fde68a; color:#78350f; }
+  .suggested { background:#bae6fd; color:#0c4a6e; }
+</style>
+</head>
+<body class="antialiased">
+
+<header class="bg-white shadow-sm sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-5 py-4 flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <h1 class="text-xl font-semibold">🔍 Verify Menu ↔ Image Mapping</h1>
+      <p class="text-xs text-slate-600 mt-1">เช็คว่าผม map ชื่อเมนูกับรูปถูกหรือไม่ — ตอบกลับว่าอันไหน <b>ผิด/แก้</b>, ที่ไม่ได้บอกถือว่าโอเค</p>
+    </div>
+    <div class="flex gap-2 text-xs">
+      <span class="badge strong">✅ strong (18)</span>
+      <span class="badge likely">🟡 likely — รอ confirm (21)</span>
+      <span class="badge suggested">🔵 suggested (1)</span>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-7xl mx-auto px-5 py-8 space-y-12">
+
+<!-- =============== COFFEE - HOT =============== -->
+<section>
+  <h2 class="text-2xl font-semibold mb-4 border-b border-slate-300 pb-2">☕ Coffee — Hot (4)</h2>
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+    <div class="card bg-white rounded-2xl overflow-hidden shadow">
+      <img src="../assets/menu/lila-cafe-espresso-hot.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">เอสเปรสโซ่ (ร้อน)</div>
+        <div class="text-xs text-slate-500">Espresso · Hot</div>
+        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">espresso-hot</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow">
+      <img src="../assets/menu/lila-cafe-latte-hot.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">ลาเต้ร้อน</div>
+        <div class="text-xs text-slate-500">Hot Latte · ถ้วยเหลือง</div>
+        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">latte-hot</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow">
+      <img src="../assets/menu/lila-cafe-cappuccino-hot.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">คาปูชิโน่ร้อน</div>
+        <div class="text-xs text-slate-500">Hot Cappuccino · ถ้วยเทา</div>
+        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">cappuccino-hot</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow">
+      <img src="../assets/menu/lila-cafe-americano-hot.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">อเมริกาโน่ร้อน</div>
+        <div class="text-xs text-slate-500">Hot Americano · ถ้วยเหลืองเล็ก</div>
+        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">americano-hot</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
+      <img src="../assets/menu/lila-cafe-flat-white-hot.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">Flat White / Cappuccino (ร้อน 2)</div>
+        <div class="text-xs text-slate-500">ถ้วยเทาอีกใบ — ใช่ flat white ไหม?</div>
+        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">flat-white-hot</code></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =============== COFFEE - ICED =============== -->
+<section>
+  <h2 class="text-2xl font-semibold mb-4 border-b border-slate-300 pb-2">☕ Coffee — Iced (12)</h2>
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+    <div class="card bg-white rounded-2xl overflow-hidden shadow">
+      <img src="../assets/menu/lila-cafe-caramel-latte-iced.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">คาราเมลลาเต้ (เย็น) ฿100</div>
+        <div class="text-xs text-slate-500">Caramel Latte Iced</div>
+        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">caramel-latte-iced</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow">
+      <img src="../assets/menu/lila-cafe-es-yen.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">Es-yen ฿95</div>
+        <div class="text-xs text-slate-500">เอสเย็น</div>
+        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">es-yen</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow">
+      <img src="../assets/menu/lila-cafe-americano-iced.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">อเมริกาโน่ (เย็น) ฿80</div>
+        <div class="text-xs text-slate-500">Americano Iced</div>
+        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">americano-iced</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow">
+      <img src="../assets/menu/lila-cafe-latte-iced.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">ลาเต้ (เย็น) ฿90</div>
+        <div class="text-xs text-slate-500">Latte Iced · cream + rosemary</div>
+        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">latte-iced</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow">
+      <img src="../assets/menu/lila-cafe-cappuccino-iced.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">คาปูชิโน่ (เย็น)</div>
+        <div class="text-xs text-slate-500">Cappuccino Iced · cinnamon dust</div>
+        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">cappuccino-iced</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
+      <img src="../assets/menu/lila-cafe-es-yen-honey.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">Es-yen + Honey?</div>
+        <div class="text-xs text-slate-500">caramel + honeycomb garnish</div>
+        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">es-yen-honey</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
+      <img src="../assets/menu/lila-cafe-caramel-macchiato.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">Caramel Macchiato?</div>
+        <div class="text-xs text-slate-500">caramel drizzle prominent</div>
+        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">caramel-macchiato</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
+      <img src="../assets/menu/lila-cafe-dirty-chocolate.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">Dirty Chocolate?</div>
+        <div class="text-xs text-slate-500">ดำ-ขาว layered</div>
+        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">dirty-chocolate</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
+      <img src="../assets/menu/lila-cafe-biscoff-latte.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">Biscoff Latte?</div>
+        <div class="text-xs text-slate-500">cream + biscuit topping</div>
+        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">biscoff-latte</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
+      <img src="../assets/menu/lila-cafe-butterfly-pea-latte.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">Butterfly Pea Latte?</div>
+        <div class="text-xs text-slate-500">tan + ดอกอัญชัน garnish</div>
+        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">butterfly-pea-latte</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
+      <img src="../assets/menu/lila-cafe-almond-caramel-latte.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">Almond Caramel Latte?</div>
+        <div class="text-xs text-slate-500">caramel + almond topping</div>
+        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">almond-caramel-latte</code></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =============== MATCHA & TEA =============== -->
+<section>
+  <h2 class="text-2xl font-semibold mb-4 border-b border-slate-300 pb-2">🍵 Matcha & Tea (9)</h2>
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+    <div class="card bg-white rounded-2xl overflow-hidden shadow">
+      <img src="../assets/menu/lila-cafe-matcha-iced.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">ชามัตฉะ (เย็น) ฿140</div>
+        <div class="text-xs text-slate-500">Matcha Iced · เขียวเข้ม</div>
+        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">matcha-iced</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow">
+      <img src="../assets/menu/lila-cafe-matcha-latte-iced.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">มัตฉะลาเต้ (เย็น)</div>
+        <div class="text-xs text-slate-500">Matcha Latte · layered เขียว-ขาว</div>
+        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">matcha-latte-iced</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow">
+      <img src="../assets/menu/lila-cafe-matcha-yuzu.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">มัตฉะยุซุ ฿140</div>
+        <div class="text-xs text-slate-500">Matcha Yuzu · เขียว-ขาว-ส้ม</div>
+        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">matcha-yuzu</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow">
+      <img src="../assets/menu/lila-cafe-thai-tea-iced.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">ชาไทยเย็น</div>
+        <div class="text-xs text-slate-500">Thai Tea · ส้ม + butterfly pea garnish</div>
+        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">thai-tea-iced</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
+      <img src="../assets/menu/lila-cafe-matcha-latte-cream.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">มัตฉะลาเต้ (ไม่ layered)?</div>
+        <div class="text-xs text-slate-500">เขียวล้วน ribbed glass</div>
+        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">matcha-latte-cream</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
+      <img src="../assets/menu/lila-cafe-matcha-shot.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">Matcha Shot?</div>
+        <div class="text-xs text-slate-500">เขียวล้วน แก้วสั้น</div>
+        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">matcha-shot</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
+      <img src="../assets/menu/lila-cafe-matcha-strawberry.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">Matcha Strawberry?</div>
+        <div class="text-xs text-slate-500">เขียว-ขาว-แดง layered</div>
+        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">matcha-strawberry</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
+      <img src="../assets/menu/lila-cafe-matcha-tonic.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">Matcha Tonic?</div>
+        <div class="text-xs text-slate-500">matcha + clear soda</div>
+        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">matcha-tonic</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
+      <img src="../assets/menu/lila-cafe-dirty-matcha.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">Dirty Matcha?</div>
+        <div class="text-xs text-slate-500">matcha + chocolate drizzle</div>
+        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">dirty-matcha</code></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =============== NON-COFFEE =============== -->
+<section>
+  <h2 class="text-2xl font-semibold mb-4 border-b border-slate-300 pb-2">🥤 Non-Coffee (5)</h2>
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+    <div class="card bg-white rounded-2xl overflow-hidden shadow">
+      <img src="../assets/menu/lila-cafe-dark-chocolate-iced.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">ดาร์กช็อกโกแลต ฿120</div>
+        <div class="text-xs text-slate-500">Dark Chocolate Iced · whipped cream</div>
+        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">dark-chocolate-iced</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow">
+      <img src="../assets/menu/lila-cafe-strawberry-milk.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">นมสตรอเบอร์รี่</div>
+        <div class="text-xs text-slate-500">Strawberry Milk · สตรอว์เบอร์รีจริง</div>
+        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">strawberry-milk</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow">
+      <img src="../assets/menu/lila-cafe-pink-milk.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">นมชมพู</div>
+        <div class="text-xs text-slate-500">Pink Milk · whipped cream</div>
+        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">pink-milk</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow">
+      <img src="../assets/menu/lila-cafe-honey-lemon.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">น้ำผึ้งมะนาว</div>
+        <div class="text-xs text-slate-500">Honey Lemon · honeycomb garnish</div>
+        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">honey-lemon</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow">
+      <img src="../assets/menu/lila-cafe-butterfly-pea-soda.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">โซดาดอกอัญชัน</div>
+        <div class="text-xs text-slate-500">Butterfly Pea Soda · ฟ้าใส</div>
+        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">butterfly-pea-soda</code></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =============== SIGNATURE / MOCKTAILS =============== -->
+<section>
+  <h2 class="text-2xl font-semibold mb-4 border-b border-slate-300 pb-2">🌟 Signature / Mocktails (8)</h2>
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+    <div class="card bg-white rounded-2xl overflow-hidden shadow">
+      <img src="../assets/menu/lila-cafe-lila-lemon-soda.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">ลีลามะนาวซ่า</div>
+        <div class="text-xs text-slate-500">LiLa Lemon Soda · ชมพู-แดง ดอกไม้</div>
+        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">lila-lemon-soda</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
+      <img src="../assets/menu/lila-cafe-lychee-mocktail.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">Lychee Mocktail?</div>
+        <div class="text-xs text-slate-500">pink + ลูกชุบ garnish</div>
+        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">lychee-mocktail</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
+      <img src="../assets/menu/lila-cafe-butterfly-pea-orange.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">Butterfly Pea + ส้ม?</div>
+        <div class="text-xs text-slate-500">ไล่สีม่วง→ส้ม</div>
+        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">butterfly-pea-orange</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
+      <img src="../assets/menu/lila-cafe-watermelon-mocktail.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">Watermelon Mocktail?</div>
+        <div class="text-xs text-slate-500">hurricane glass + แตงโม</div>
+        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">watermelon-mocktail</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
+      <img src="../assets/menu/lila-cafe-passion-peach.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">Passion Peach?</div>
+        <div class="text-xs text-slate-500">ส้ม + passion fruit</div>
+        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">passion-peach</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
+      <img src="../assets/menu/lila-cafe-rainbow-layered.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">Rainbow Layered?</div>
+        <div class="text-xs text-slate-500">ชมพู-ขาว-ฟ้า cotton candy style</div>
+        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">rainbow-layered</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
+      <img src="../assets/menu/lila-cafe-berry-smoothie.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">Berry Smoothie?</div>
+        <div class="text-xs text-slate-500">red + cream layer</div>
+        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">berry-smoothie</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-blue-300">
+      <img src="../assets/menu/lila-cafe-red-mocktail.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">Red Mocktail?</div>
+        <div class="text-xs text-slate-500">red iced — ไม่รู้ชื่อ</div>
+        <div class="flex gap-2 mt-2"><span class="badge suggested">🔵</span><code class="text-[10px] text-slate-400">red-mocktail</code></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =============== SOFT DRINKS =============== -->
+<section>
+  <h2 class="text-2xl font-semibold mb-4 border-b border-slate-300 pb-2">🥛 Soft Drinks (2)</h2>
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+    <div class="card bg-white rounded-2xl overflow-hidden shadow">
+      <img src="../assets/menu/lila-cafe-orange-juice.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">น้ำส้ม</div>
+        <div class="text-xs text-slate-500">Orange Juice</div>
+        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">orange-juice</code></div>
+      </div>
+    </div>
+    <div class="card bg-white rounded-2xl overflow-hidden shadow">
+      <img src="../assets/menu/lila-cafe-sparkling-water.jpg" class="w-full aspect-square object-cover" />
+      <div class="p-3">
+        <div class="font-medium">น้ำโซดา / น้ำเปล่า</div>
+        <div class="text-xs text-slate-500">Sparkling Water · clear glass</div>
+        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">sparkling-water</code></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =============== HOW TO REPLY =============== -->
+<section class="bg-slate-100 rounded-2xl p-6 mt-12">
+  <h3 class="font-semibold mb-3">📝 วิธีตอบกลับ</h3>
+  <p class="text-sm text-slate-700 mb-3">บอกได้แค่อันที่ <b>ผิด</b> หรืออยากแก้ — ที่ไม่ได้บอกถือว่าโอเค</p>
+  <p class="text-sm text-slate-700 mb-3">ตัวอย่าง:</p>
+  <pre class="bg-white p-3 rounded text-xs overflow-x-auto">- es-yen-honey → ที่จริงคือ "เอสเย็นนมข้น"
+- biscoff-latte → ที่จริงคือ "Lotus Biscoff"
+- rainbow-layered → ลบทิ้ง (ไม่มีเมนูนี้)
+- red-mocktail → ที่จริงคือ "Strawberry Soda"</pre>
+  <p class="text-sm text-slate-600 mt-3">ผมจะ rename file + update HTML/docs + commit ให้</p>
+</section>
+
+</main>
+
+<footer class="text-center text-xs text-slate-500 py-8">
+  Verification page — temporary tool · จะลบหลัง mapping confirm แล้ว
+</footer>
+
+</body>
+</html>
