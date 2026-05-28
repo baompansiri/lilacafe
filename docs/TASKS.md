@@ -43,6 +43,7 @@ Status: `todo` | `in-progress` | `blocked` | `done`
 | P.9 | Update home: nav/CTA/footer/cards link ไปหน้าใหม่ | done | ทุกปุ่มคลิกได้แล้ว |
 | P.10 | เพิ่ม glossy theme layer (3 ไฟล์) | done | คงโทนสีเดิม |
 | P.11 | Connect git + push GitHub repo | done | https://github.com/baompansiri/lilacafe.git |
+| P.12 | Enable GitHub Pages (เปลี่ยน repo เป็น public) | done | https://baompansiri.github.io/lilacafe/ |
 
 ---
 
