@@ -4,7 +4,8 @@
 **Downloaded:** 2026-05-28 (40 จาก ~45 ไฟล์ — Drive rate-limit ตัดบางไฟล์ รอ retry)
 **Processed:**
 - ต้นฉบับ: ~14MB / รูป (563MB total) → เก็บใน `_downloads/lila-source/` (gitignored)
-- Web-ready: 1200px / 75% JPEG → `assets/menu/LILA-NNN.jpg` (~132KB/รูป, 5.3MB total)
+- Web-ready: 1200px / 75% JPEG → `assets/menu/lila-cafe-{menu-slug}.jpg` (~132KB/รูป, 5.3MB total)
+- **SEO naming:** `lila-cafe-` prefix (brand keyword) + descriptive menu slug — Google Images friendly
 
 **Note:** ทุกรูปคือ **drinks** (กาแฟ / Non-coffee / Matcha & Tea / Signature / Soft) — ไม่มีรูปอาหาร/ขนม/ภายในร้านในชุดนี้
 
@@ -21,45 +22,45 @@
 
 | File | Category | Suggested menu_id | name (ที่เห็น) | Confidence | Note |
 |---|---|---|---|---|---|
-| LILA-007.jpg | signature | lila-lychee | Pink lychee mocktail | 🟡 | ลูกชุบ + ดอกไม้ตกแต่ง |
-| LILA-008.jpg | signature | butterfly-pea-orange | Butterfly pea + ส้ม layered | 🟡 | ไล่สีม่วง→ส้ม |
-| LILA-009.jpg | signature | watermelon-mocktail | Watermelon hurricane | 🟡 | hurricane glass + แตงโม |
-| LILA-011.jpg | noncoffee | butterfly-pea-soda | โซดาดอกอัญชัน | ✅ | สีฟ้าแน่ๆ |
-| LILA-013.jpg | noncoffee | honey-lemon | น้ำผึ้งมะนาว | ✅ | honeycomb garnish |
-| LILA-014.jpg | signature | lila-lemon-soda | LiLa Lemon Soda | ✅ | สีชมพู-แดง ดอกไม้ |
-| LILA-017.jpg | signature | passion-peach | Passion fruit + peach | 🟡 | passion fruit garnish |
-| LILA-018.jpg | signature | rainbow-layered | Cotton candy 3-color | 🟡 | ชมพู-ขาว-ฟ้า |
-| LILA-019.jpg | signature | thai-tea-iced | ชาไทยเย็น | ✅ | สีส้ม ribbed glass |
-| LILA-025.jpg | signature | red-mocktail | Red iced mocktail | 🔵 | ribbed glass |
-| LILA-026.jpg | noncoffee | dark-chocolate-iced | ดาร์กช็อกโกแลต + วิปครีม | ✅ | chocolate drizzle |
-| LILA-027.jpg | noncoffee | dirty-chocolate | Dirty chocolate / es-yen chocolate | 🟡 | layered ดำ-ขาว |
-| LILA-031.jpg | noncoffee | strawberry-milk | นมสตรอเบอร์รี่ | ✅ | สตรอว์เบอร์รีจริง |
-| LILA-033.jpg | coffee | butterfly-pea-latte | Butterfly pea latte | 🟡 | tan + ดอกอัญชัน |
-| LILA-034.jpg | coffee | almond-caramel-latte | Almond caramel latte | 🟡 | almond garnish |
-| LILA-038.jpg | noncoffee | biscoff-latte | Biscoff/Lotus latte | 🟡 | biscuit topping |
-| LILA-040.jpg | coffee | es-yen-honey | Es-yen + honeycomb | 🟡 | caramel + honeycomb |
-| LILA-043.jpg | coffee | caramel-latte-iced | คาราเมลลาเต้ (เย็น) | ✅ | layered + caramel ribbon |
-| LILA-044.jpg | coffee | latte-iced | ลาเต้ (เย็น) | ✅ | cream + rosemary |
-| LILA-046.jpg | coffee | americano-iced | อเมริกาโน่ (เย็น) | ✅ | ดำเข้ม ใส |
-| LILA-047.jpg | signature | berry-smoothie | Berry smoothie | 🟡 | red + cream layer |
-| LILA-049.jpg | coffee | es-yen | Es-yen | ✅ | caramel layered |
-| LILA-051.jpg | noncoffee | pink-milk | นมชมพู | ✅ | shake + whipped cream |
-| LILA-053.jpg | coffee | caramel-latte-alt | Caramel latte alt | 🟡 | drizzle prominent |
-| LILA-055.jpg | matcha | matcha-tonic | Matcha tonic | 🟡 | matcha + clear soda |
-| LILA-057.jpg | matcha | dirty-matcha | Dirty matcha | 🟡 | matcha + chocolate drizzle |
-| LILA-058.jpg | matcha | matcha-strawberry | Matcha strawberry | 🟡 | เขียว-ขาว-แดง |
-| LILA-059.jpg | matcha | matcha-yuzu | มัตฉะยุซุ | ✅ | เขียว-ขาว-ส้ม |
-| LILA-061.jpg | matcha | matcha-latte | มัตฉะลาเต้ | 🟡 | เขียวล้วน ribbed |
-| LILA-064.jpg | coffee | cappuccino-iced | คาปูชิโน่ (เย็น) | ✅ | cinnamon dust |
-| LILA-065.jpg | matcha | matcha-iced | ชามัตฉะ (เย็น) | ✅ | เขียวเข้ม ribbed |
-| LILA-067.jpg | matcha | matcha-shot | Matcha shot | 🟡 | เขียวล้วนสั้น |
-| LILA-070.jpg | matcha | matcha-latte-iced | มัตฉะลาเต้ (เย็น) | ✅ | layered |
-| LILA-071.jpg | soft | orange-juice | น้ำส้ม | ✅ | สีส้มล้วน |
-| LILA-073.jpg | soft | sparkling-water | น้ำโซดา / น้ำเปล่า | ✅ | clear glass |
-| LILA-075.jpg | coffee | espresso | เอสเปรสโซ่ (ร้อน) | ✅ | shot glass |
-| LILA-076.jpg | coffee | latte-hot | ลาเต้ร้อน | ✅ | yellow cup + latte art |
-| LILA-077.jpg | coffee | cappuccino-hot | คาปูชิโน่ร้อน | ✅ | grey cup + latte art |
-| LILA-078.jpg | coffee | americano-hot | อเมริกาโน่ร้อน | ✅ | yellow espresso cup |
+| lila-cafe-lychee-mocktail.jpg | signature | lila-lychee | Pink lychee mocktail | 🟡 | ลูกชุบ + ดอกไม้ตกแต่ง |
+| lila-cafe-butterfly-pea-orange.jpg | signature | butterfly-pea-orange | Butterfly pea + ส้ม layered | 🟡 | ไล่สีม่วง→ส้ม |
+| lila-cafe-watermelon-mocktail.jpg | signature | watermelon-mocktail | Watermelon hurricane | 🟡 | hurricane glass + แตงโม |
+| lila-cafe-butterfly-pea-soda.jpg | noncoffee | butterfly-pea-soda | โซดาดอกอัญชัน | ✅ | สีฟ้าแน่ๆ |
+| lila-cafe-honey-lemon.jpg | noncoffee | honey-lemon | น้ำผึ้งมะนาว | ✅ | honeycomb garnish |
+| lila-cafe-lila-lemon-soda.jpg | signature | lila-lemon-soda | LiLa Lemon Soda | ✅ | สีชมพู-แดง ดอกไม้ |
+| lila-cafe-passion-peach.jpg | signature | passion-peach | Passion fruit + peach | 🟡 | passion fruit garnish |
+| lila-cafe-rainbow-layered.jpg | signature | rainbow-layered | Cotton candy 3-color | 🟡 | ชมพู-ขาว-ฟ้า |
+| lila-cafe-thai-tea-iced.jpg | signature | thai-tea-iced | ชาไทยเย็น | ✅ | สีส้ม ribbed glass |
+| lila-cafe-red-mocktail.jpg | signature | red-mocktail | Red iced mocktail | 🔵 | ribbed glass |
+| lila-cafe-dark-chocolate-iced.jpg | noncoffee | dark-chocolate-iced | ดาร์กช็อกโกแลต + วิปครีม | ✅ | chocolate drizzle |
+| lila-cafe-dirty-chocolate.jpg | noncoffee | dirty-chocolate | Dirty chocolate / es-yen chocolate | 🟡 | layered ดำ-ขาว |
+| lila-cafe-strawberry-milk.jpg | noncoffee | strawberry-milk | นมสตรอเบอร์รี่ | ✅ | สตรอว์เบอร์รีจริง |
+| lila-cafe-butterfly-pea-latte.jpg | coffee | butterfly-pea-latte | Butterfly pea latte | 🟡 | tan + ดอกอัญชัน |
+| lila-cafe-almond-caramel-latte.jpg | coffee | almond-caramel-latte | Almond caramel latte | 🟡 | almond garnish |
+| lila-cafe-biscoff-latte.jpg | noncoffee | biscoff-latte | Biscoff/Lotus latte | 🟡 | biscuit topping |
+| lila-cafe-es-yen-honey.jpg | coffee | es-yen-honey | Es-yen + honeycomb | 🟡 | caramel + honeycomb |
+| lila-cafe-caramel-latte-iced.jpg | coffee | caramel-latte-iced | คาราเมลลาเต้ (เย็น) | ✅ | layered + caramel ribbon |
+| lila-cafe-latte-iced.jpg | coffee | latte-iced | ลาเต้ (เย็น) | ✅ | cream + rosemary |
+| lila-cafe-americano-iced.jpg | coffee | americano-iced | อเมริกาโน่ (เย็น) | ✅ | ดำเข้ม ใส |
+| lila-cafe-berry-smoothie.jpg | signature | berry-smoothie | Berry smoothie | 🟡 | red + cream layer |
+| lila-cafe-es-yen.jpg | coffee | es-yen | Es-yen | ✅ | caramel layered |
+| lila-cafe-pink-milk.jpg | noncoffee | pink-milk | นมชมพู | ✅ | shake + whipped cream |
+| lila-cafe-caramel-macchiato.jpg | coffee | caramel-latte-alt | Caramel latte alt | 🟡 | drizzle prominent |
+| lila-cafe-matcha-tonic.jpg | matcha | matcha-tonic | Matcha tonic | 🟡 | matcha + clear soda |
+| lila-cafe-dirty-matcha.jpg | matcha | dirty-matcha | Dirty matcha | 🟡 | matcha + chocolate drizzle |
+| lila-cafe-matcha-strawberry.jpg | matcha | matcha-strawberry | Matcha strawberry | 🟡 | เขียว-ขาว-แดง |
+| lila-cafe-matcha-yuzu.jpg | matcha | matcha-yuzu | มัตฉะยุซุ | ✅ | เขียว-ขาว-ส้ม |
+| lila-cafe-matcha-latte-cream.jpg | matcha | matcha-latte | มัตฉะลาเต้ | 🟡 | เขียวล้วน ribbed |
+| lila-cafe-cappuccino-iced.jpg | coffee | cappuccino-iced | คาปูชิโน่ (เย็น) | ✅ | cinnamon dust |
+| lila-cafe-matcha-iced.jpg | matcha | matcha-iced | ชามัตฉะ (เย็น) | ✅ | เขียวเข้ม ribbed |
+| lila-cafe-matcha-shot.jpg | matcha | matcha-shot | Matcha shot | 🟡 | เขียวล้วนสั้น |
+| lila-cafe-matcha-latte-iced.jpg | matcha | matcha-latte-iced | มัตฉะลาเต้ (เย็น) | ✅ | layered |
+| lila-cafe-orange-juice.jpg | soft | orange-juice | น้ำส้ม | ✅ | สีส้มล้วน |
+| lila-cafe-sparkling-water.jpg | soft | sparkling-water | น้ำโซดา / น้ำเปล่า | ✅ | clear glass |
+| lila-cafe-espresso-hot.jpg | coffee | espresso | เอสเปรสโซ่ (ร้อน) | ✅ | shot glass |
+| lila-cafe-latte-hot.jpg | coffee | latte-hot | ลาเต้ร้อน | ✅ | yellow cup + latte art |
+| lila-cafe-cappuccino-hot.jpg | coffee | cappuccino-hot | คาปูชิโน่ร้อน | ✅ | grey cup + latte art |
+| lila-cafe-americano-hot.jpg | coffee | americano-hot | อเมริกาโน่ร้อน | ✅ | yellow espresso cup |
 
 ---
 
@@ -89,9 +90,24 @@
 
 ## Image Specs
 
-- **Web (in repo):** `assets/menu/LILA-NNN.jpg` — 1200px wide, JPEG q75, ~132KB/file
+- **Web (in repo):** `assets/menu/lila-cafe-{menu-slug}.jpg` — 1200px wide, JPEG q75, ~132KB/file
 - **Original (gitignored):** `_downloads/lila-source/LILA-NNN.jpg` — ~14MB/file, full resolution
 - **Aspect ratio:** ทุกรูปเป็น **portrait** (3:4 ≈) — เหมาะกับ card layout ที่ใช้ aspect-square / aspect-[3/4] อยู่แล้ว
+
+## SEO Filename Convention
+
+```
+lila-cafe-{descriptor}.jpg
+```
+
+- **Prefix `lila-cafe-`** = brand keyword (ปรากฏใน URL เวลา Google Images index → CTR ดีขึ้น เวลาคนค้น "lila cafe")
+- **Descriptor** = ชื่อเมนูเป็น kebab-case ภาษาอังกฤษ (เช่น `caramel-latte-iced`, `thai-tea-iced`, `matcha-yuzu`)
+- **Lowercase only** + แค่ a-z, 0-9, hyphen (no spaces, no Thai char, no underscore) — รองรับ URL ทุก server ได้ปลอดภัย
+- **Match keyword ที่คนค้น:** `lila-cafe-thai-tea-iced.jpg` แท็กด้วย keyword ที่ติด search query
+- ทำงานคู่กับ:
+  - `alt=` ภาษาไทยใน `<img>` (เพื่อ user-facing + a11y + Thai search)
+  - `title=` ถ้าใส่ (เพื่อ tooltip)
+  - JSON-LD `Restaurant.menu[].image` ใน Phase 4 (จะอ้าง path ใหม่นี้)
 
 ---
 
@@ -100,3 +116,4 @@
 | Date | Change |
 |---|---|
 | 2026-05-28 | Initial mapping: 40 drink photos ระบุประเภทแล้ว, web-resize ครบ |
+| 2026-05-28 | **SEO rename:** `LILA-NNN.jpg` → `lila-cafe-{menu-slug}.jpg` (40 ไฟล์) + update references ใน HTML/docs |
