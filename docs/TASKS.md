@@ -41,6 +41,8 @@ Status: `todo` | `in-progress` | `blocked` | `done`
 | P.7 | สร้าง prototype/menu.html (10 หมวด) | done | sticky category nav |
 | P.8 | สร้าง prototype/facility.html (5 มุม detail) | done | alternating layout |
 | P.9 | Update home: nav/CTA/footer/cards link ไปหน้าใหม่ | done | ทุกปุ่มคลิกได้แล้ว |
+| P.10 | เพิ่ม glossy theme layer (3 ไฟล์) | done | คงโทนสีเดิม |
+| P.11 | Connect git + push GitHub repo | done | https://github.com/baompansiri/lilacafe.git |
 
 ---
 
@@ -140,3 +142,5 @@ Status: `todo` | `in-progress` | `blocked` | `done`
 | 2026-05-28 | สร้าง menu-data.md preliminary จาก FoodStory POS — 10 categories |
 | 2026-05-28 | New Requirement: Phase 0.5 HTML Prototype — สร้าง prototype/index.html (single-file Tailwind) |
 | 2026-05-28 | สร้าง menu.html + facility.html, อัปเดต home ให้ทุกปุ่มและการ์ดคลิกได้ |
+| 2026-05-28 | เพิ่ม glossy theme layer ทั้ง 3 ไฟล์ (sheen, frosted glass, ambient glow) |
+| 2026-05-28 | Initial commit + push GitHub: baompansiri/lilacafe |
