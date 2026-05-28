@@ -9,411 +9,269 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
   body { font-family: 'IBM Plex Sans Thai', system-ui, sans-serif; background:#F5EFE4; color:#2A2520; }
-  .card { transition: transform .2s; }
-  .card:hover { transform: translateY(-4px); }
-  .badge { font-size: 11px; padding: 2px 8px; border-radius: 9999px; }
-  .strong { background:#86efac; color:#14532d; }
-  .likely { background:#fde68a; color:#78350f; }
-  .suggested { background:#bae6fd; color:#0c4a6e; }
+  .card { transition: all .2s; }
+  .card.status-ok { background:#dcfce7; box-shadow: 0 0 0 2px #22c55e inset; }
+  .card.status-fix { background:#fee2e2; box-shadow: 0 0 0 2px #ef4444 inset; }
+  .card.status-unsure { background:#fef9c3; box-shadow: 0 0 0 2px #eab308 inset; }
+  .btn-state { font-size: 13px; padding: 5px 10px; border-radius: 8px; transition: all .2s; cursor: pointer; }
+  .btn-state.active-ok { background:#22c55e; color:white; }
+  .btn-state.active-fix { background:#ef4444; color:white; }
+  .btn-state.active-unsure { background:#eab308; color:white; }
+  .btn-state:not(.active) { background:#f1f5f9; color:#475569; }
+  .btn-state:not(.active):hover { background:#e2e8f0; }
+  input[type="text"], textarea { transition: border-color .2s; }
+  input[type="text"]:focus, textarea:focus { outline: none; border-color:#A0522D; box-shadow: 0 0 0 3px rgba(160,82,45,0.15); }
+  .fab {
+    position: fixed; bottom: 20px; right: 20px; z-index: 100;
+    background: #A0522D; color: white; padding: 14px 24px; border-radius: 9999px;
+    box-shadow: 0 8px 24px rgba(160,82,45,.4); cursor: pointer;
+    font-weight: 500; display: flex; gap: 10px; align-items: center;
+    transition: all .2s;
+  }
+  .fab:hover { background:#854422; transform: translateY(-2px); box-shadow: 0 12px 32px rgba(160,82,45,.5); }
+  .toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background:#22c55e; color:white; padding: 12px 24px; border-radius: 9999px; z-index: 200; opacity: 0; transition: opacity .3s; box-shadow: 0 4px 16px rgba(0,0,0,.2); }
+  .toast.show { opacity: 1; }
 </style>
 </head>
-<body class="antialiased">
+<body class="antialiased pb-32">
 
 <header class="bg-white shadow-sm sticky top-0 z-50">
   <div class="max-w-7xl mx-auto px-5 py-4 flex flex-wrap items-center justify-between gap-3">
     <div>
       <h1 class="text-xl font-semibold">🔍 Verify Menu ↔ Image Mapping</h1>
-      <p class="text-xs text-slate-600 mt-1">เช็คว่าผม map ชื่อเมนูกับรูปถูกหรือไม่ — ตอบกลับว่าอันไหน <b>ผิด/แก้</b>, ที่ไม่ได้บอกถือว่าโอเค</p>
+      <p class="text-xs text-slate-600 mt-1">กดปุ่ม <b>✓ ตรง / ✗ ผิด / ? ไม่แน่ใจ</b> ที่แต่ละการ์ด · กดเสร็จแล้วกด <b>"Copy ผล"</b> มุมล่างขวาส่งกลับมาได้เลย</p>
     </div>
-    <div class="flex gap-2 text-xs">
-      <span class="badge strong">✅ strong (18)</span>
-      <span class="badge likely">🟡 likely — รอ confirm (21)</span>
-      <span class="badge suggested">🔵 suggested (1)</span>
+    <div class="flex flex-col items-end gap-1 text-xs">
+      <div class="flex gap-2">
+        <span class="px-2 py-1 rounded bg-green-100 text-green-800">✓ ตรง: <span id="cnt-ok">0</span></span>
+        <span class="px-2 py-1 rounded bg-red-100 text-red-800">✗ ผิด: <span id="cnt-fix">0</span></span>
+        <span class="px-2 py-1 rounded bg-yellow-100 text-yellow-800">? ไม่แน่ใจ: <span id="cnt-unsure">0</span></span>
+        <span class="px-2 py-1 rounded bg-slate-100 text-slate-700">ยังไม่เช็ค: <span id="cnt-pending">40</span></span>
+      </div>
+      <progress id="progress" max="40" value="0" class="w-64 h-2"></progress>
     </div>
   </div>
 </header>
 
-<main class="max-w-7xl mx-auto px-5 py-8 space-y-12">
-
-<!-- =============== COFFEE - HOT =============== -->
-<section>
-  <h2 class="text-2xl font-semibold mb-4 border-b border-slate-300 pb-2">☕ Coffee — Hot (4)</h2>
-  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-    <div class="card bg-white rounded-2xl overflow-hidden shadow">
-      <img src="../assets/menu/lila-cafe-espresso-hot.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">เอสเปรสโซ่ (ร้อน)</div>
-        <div class="text-xs text-slate-500">Espresso · Hot</div>
-        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">espresso-hot</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow">
-      <img src="../assets/menu/lila-cafe-latte-hot.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">ลาเต้ร้อน</div>
-        <div class="text-xs text-slate-500">Hot Latte · ถ้วยเหลือง</div>
-        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">latte-hot</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow">
-      <img src="../assets/menu/lila-cafe-cappuccino-hot.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">คาปูชิโน่ร้อน</div>
-        <div class="text-xs text-slate-500">Hot Cappuccino · ถ้วยเทา</div>
-        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">cappuccino-hot</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow">
-      <img src="../assets/menu/lila-cafe-americano-hot.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">อเมริกาโน่ร้อน</div>
-        <div class="text-xs text-slate-500">Hot Americano · ถ้วยเหลืองเล็ก</div>
-        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">americano-hot</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
-      <img src="../assets/menu/lila-cafe-flat-white-hot.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">Flat White / Cappuccino (ร้อน 2)</div>
-        <div class="text-xs text-slate-500">ถ้วยเทาอีกใบ — ใช่ flat white ไหม?</div>
-        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">flat-white-hot</code></div>
-      </div>
-    </div>
+<main class="max-w-7xl mx-auto px-5 py-8">
+  <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-8 text-sm">
+    💡 <b>วิธีใช้:</b>
+    <ol class="list-decimal list-inside mt-2 space-y-1 text-slate-700">
+      <li>กดปุ่ม <b>✓ ตรง</b> ถ้ารูป-ชื่อเมนูตรง — ไม่ต้องทำอะไรเพิ่ม</li>
+      <li>กดปุ่ม <b>✗ ผิด</b> → กล่อง "ชื่อจริง" เปิดขึ้น พิมพ์ชื่อที่ถูกต้องลงไป</li>
+      <li>กดปุ่ม <b>? ไม่แน่ใจ</b> → ใส่ note ในกล่อง comment (เช่น "เหมือนเมนู X แต่ไม่แน่ใจ")</li>
+      <li>การเปลี่ยนแปลง <b>เซฟอัตโนมัติ</b> ใน browser — กลับมาทำต่อได้</li>
+      <li>เสร็จแล้วกด <b>📋 Copy ผล</b> ที่มุมล่างขวา → paste ในแชทส่งให้ Claude</li>
+    </ol>
   </div>
-</section>
 
-<!-- =============== COFFEE - ICED =============== -->
-<section>
-  <h2 class="text-2xl font-semibold mb-4 border-b border-slate-300 pb-2">☕ Coffee — Iced (12)</h2>
-  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-    <div class="card bg-white rounded-2xl overflow-hidden shadow">
-      <img src="../assets/menu/lila-cafe-caramel-latte-iced.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">คาราเมลลาเต้ (เย็น) ฿100</div>
-        <div class="text-xs text-slate-500">Caramel Latte Iced</div>
-        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">caramel-latte-iced</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow">
-      <img src="../assets/menu/lila-cafe-es-yen.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">Es-yen ฿95</div>
-        <div class="text-xs text-slate-500">เอสเย็น · beige + rosemary</div>
-        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">es-yen</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow">
-      <img src="../assets/menu/lila-cafe-americano-iced.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">อเมริกาโน่ (เย็น) ฿80</div>
-        <div class="text-xs text-slate-500">Americano Iced</div>
-        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">americano-iced</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow">
-      <img src="../assets/menu/lila-cafe-latte-iced.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">ลาเต้ (เย็น) ฿90</div>
-        <div class="text-xs text-slate-500">Latte Iced · layered + rosemary</div>
-        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">latte-iced</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow">
-      <img src="../assets/menu/lila-cafe-cappuccino-iced.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">คาปูชิโน่ (เย็น)</div>
-        <div class="text-xs text-slate-500">Cappuccino Iced · cinnamon dust</div>
-        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">cappuccino-iced</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
-      <img src="../assets/menu/lila-cafe-es-yen-honey.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">Es-yen + Honey?</div>
-        <div class="text-xs text-slate-500">caramel + honeycomb garnish</div>
-        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">es-yen-honey</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-blue-300">
-      <img src="../assets/menu/lila-cafe-latte-iced-floral.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">⚠️ ไม่ทราบชื่อ — รอ confirm</div>
-        <div class="text-xs text-slate-500">layered + flower + rosemary — เมนูพิเศษอะไร?</div>
-        <div class="flex gap-2 mt-2"><span class="badge suggested">🔵</span><code class="text-[10px] text-slate-400">latte-iced-floral</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
-      <img src="../assets/menu/lila-cafe-dirty-chocolate.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">Dirty Chocolate?</div>
-        <div class="text-xs text-slate-500">ดำ-ขาว layered</div>
-        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">dirty-chocolate</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
-      <img src="../assets/menu/lila-cafe-biscoff-latte.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">Biscoff Latte?</div>
-        <div class="text-xs text-slate-500">cream + biscuit topping</div>
-        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">biscoff-latte</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
-      <img src="../assets/menu/lila-cafe-butterfly-pea-latte.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">Butterfly Pea Latte?</div>
-        <div class="text-xs text-slate-500">tan + ดอกอัญชัน garnish</div>
-        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">butterfly-pea-latte</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
-      <img src="../assets/menu/lila-cafe-almond-caramel-latte.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">Almond Caramel Latte?</div>
-        <div class="text-xs text-slate-500">caramel + almond topping</div>
-        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">almond-caramel-latte</code></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- =============== MATCHA & TEA =============== -->
-<section>
-  <h2 class="text-2xl font-semibold mb-4 border-b border-slate-300 pb-2">🍵 Matcha & Tea (9)</h2>
-  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-    <div class="card bg-white rounded-2xl overflow-hidden shadow">
-      <img src="../assets/menu/lila-cafe-matcha-iced.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">ชามัตฉะ (เย็น) ฿140</div>
-        <div class="text-xs text-slate-500">Matcha Iced · เขียวเข้ม</div>
-        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">matcha-iced</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow">
-      <img src="../assets/menu/lila-cafe-matcha-latte-iced.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">มัตฉะลาเต้ (เย็น)</div>
-        <div class="text-xs text-slate-500">Matcha Latte · layered เขียว-ขาว</div>
-        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">matcha-latte-iced</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow">
-      <img src="../assets/menu/lila-cafe-matcha-yuzu.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">มัตฉะยุซุ ฿140</div>
-        <div class="text-xs text-slate-500">Matcha Yuzu · เขียว-ขาว-ส้ม</div>
-        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">matcha-yuzu</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow">
-      <img src="../assets/menu/lila-cafe-thai-tea-iced.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">ชาไทยเย็น</div>
-        <div class="text-xs text-slate-500">Thai Tea · ส้ม + butterfly pea garnish</div>
-        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">thai-tea-iced</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
-      <img src="../assets/menu/lila-cafe-matcha-latte-cream.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">มัตฉะลาเต้ (ไม่ layered)?</div>
-        <div class="text-xs text-slate-500">เขียวล้วน ribbed glass</div>
-        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">matcha-latte-cream</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
-      <img src="../assets/menu/lila-cafe-matcha-shot.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">Matcha Shot?</div>
-        <div class="text-xs text-slate-500">เขียวล้วน แก้วสั้น</div>
-        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">matcha-shot</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
-      <img src="../assets/menu/lila-cafe-matcha-strawberry.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">Matcha Strawberry?</div>
-        <div class="text-xs text-slate-500">เขียว-ขาว-แดง layered</div>
-        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">matcha-strawberry</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
-      <img src="../assets/menu/lila-cafe-matcha-tonic.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">Matcha Tonic?</div>
-        <div class="text-xs text-slate-500">matcha + clear soda</div>
-        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">matcha-tonic</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
-      <img src="../assets/menu/lila-cafe-dirty-matcha.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">Dirty Matcha?</div>
-        <div class="text-xs text-slate-500">matcha + chocolate drizzle</div>
-        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">dirty-matcha</code></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- =============== NON-COFFEE =============== -->
-<section>
-  <h2 class="text-2xl font-semibold mb-4 border-b border-slate-300 pb-2">🥤 Non-Coffee (5)</h2>
-  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-    <div class="card bg-white rounded-2xl overflow-hidden shadow">
-      <img src="../assets/menu/lila-cafe-dark-chocolate-iced.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">ดาร์กช็อกโกแลต ฿120</div>
-        <div class="text-xs text-slate-500">Dark Chocolate Iced · whipped cream</div>
-        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">dark-chocolate-iced</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow">
-      <img src="../assets/menu/lila-cafe-strawberry-milk.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">นมสตรอเบอร์รี่</div>
-        <div class="text-xs text-slate-500">Strawberry Milk · สตรอว์เบอร์รีจริง</div>
-        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">strawberry-milk</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow">
-      <img src="../assets/menu/lila-cafe-pink-milk.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">นมชมพู</div>
-        <div class="text-xs text-slate-500">Pink Milk · whipped cream</div>
-        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">pink-milk</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow">
-      <img src="../assets/menu/lila-cafe-honey-lemon.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">น้ำผึ้งมะนาว</div>
-        <div class="text-xs text-slate-500">Honey Lemon · honeycomb garnish</div>
-        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">honey-lemon</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow">
-      <img src="../assets/menu/lila-cafe-butterfly-pea-soda.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">โซดาดอกอัญชัน</div>
-        <div class="text-xs text-slate-500">Butterfly Pea Soda · ฟ้าใส</div>
-        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">butterfly-pea-soda</code></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- =============== SIGNATURE / MOCKTAILS =============== -->
-<section>
-  <h2 class="text-2xl font-semibold mb-4 border-b border-slate-300 pb-2">🌟 Signature / Mocktails (8)</h2>
-  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-    <div class="card bg-white rounded-2xl overflow-hidden shadow">
-      <img src="../assets/menu/lila-cafe-lila-lemon-soda.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">ลีลามะนาวซ่า</div>
-        <div class="text-xs text-slate-500">LiLa Lemon Soda · ชมพู-แดง ดอกไม้</div>
-        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">lila-lemon-soda</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
-      <img src="../assets/menu/lila-cafe-lychee-mocktail.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">Lychee Mocktail?</div>
-        <div class="text-xs text-slate-500">pink + ลูกชุบ garnish</div>
-        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">lychee-mocktail</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
-      <img src="../assets/menu/lila-cafe-butterfly-pea-orange.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">Butterfly Pea + ส้ม?</div>
-        <div class="text-xs text-slate-500">ไล่สีม่วง→ส้ม</div>
-        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">butterfly-pea-orange</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
-      <img src="../assets/menu/lila-cafe-watermelon-mocktail.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">Watermelon Mocktail?</div>
-        <div class="text-xs text-slate-500">hurricane glass + แตงโม</div>
-        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">watermelon-mocktail</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
-      <img src="../assets/menu/lila-cafe-passion-peach.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">Passion Peach?</div>
-        <div class="text-xs text-slate-500">ส้ม + passion fruit</div>
-        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">passion-peach</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
-      <img src="../assets/menu/lila-cafe-rainbow-layered.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">Rainbow Layered?</div>
-        <div class="text-xs text-slate-500">ชมพู-ขาว-ฟ้า cotton candy style</div>
-        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">rainbow-layered</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-yellow-400">
-      <img src="../assets/menu/lila-cafe-berry-smoothie.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">Berry Smoothie?</div>
-        <div class="text-xs text-slate-500">red + cream layer</div>
-        <div class="flex gap-2 mt-2"><span class="badge likely">🟡</span><code class="text-[10px] text-slate-400">berry-smoothie</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow ring-2 ring-blue-300">
-      <img src="../assets/menu/lila-cafe-red-mocktail.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">Red Mocktail?</div>
-        <div class="text-xs text-slate-500">red iced — ไม่รู้ชื่อ</div>
-        <div class="flex gap-2 mt-2"><span class="badge suggested">🔵</span><code class="text-[10px] text-slate-400">red-mocktail</code></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- =============== SOFT DRINKS =============== -->
-<section>
-  <h2 class="text-2xl font-semibold mb-4 border-b border-slate-300 pb-2">🥛 Soft Drinks (2)</h2>
-  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-    <div class="card bg-white rounded-2xl overflow-hidden shadow">
-      <img src="../assets/menu/lila-cafe-orange-juice.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">น้ำส้ม</div>
-        <div class="text-xs text-slate-500">Orange Juice</div>
-        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">orange-juice</code></div>
-      </div>
-    </div>
-    <div class="card bg-white rounded-2xl overflow-hidden shadow">
-      <img src="../assets/menu/lila-cafe-sparkling-water.jpg" class="w-full aspect-square object-cover" />
-      <div class="p-3">
-        <div class="font-medium">น้ำโซดา / น้ำเปล่า</div>
-        <div class="text-xs text-slate-500">Sparkling Water · clear glass</div>
-        <div class="flex gap-2 mt-2"><span class="badge strong">✅</span><code class="text-[10px] text-slate-400">sparkling-water</code></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- =============== HOW TO REPLY =============== -->
-<section class="bg-slate-100 rounded-2xl p-6 mt-12">
-  <h3 class="font-semibold mb-3">📝 วิธีตอบกลับ</h3>
-  <p class="text-sm text-slate-700 mb-3">บอกได้แค่อันที่ <b>ผิด</b> หรืออยากแก้ — ที่ไม่ได้บอกถือว่าโอเค</p>
-  <p class="text-sm text-slate-700 mb-3">ตัวอย่าง:</p>
-  <pre class="bg-white p-3 rounded text-xs overflow-x-auto">- es-yen-honey → ที่จริงคือ "เอสเย็นนมข้น"
-- biscoff-latte → ที่จริงคือ "Lotus Biscoff"
-- rainbow-layered → ลบทิ้ง (ไม่มีเมนูนี้)
-- red-mocktail → ที่จริงคือ "Strawberry Soda"</pre>
-  <p class="text-sm text-slate-600 mt-3">ผมจะ rename file + update HTML/docs + commit ให้</p>
-</section>
-
+  <div id="grid" class="space-y-12"></div>
 </main>
 
-<footer class="text-center text-xs text-slate-500 py-8">
-  Verification page — temporary tool · จะลบหลัง mapping confirm แล้ว
-</footer>
+<!-- Floating action buttons -->
+<div class="fab" onclick="copyReview()">
+  📋 Copy ผล (<span id="fab-count">0</span> รายการ)
+</div>
+
+<div id="toast" class="toast">✓ Copied!</div>
+
+<script>
+// =========================
+// DATA: 40 menu items (current mapping)
+// =========================
+const ITEMS = [
+  // Coffee — Hot
+  { cat: "☕ Coffee — Hot", slug: "espresso-hot",        name: "เอสเปรสโซ่ (ร้อน)",        en: "Espresso · Hot",                desc: "shot glass" },
+  { cat: "☕ Coffee — Hot", slug: "latte-hot",           name: "ลาเต้ร้อน",                 en: "Hot Latte · ถ้วยเหลือง",        desc: "yellow cup + latte art" },
+  { cat: "☕ Coffee — Hot", slug: "cappuccino-hot",      name: "คาปูชิโน่ร้อน",             en: "Hot Cappuccino · ถ้วยเทา",     desc: "grey cup + latte art" },
+  { cat: "☕ Coffee — Hot", slug: "americano-hot",       name: "อเมริกาโน่ร้อน",            en: "Hot Americano · ถ้วยเหลืองเล็ก", desc: "yellow espresso cup" },
+  { cat: "☕ Coffee — Hot", slug: "flat-white-hot",      name: "Flat White (?)",            en: "ถ้วยเทาอีกใบ — ไม่แน่ใจ",        desc: "grey cup, simpler art" },
+
+  // Coffee — Iced
+  { cat: "☕ Coffee — Iced", slug: "caramel-latte-iced", name: "คาราเมลลาเต้ ฿100",         en: "Caramel Latte Iced",            desc: "caramel หยดด้านนอกแก้วใส" },
+  { cat: "☕ Coffee — Iced", slug: "es-yen",             name: "Es-yen ฿95",                en: "เอสเย็น",                       desc: "beige + rosemary, fluted glass" },
+  { cat: "☕ Coffee — Iced", slug: "americano-iced",     name: "อเมริกาโน่ ฿80",            en: "Americano Iced",                desc: "ดำเข้ม + rosemary" },
+  { cat: "☕ Coffee — Iced", slug: "latte-iced",         name: "ลาเต้ ฿90",                 en: "Latte Iced",                    desc: "layered + rosemary, fluted glass" },
+  { cat: "☕ Coffee — Iced", slug: "cappuccino-iced",    name: "คาปูชิโน่ (เย็น)",          en: "Cappuccino Iced",               desc: "cinnamon dust" },
+  { cat: "☕ Coffee — Iced", slug: "es-yen-honey",       name: "Es-yen + Honey (?)",        en: "ไม่แน่ใจชื่อ",                  desc: "caramel + honeycomb garnish" },
+  { cat: "☕ Coffee — Iced", slug: "dirty-chocolate",    name: "Dirty Chocolate (?)",       en: "ไม่แน่ใจชื่อ",                  desc: "ดำ-ขาว layered" },
+  { cat: "☕ Coffee — Iced", slug: "biscoff-latte",      name: "Biscoff Latte (?)",         en: "ไม่แน่ใจชื่อ",                  desc: "cream + biscuit topping" },
+  { cat: "☕ Coffee — Iced", slug: "butterfly-pea-latte",name: "Butterfly Pea Latte (?)",   en: "ไม่แน่ใจชื่อ",                  desc: "tan + ดอกอัญชัน garnish" },
+  { cat: "☕ Coffee — Iced", slug: "almond-caramel-latte", name: "Almond Caramel Latte (?)",en: "ไม่แน่ใจชื่อ",                  desc: "caramel + almond topping" },
+  { cat: "☕ Coffee — Iced", slug: "latte-iced-floral",  name: "⚠️ ไม่ทราบชื่อ",            en: "เมนูพิเศษอะไร?",                desc: "layered + flower + rosemary" },
+
+  // Matcha & Tea
+  { cat: "🍵 Matcha & Tea", slug: "matcha-iced",        name: "ชามัตฉะ (เย็น) ฿140",      en: "Matcha Iced",                   desc: "เขียวเข้ม ribbed" },
+  { cat: "🍵 Matcha & Tea", slug: "matcha-latte-iced",  name: "มัตฉะลาเต้ (เย็น)",         en: "Matcha Latte",                  desc: "layered เขียว-ขาว" },
+  { cat: "🍵 Matcha & Tea", slug: "matcha-yuzu",        name: "มัตฉะยุซุ ฿140",            en: "Matcha Yuzu",                   desc: "เขียว-ขาว-ส้ม" },
+  { cat: "🍵 Matcha & Tea", slug: "thai-tea-iced",      name: "ชาไทยเย็น",                 en: "Thai Tea",                      desc: "ส้ม + butterfly pea garnish" },
+  { cat: "🍵 Matcha & Tea", slug: "matcha-latte-cream", name: "มัตฉะลาเต้ (ไม่ layered)?", en: "ไม่แน่ใจ variant ไหน",          desc: "เขียวล้วน ribbed glass" },
+  { cat: "🍵 Matcha & Tea", slug: "matcha-shot",        name: "Matcha Shot (?)",           en: "ไม่แน่ใจชื่อ",                  desc: "เขียวล้วน แก้วสั้น" },
+  { cat: "🍵 Matcha & Tea", slug: "matcha-strawberry",  name: "Matcha Strawberry (?)",     en: "ไม่แน่ใจชื่อ",                  desc: "เขียว-ขาว-แดง layered" },
+  { cat: "🍵 Matcha & Tea", slug: "matcha-tonic",       name: "Matcha Tonic (?)",          en: "ไม่แน่ใจชื่อ",                  desc: "matcha + clear soda" },
+  { cat: "🍵 Matcha & Tea", slug: "dirty-matcha",       name: "Dirty Matcha (?)",          en: "ไม่แน่ใจชื่อ",                  desc: "matcha + chocolate drizzle" },
+
+  // Non-Coffee
+  { cat: "🥤 Non-Coffee",   slug: "dark-chocolate-iced",name: "ดาร์กช็อกโกแลต ฿120",       en: "Dark Chocolate Iced",           desc: "chocolate drizzle + whipped cream" },
+  { cat: "🥤 Non-Coffee",   slug: "strawberry-milk",    name: "นมสตรอเบอร์รี่",            en: "Strawberry Milk",               desc: "สตรอว์เบอร์รีจริง" },
+  { cat: "🥤 Non-Coffee",   slug: "pink-milk",          name: "นมชมพู",                    en: "Pink Milk",                     desc: "shake + whipped cream" },
+  { cat: "🥤 Non-Coffee",   slug: "honey-lemon",        name: "น้ำผึ้งมะนาว",              en: "Honey Lemon",                   desc: "honeycomb garnish" },
+  { cat: "🥤 Non-Coffee",   slug: "butterfly-pea-soda", name: "โซดาดอกอัญชัน",             en: "Butterfly Pea Soda",            desc: "สีฟ้าใส" },
+
+  // Signature / Mocktails
+  { cat: "🌟 Signature / Mocktails", slug: "lila-lemon-soda",       name: "ลีลามะนาวซ่า",          en: "LiLa Lemon Soda",         desc: "ชมพู-แดง + ดอกไม้" },
+  { cat: "🌟 Signature / Mocktails", slug: "lychee-mocktail",       name: "Lychee Mocktail (?)",   en: "ไม่แน่ใจชื่อ",            desc: "pink + ลูกชุบ garnish" },
+  { cat: "🌟 Signature / Mocktails", slug: "butterfly-pea-orange",  name: "Butterfly Pea + ส้ม (?)", en: "ไม่แน่ใจชื่อ",          desc: "ไล่สีม่วง→ส้ม" },
+  { cat: "🌟 Signature / Mocktails", slug: "watermelon-mocktail",   name: "Watermelon Mocktail (?)", en: "ไม่แน่ใจชื่อ",          desc: "hurricane glass + แตงโม" },
+  { cat: "🌟 Signature / Mocktails", slug: "passion-peach",         name: "Passion Peach (?)",     en: "ไม่แน่ใจชื่อ",            desc: "ส้ม + passion fruit" },
+  { cat: "🌟 Signature / Mocktails", slug: "rainbow-layered",       name: "Rainbow Layered (?)",   en: "ไม่แน่ใจชื่อ",            desc: "ชมพู-ขาว-ฟ้า cotton candy" },
+  { cat: "🌟 Signature / Mocktails", slug: "berry-smoothie",        name: "Berry Smoothie (?)",    en: "ไม่แน่ใจชื่อ",            desc: "red + cream layer" },
+  { cat: "🌟 Signature / Mocktails", slug: "red-mocktail",          name: "⚠️ ไม่ทราบชื่อ",        en: "Red iced",                desc: "red ribbed glass" },
+
+  // Soft Drinks
+  { cat: "🥛 Soft Drinks",  slug: "orange-juice",       name: "น้ำส้ม",                    en: "Orange Juice",                  desc: "สีส้มล้วน" },
+  { cat: "🥛 Soft Drinks",  slug: "sparkling-water",    name: "น้ำโซดา / น้ำเปล่า",       en: "Sparkling Water",               desc: "clear glass" },
+];
+
+const STORAGE_KEY = "lila-verify-v1";
+
+// Load existing review state
+let state = {};
+try { state = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch(e) {}
+
+function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+function setStatus(slug, status) {
+  if (!state[slug]) state[slug] = {};
+  state[slug].status = status;
+  save();
+  render();
+}
+
+function setCorrect(slug, value) {
+  if (!state[slug]) state[slug] = {};
+  state[slug].correct = value;
+  save();
+}
+
+function setComment(slug, value) {
+  if (!state[slug]) state[slug] = {};
+  state[slug].comment = value;
+  save();
+}
+
+function render() {
+  // Group by category
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
+  const cats = [...new Set(ITEMS.map(i => i.cat))];
+
+  let cnt = { ok: 0, fix: 0, unsure: 0, pending: 0 };
+
+  for (const cat of cats) {
+    const section = document.createElement("section");
+    const catItems = ITEMS.filter(i => i.cat === cat);
+    section.innerHTML = `<h2 class="text-2xl font-semibold mb-4 border-b border-slate-300 pb-2">${cat} (${catItems.length})</h2>`;
+    const wrap = document.createElement("div");
+    wrap.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8";
+
+    for (const item of catItems) {
+      const s = state[item.slug] || {};
+      const status = s.status || "pending";
+      cnt[status]++;
+
+      const card = document.createElement("div");
+      card.className = `card bg-white rounded-2xl overflow-hidden shadow status-${status}`;
+      card.innerHTML = `
+        <div class="flex gap-4 p-4">
+          <img src="../assets/menu/lila-cafe-${item.slug}.jpg" class="w-32 h-32 object-cover rounded-xl flex-shrink-0" />
+          <div class="flex-1 min-w-0">
+            <div class="font-medium text-sm">${item.name}</div>
+            <div class="text-xs text-slate-500 mt-0.5">${item.en}</div>
+            <div class="text-[11px] text-slate-400 mt-1 italic">${item.desc}</div>
+            <code class="text-[10px] text-slate-400 block mt-1 truncate">${item.slug}</code>
+          </div>
+        </div>
+        <div class="bg-slate-50 p-3 space-y-2 border-t">
+          <div class="flex gap-2">
+            <button class="btn-state flex-1 ${status==='ok'?'active active-ok':''}" onclick="setStatus('${item.slug}','ok')">✓ ตรง</button>
+            <button class="btn-state flex-1 ${status==='fix'?'active active-fix':''}" onclick="setStatus('${item.slug}','fix')">✗ ผิด</button>
+            <button class="btn-state flex-1 ${status==='unsure'?'active active-unsure':''}" onclick="setStatus('${item.slug}','unsure')">? ไม่แน่ใจ</button>
+          </div>
+          ${status === 'fix' ? `
+            <input type="text" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg"
+              placeholder="✏️ ชื่อจริง (TH) เช่น 'มัตฉะลาเต้ส้ม'"
+              value="${(s.correct||'').replace(/"/g,'&quot;')}"
+              oninput="setCorrect('${item.slug}', this.value)" />
+          ` : ''}
+          ${(status === 'fix' || status === 'unsure') ? `
+            <textarea class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg" rows="2"
+              placeholder="💬 comment (ถ้ามี) — เช่น 'รูปนี้เหมือนของหวานมากกว่า' หรือ 'ลบเมนูนี้ทิ้ง'"
+              oninput="setComment('${item.slug}', this.value)">${(s.comment||'')}</textarea>
+          ` : ''}
+        </div>
+      `;
+      wrap.appendChild(card);
+    }
+    section.appendChild(wrap);
+    grid.appendChild(section);
+  }
+
+  // Update counters
+  document.getElementById("cnt-ok").textContent = cnt.ok;
+  document.getElementById("cnt-fix").textContent = cnt.fix;
+  document.getElementById("cnt-unsure").textContent = cnt.unsure;
+  document.getElementById("cnt-pending").textContent = cnt.pending;
+  document.getElementById("progress").value = cnt.ok + cnt.fix + cnt.unsure;
+  document.getElementById("fab-count").textContent = cnt.fix + cnt.unsure;
+}
+
+function copyReview() {
+  const fix = [];
+  const unsure = [];
+  for (const item of ITEMS) {
+    const s = state[item.slug];
+    if (!s) continue;
+    if (s.status === 'fix') {
+      let line = `- **${item.slug}** (ตอนนี้: "${item.name}")`;
+      if (s.correct) line += ` → ชื่อจริง: **"${s.correct}"**`;
+      if (s.comment) line += `\n  💬 ${s.comment}`;
+      fix.push(line);
+    } else if (s.status === 'unsure') {
+      let line = `- **${item.slug}** (ตอนนี้: "${item.name}")`;
+      if (s.comment) line += `\n  💬 ${s.comment}`;
+      unsure.push(line);
+    }
+  }
+
+  let cnt = { ok: 0, fix: 0, unsure: 0, pending: 0 };
+  for (const item of ITEMS) {
+    const s = state[item.slug]||{};
+    cnt[s.status || 'pending']++;
+  }
+
+  const out = `# 📋 Verify Review — LiLa Cafe Menu Images
+
+**สรุป:** ✓ ตรง ${cnt.ok} | ✗ ผิด ${cnt.fix} | ? ไม่แน่ใจ ${cnt.unsure} | ยังไม่เช็ค ${cnt.pending} (จาก ${ITEMS.length} รายการ)
+
+${fix.length > 0 ? `## ✗ ผิด — ต้องแก้ (${fix.length})\n\n${fix.join('\n\n')}\n` : ''}
+${unsure.length > 0 ? `\n## ? ไม่แน่ใจ — รอ confirm (${unsure.length})\n\n${unsure.join('\n\n')}\n` : ''}
+${(fix.length === 0 && unsure.length === 0) ? '\n✅ ไม่มีอะไรต้องแก้ — mapping ทั้งหมดถูกแล้ว!' : ''}
+
+_(สร้างจาก verify.html — paste ในแชทให้ Claude แก้ต่อ)_`;
+
+  navigator.clipboard.writeText(out).then(() => {
+    const t = document.getElementById("toast");
+    t.textContent = `✓ Copied ${fix.length + unsure.length} รายการ — paste ในแชทได้เลย`;
+    t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 3000);
+  }).catch(err => {
+    alert("Copy ไม่สำเร็จ — ลอง browser อื่น\n\nข้อความ:\n\n" + out);
+  });
+}
+
+render();
+</script>
 
 </body>
 </html>

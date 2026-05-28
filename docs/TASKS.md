@@ -36,6 +36,7 @@ Status: `todo` | `in-progress` | `blocked` | `done`
 | 0.24 | Re-map Coffee 4 รายการหลัก (คาราเมลลาเต้/Es-yen/ลาเต้/อเมริกาโน่) | done | สลับ LILA-043/044/049/053 ให้ตรงตาม POS images ใหม่ |
 | 0.25 | Re-map รายการที่เหลือ (~36) | todo | รอ user check verify.html รอบ 2 + ส่ง POS ละเอียดเพิ่ม |
 | 0.26 | Process รูปใหม่ใน _downloads/lila-source (164 ไฟล์) | todo | resize + map หลัง user confirm task 0.25 |
+| 0.27 | Upgrade verify.html: interactive checkboxes + edit + copy review | done | 3-state buttons + auto-save localStorage + clipboard export markdown |
 
 ---
 
