@@ -42,6 +42,7 @@ Status: `todo` | `in-progress` | `blocked` | `done`
 | 0.30 | Verify v2: เพิ่มช่องแก้ราคา (priceCorrection) | done | numeric input โผล่เมื่อ ✗ ผิด / ? ไม่แน่ใจ — รวมใน markdown + ZIP export |
 | 0.31 | Verify v2: ปุ่มลบเมนู + undo + counter + export section | done | grey-out card + strikethrough name + "↩️ คืน"; รวมใน markdown สรุปและ ZIP |
 | 0.32 | Verify v3: rewrite ตามรูปเมนูจริง (28 รายการ, 5 หมวด, multi-price + description) | done | reset menu list, multi-price (hot/iced/frappe/single), description always editable, ทุก function เดิม (status/upload/delete/add-new/zip) คงไว้ |
+| 0.33 | Verify v3: drag-and-drop upload + confirm modal | done | ลากไฟล์วางบน card → preview modal → Enter ยืนยัน / Esc ยกเลิก; visual highlight target card ขณะลาก |
 
 ---
 

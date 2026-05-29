@@ -57,6 +57,42 @@
   #zoom-popup img { display:block; width:480px; max-width:88vw; max-height:80vh; object-fit:contain; border-radius:10px; }
   #zoom-popup .caption { text-align:center; font-size:11px; color:#64748b; margin-top:6px; padding:0 8px; }
   @media (hover:none) { .photo-frame img { cursor:pointer; } .photo-frame img:hover { transform:none; } }
+
+  /* Drag-and-drop */
+  .card.drop-target { box-shadow: 0 0 0 3px #A0522D inset, 0 0 24px rgba(160,82,45,.3); }
+  .card.drop-target .photo-frame { background:#fef3e8; }
+  body.dragging-file::after {
+    content: '🎯 ลากมาวางบนการ์ดที่ต้องการ';
+    position: fixed; top: 80px; left: 50%; transform: translateX(-50%);
+    background: #A0522D; color: white; padding: 10px 24px; border-radius: 9999px;
+    font-size: 13px; z-index: 9999; box-shadow: 0 8px 24px rgba(160,82,45,.4);
+    pointer-events: none;
+  }
+
+  /* Confirm modal */
+  #confirm-modal {
+    position: fixed; inset: 0; display: none; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.6); z-index: 2000; padding: 20px;
+    backdrop-filter: blur(4px);
+  }
+  #confirm-modal.show { display: flex; }
+  #confirm-modal .box {
+    background: white; border-radius: 20px; padding: 24px; max-width: 480px; width: 100%;
+    box-shadow: 0 20px 60px rgba(0,0,0,.4);
+  }
+  #confirm-modal .preview {
+    width: 100%; max-height: 320px; object-fit: contain;
+    border-radius: 12px; background: #f1f5f9; margin-bottom: 16px;
+  }
+  #confirm-modal .target-info { background: #fef3e8; border: 1px solid #fde0c5; padding: 12px; border-radius: 10px; margin-bottom: 12px; }
+  #confirm-modal .hint { display:flex; gap:8px; justify-content:center; font-size:13px; color:#475569; }
+  #confirm-modal kbd { background: #e2e8f0; padding: 2px 8px; border-radius: 6px; font-family: ui-monospace, monospace; font-size: 12px; border-bottom: 2px solid #94a3b8; }
+  #confirm-modal .actions { display: flex; gap: 10px; margin-top: 16px; }
+  #confirm-modal .btn { flex: 1; padding: 10px 16px; border-radius: 10px; font-weight: 500; cursor: pointer; border: none; transition: all .2s; }
+  #confirm-modal .btn-ok { background: #A0522D; color: white; }
+  #confirm-modal .btn-ok:hover { background: #854422; }
+  #confirm-modal .btn-cancel { background: #e2e8f0; color: #334155; }
+  #confirm-modal .btn-cancel:hover { background: #cbd5e1; }
 </style>
 </head>
 <body class="antialiased pb-32">
@@ -91,7 +127,7 @@
       <li>กรอก <b>คำอธิบาย</b> (description) ใต้ชื่อเมนู — เป็นบรรทัดที่ 2 บนเว็บจริง</li>
       <li>กด ✓ ตรง / ✗ ผิด / ? ไม่แน่ใจ ตามที่เห็น</li>
       <li>✗ ผิด → แก้ชื่อ + ราคา (ทุก variant: ร้อน/เย็น/ปั่น) ได้</li>
-      <li>📷 <b>Upload</b> รูปใส่ทุกการ์ด (resize อัตโนมัติ 1200px JPEG)</li>
+      <li>📷 <b>Upload</b> รูปใส่ทุกการ์ด (resize อัตโนมัติ 1200px JPEG) — กดปุ่ม Upload หรือ <b>ลากไฟล์รูปวางบนการ์ดได้เลย</b> (กด Enter ยืนยัน / Esc ยกเลิก)</li>
       <li>+ เพิ่มเมนูใหม่ที่ส่วนล่างของหมวด · 🗑️ ลบเมนู ที่ไม่ขาย</li>
       <li>เสร็จแล้วกด <b>💾 Download ZIP</b> ส่ง Claude</li>
     </ol>
@@ -107,6 +143,27 @@
 
 <div id="toast" class="toast"></div>
 <div id="zoom-popup"><img id="zoom-img" alt="" /><div class="caption" id="zoom-caption"></div></div>
+
+<!-- Drag-and-drop confirmation modal -->
+<div id="confirm-modal" onclick="if(event.target===this) cancelConfirm()">
+  <div class="box">
+    <h3 class="text-lg font-semibold mb-3">📷 ยืนยันการอัปโหลดรูป</h3>
+    <img id="confirm-preview" class="preview" alt="" />
+    <div class="target-info">
+      <div class="text-xs text-slate-500 mb-1">📍 เมนูที่จะแทนรูป:</div>
+      <div id="confirm-target" class="font-medium"></div>
+    </div>
+    <div class="hint">
+      <span><kbd>Enter</kbd> = ยืนยัน</span>
+      <span>·</span>
+      <span><kbd>Esc</kbd> = ยกเลิก</span>
+    </div>
+    <div class="actions">
+      <button class="btn btn-cancel" onclick="cancelConfirm()">ยกเลิก (Esc)</button>
+      <button class="btn btn-ok" onclick="confirmUpload()">ยืนยัน (Enter)</button>
+    </div>
+  </div>
+</div>
 
 <script>
 // =========================
@@ -334,6 +391,7 @@ function renderItemCard(item) {
 
   const card = document.createElement("div");
   card.className = `card bg-white rounded-xl overflow-hidden border border-slate-200 ${deleted ? 'status-deleted' : 'status-' + status}`;
+  card.dataset.menuId = item.id;
   const desc = s.description || "";
   const displayName = s.correctName || item.name_th;
 
@@ -416,6 +474,7 @@ function renderNewItemCard(item) {
   const prices = item.prices || {};
   const card = document.createElement("div");
   card.className = "card bg-purple-50 rounded-xl overflow-hidden border-2 border-purple-300";
+  card.dataset.newIdx = idx;
   card.innerHTML = `
     <div class="flex gap-3 p-3">
       <div class="photo-frame w-28 h-28 flex-shrink-0 rounded-lg overflow-hidden bg-slate-100">
@@ -657,6 +716,132 @@ async function downloadZip() {
   }, { passive:false });
   document.addEventListener("keydown", e => { if (e.key === "Escape") hide(); });
 })();
+
+// =========================
+// DRAG-AND-DROP UPLOAD
+// =========================
+let pendingDrop = null; // { file, blob, dataUrl, menuId, newIdx, targetLabel }
+
+function getCardFromEvent(e) {
+  const el = e.target.closest(".card[data-menu-id], .card[data-new-idx]");
+  if (!el) return null;
+  return el;
+}
+
+(function setupDragDrop() {
+  let lastHighlight = null;
+  let dragDepth = 0;
+
+  function clearHighlight() {
+    if (lastHighlight) lastHighlight.classList.remove("drop-target");
+    lastHighlight = null;
+  }
+
+  document.addEventListener("dragenter", (e) => {
+    // Only respond to file drags
+    if (!e.dataTransfer.types.includes("Files")) return;
+    e.preventDefault();
+    dragDepth++;
+    document.body.classList.add("dragging-file");
+  });
+
+  document.addEventListener("dragover", (e) => {
+    if (!e.dataTransfer.types.includes("Files")) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "copy";
+    const card = getCardFromEvent(e);
+    if (card !== lastHighlight) {
+      clearHighlight();
+      if (card) { card.classList.add("drop-target"); lastHighlight = card; }
+    }
+  });
+
+  document.addEventListener("dragleave", (e) => {
+    if (!e.dataTransfer.types.includes("Files")) return;
+    dragDepth = Math.max(0, dragDepth - 1);
+    if (dragDepth === 0) {
+      document.body.classList.remove("dragging-file");
+      clearHighlight();
+    }
+  });
+
+  document.addEventListener("drop", async (e) => {
+    if (!e.dataTransfer.types.includes("Files")) return;
+    e.preventDefault();
+    dragDepth = 0;
+    document.body.classList.remove("dragging-file");
+    const card = getCardFromEvent(e);
+    clearHighlight();
+    if (!card) {
+      showToast("⚠️ ต้องลากวางบน card เมนู", true);
+      return;
+    }
+    const file = e.dataTransfer.files[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      showToast("⚠️ รองรับเฉพาะไฟล์รูปภาพ", true);
+      return;
+    }
+
+    // Resize first so confirm preview matches what will be saved
+    try {
+      const blob = await resizeImage(file);
+      const dataUrl = await blobToDataURL(blob);
+      const menuId = card.dataset.menuId;
+      const newIdx = card.dataset.newIdx !== undefined ? Number(card.dataset.newIdx) : null;
+
+      let targetLabel = "";
+      if (menuId) {
+        const it = ITEMS.find(x => x.id === menuId);
+        targetLabel = it ? `#${it.no} ${it.name_th} (${it.name_en})` : menuId;
+      } else if (newIdx !== null) {
+        const it = state.newItems[newIdx];
+        targetLabel = `➕ NEW: ${it.name_th || '(unnamed)'}`;
+      }
+
+      pendingDrop = { blob, dataUrl, menuId, newIdx, targetLabel };
+      document.getElementById("confirm-preview").src = dataUrl;
+      document.getElementById("confirm-target").textContent = targetLabel;
+      document.getElementById("confirm-modal").classList.add("show");
+    } catch (err) {
+      showToast("❌ Process error: " + err.message, true);
+    }
+  });
+})();
+
+function confirmUpload() {
+  if (!pendingDrop) return;
+  const { dataUrl, menuId, newIdx } = pendingDrop;
+  if (menuId) {
+    (state.items[menuId] ||= {}).uploadedDataUrl = dataUrl;
+    state.items[menuId].uploadedAt = new Date().toISOString();
+  } else if (newIdx !== null) {
+    state.newItems[newIdx].uploadedDataUrl = dataUrl;
+  }
+  save();
+  cancelConfirm();
+  render();
+  showToast(`✓ Upload สำเร็จ`);
+}
+
+function cancelConfirm() {
+  pendingDrop = null;
+  document.getElementById("confirm-modal").classList.remove("show");
+  document.getElementById("confirm-preview").src = "";
+}
+
+// Global keyboard handler for confirm modal (Enter/Esc)
+document.addEventListener("keydown", (e) => {
+  const modal = document.getElementById("confirm-modal");
+  if (!modal.classList.contains("show")) return;
+  if (e.key === "Enter") {
+    e.preventDefault();
+    confirmUpload();
+  } else if (e.key === "Escape") {
+    e.preventDefault();
+    cancelConfirm();
+  }
+});
 
 function showToast(msg, isError = false) {
   const t = document.getElementById("toast");
