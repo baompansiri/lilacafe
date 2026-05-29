@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Verify Menu ↔ Image | LiLa Cafe</title>
+<title>Verify Menu v3 | LiLa Cafe</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -14,14 +14,9 @@
   .card.status-ok { background:#dcfce7; box-shadow: 0 0 0 2px #22c55e inset; }
   .card.status-fix { background:#fee2e2; box-shadow: 0 0 0 2px #ef4444 inset; }
   .card.status-unsure { background:#fef9c3; box-shadow: 0 0 0 2px #eab308 inset; }
-  .card.status-nophoto { background:#f1f5f9; box-shadow: 0 0 0 2px #94a3b8 inset; }
   .card.status-deleted { background:#fafafa; opacity:.55; box-shadow: 0 0 0 2px #94a3b8 inset; }
   .card.status-deleted .item-name { text-decoration: line-through; color: #94a3b8; }
-  .card.status-deleted img { filter: grayscale(1); }
-  .btn-del { font-size:11px; padding:5px 10px; background:#fee2e2; color:#991b1b; border-radius:6px; border:none; cursor:pointer; transition:all .2s; }
-  .btn-del:hover { background:#fecaca; }
-  .btn-undel { font-size:11px; padding:5px 10px; background:#dcfce7; color:#166534; border-radius:6px; border:none; cursor:pointer; transition:all .2s; }
-  .btn-undel:hover { background:#bbf7d0; }
+  .card.status-deleted img, .card.status-deleted .no-photo { filter: grayscale(1); }
   .btn-state { font-size: 12px; padding: 4px 8px; border-radius: 6px; transition: all .2s; cursor: pointer; border: none; flex:1; }
   .btn-state.active-ok { background:#22c55e; color:white; }
   .btn-state.active-fix { background:#ef4444; color:white; }
@@ -32,11 +27,21 @@
   .btn-upload:hover { background:#854422; }
   .btn-upload-replace { background:#64748b; }
   .btn-upload-replace:hover { background:#475569; }
+  .btn-del { font-size:11px; padding:5px 10px; background:#fee2e2; color:#991b1b; border-radius:6px; border:none; cursor:pointer; transition:all .2s; }
+  .btn-del:hover { background:#fecaca; }
+  .btn-undel { font-size:11px; padding:5px 10px; background:#dcfce7; color:#166534; border-radius:6px; border:none; cursor:pointer; transition:all .2s; }
+  .btn-undel:hover { background:#bbf7d0; }
   input[type=text], input[type=number], textarea, select { transition: border-color .2s; }
   input:focus, textarea:focus, select:focus { outline:none; border-color:#A0522D; box-shadow:0 0 0 3px rgba(160,82,45,0.15); }
   .photo-frame { position:relative; }
   .photo-frame .badge-new { position:absolute; top:6px; right:6px; background:#A0522D; color:white; font-size:10px; padding:2px 6px; border-radius:9999px; }
-  .photo-frame .no-photo { display:flex; flex-direction:column; align-items:center; justify-content:center; background:#e2e8f0; color:#64748b; text-align:center; font-size:11px; }
+  .photo-frame .no-photo { display:flex; flex-direction:column; align-items:center; justify-content:center; background:#e2e8f0; color:#64748b; text-align:center; font-size:11px; gap:4px; padding:8px; height:100%; }
+  .price-pill { display:inline-block; padding:2px 7px; border-radius:9999px; font-size:11px; font-weight:500; margin-right:4px; margin-bottom:2px; }
+  .price-hot    { background:#fee2e2; color:#991b1b; }
+  .price-iced   { background:#dbeafe; color:#1e40af; }
+  .price-frappe { background:#e9d5ff; color:#6b21a8; }
+  .price-single { background:#f1f5f9; color:#334155; }
+  .menu-no { display:inline-block; min-width:32px; padding:2px 6px; background:#A0522D; color:white; border-radius:6px; font-size:11px; font-weight:600; text-align:center; }
   .fab-group { position:fixed; bottom:20px; right:20px; z-index:100; display:flex; flex-direction:column; gap:10px; }
   .fab { background:#A0522D; color:white; padding:12px 20px; border-radius:9999px; box-shadow:0 8px 24px rgba(160,82,45,.4); cursor:pointer; font-weight:500; display:flex; gap:8px; align-items:center; transition:all .2s; border:none; font-size:14px; }
   .fab:hover { background:#854422; transform:translateY(-2px); }
@@ -45,263 +50,127 @@
   .toast { position:fixed; top:80px; left:50%; transform:translateX(-50%); background:#22c55e; color:white; padding:12px 24px; border-radius:9999px; z-index:200; opacity:0; transition:opacity .3s; box-shadow:0 4px 16px rgba(0,0,0,.2); pointer-events:none; }
   .toast.show { opacity:1; }
   .toast.error { background:#ef4444; }
-  details > summary { cursor:pointer; list-style:none; }
-  details > summary::-webkit-details-marker { display:none; }
-
   /* Hover-zoom popup */
-  .photo-frame img, #orphan-grid img { cursor: zoom-in; transition: transform .15s; }
-  .photo-frame img:hover, #orphan-grid img:hover { transform: scale(1.05); }
-  #zoom-popup {
-    position: fixed; display: none; z-index: 1000;
-    background: white; border-radius: 16px; padding: 8px;
-    box-shadow: 0 20px 60px rgba(0,0,0,.4), 0 4px 12px rgba(0,0,0,.2);
-    pointer-events: none; max-width: 90vw; max-height: 90vh;
-  }
+  .photo-frame img { cursor: zoom-in; transition: transform .15s; }
+  .photo-frame img:hover { transform: scale(1.05); }
+  #zoom-popup { position: fixed; display: none; z-index: 1000; background: white; border-radius: 16px; padding: 8px; box-shadow: 0 20px 60px rgba(0,0,0,.4); pointer-events: none; }
   #zoom-popup img { display:block; width:480px; max-width:88vw; max-height:80vh; object-fit:contain; border-radius:10px; }
   #zoom-popup .caption { text-align:center; font-size:11px; color:#64748b; margin-top:6px; padding:0 8px; }
-  @media (hover: none) {
-    .photo-frame img, #orphan-grid img { cursor: pointer; }
-    .photo-frame img:hover, #orphan-grid img:hover { transform: none; }
-  }
+  @media (hover:none) { .photo-frame img { cursor:pointer; } .photo-frame img:hover { transform:none; } }
 </style>
 </head>
 <body class="antialiased pb-32">
 
-<!-- ============ HEADER ============ -->
 <header class="bg-white shadow-sm sticky top-0 z-40">
   <div class="max-w-7xl mx-auto px-5 py-4">
     <div class="flex flex-wrap items-center justify-between gap-3">
       <div>
-        <h1 class="text-xl font-semibold">🔍 LiLa Cafe — Menu Verification</h1>
-        <p class="text-xs text-slate-600 mt-1">86 รายการจาก menu-data.md · เช็ค ✓/✗ · แก้ชื่อ · upload รูป · เพิ่มเมนูใหม่ · เซฟอัตโนมัติ</p>
+        <h1 class="text-xl font-semibold">🔍 LiLa Cafe — Menu Verification <span class="text-xs text-slate-400 font-normal">v3</span></h1>
+        <p class="text-xs text-slate-600 mt-1">เมนูตามรูปใหม่ · multi-price (ร้อน/เย็น/ปั่น) · description บรรทัด 2 · upload รูปได้ทุกการ์ด</p>
       </div>
       <div class="flex flex-col items-end gap-1 text-xs">
         <div class="flex gap-2 flex-wrap">
           <span class="px-2 py-1 rounded bg-green-100 text-green-800">✓ <span id="cnt-ok">0</span></span>
           <span class="px-2 py-1 rounded bg-red-100 text-red-800">✗ <span id="cnt-fix">0</span></span>
           <span class="px-2 py-1 rounded bg-yellow-100 text-yellow-800">? <span id="cnt-unsure">0</span></span>
-          <span class="px-2 py-1 rounded bg-blue-100 text-blue-800">📷 upload <span id="cnt-upload">0</span></span>
+          <span class="px-2 py-1 rounded bg-blue-100 text-blue-800">📷 <span id="cnt-upload">0</span></span>
           <span class="px-2 py-1 rounded bg-purple-100 text-purple-800">➕ ใหม่ <span id="cnt-new">0</span></span>
           <span class="px-2 py-1 rounded bg-slate-200 text-slate-700">🗑️ ลบ <span id="cnt-deleted">0</span></span>
         </div>
-        <progress id="progress" max="86" value="0" class="w-72 h-2"></progress>
+        <progress id="progress" max="28" value="0" class="w-72 h-2"></progress>
       </div>
     </div>
   </div>
 </header>
 
-<main class="max-w-7xl mx-auto px-5 py-6 space-y-8">
+<main class="max-w-7xl mx-auto px-5 py-6 space-y-6">
 
-  <!-- Instructions -->
   <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm">
     💡 <b>วิธีใช้:</b>
     <ol class="list-decimal list-inside mt-2 space-y-0.5 text-slate-700">
-      <li>ทุกการ์ดมี <b>3 ปุ่ม</b>: ✓ ตรง · ✗ ผิด · ? ไม่แน่ใจ — กดเลือก state</li>
-      <li><b>✗ ผิด</b> → กล่อง "ชื่อจริง" เปิด พิมพ์ชื่อถูกต้องลงไป</li>
-      <li><b>📷 Upload</b> → เลือกรูปจากเครื่อง · resize อัตโนมัติเป็น 1200px JPEG · เก็บใน browser</li>
-      <li><b>เมนูที่ยังไม่มีรูป</b> (no-photo) → กด upload ใส่ได้เลย</li>
-      <li><b>+ เพิ่มเมนูใหม่</b> ที่ส่วนล่างของแต่ละหมวดถ้ามีเมนูไม่อยู่ใน list</li>
-      <li>เสร็จแล้วกด <b>💾 Download ZIP</b> (มีรูป + JSON) ส่งให้ Claude หรือ <b>📋 Copy Markdown</b> paste ในแชท</li>
+      <li>กรอก <b>คำอธิบาย</b> (description) ใต้ชื่อเมนู — เป็นบรรทัดที่ 2 บนเว็บจริง</li>
+      <li>กด ✓ ตรง / ✗ ผิด / ? ไม่แน่ใจ ตามที่เห็น</li>
+      <li>✗ ผิด → แก้ชื่อ + ราคา (ทุก variant: ร้อน/เย็น/ปั่น) ได้</li>
+      <li>📷 <b>Upload</b> รูปใส่ทุกการ์ด (resize อัตโนมัติ 1200px JPEG)</li>
+      <li>+ เพิ่มเมนูใหม่ที่ส่วนล่างของหมวด · 🗑️ ลบเมนู ที่ไม่ขาย</li>
+      <li>เสร็จแล้วกด <b>💾 Download ZIP</b> ส่ง Claude</li>
     </ol>
   </div>
 
-  <!-- Orphan photos section -->
-  <details id="orphan-section" class="bg-white rounded-2xl border-2 border-blue-200 p-5" open>
-    <summary class="text-lg font-semibold flex items-center justify-between">
-      <span>📷 รูปที่ยังไม่ได้ match กับเมนูใน list (<span id="cnt-orphan">0</span>)</span>
-      <span class="text-xs text-slate-500">เลือกเมนูเพื่อ assign · ถ้าไม่ตรง keep ไว้ก่อน</span>
-    </summary>
-    <div id="orphan-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-4"></div>
-  </details>
-
-  <!-- Menu sections (rendered by JS) -->
   <div id="grid"></div>
-
 </main>
 
-<!-- Floating actions -->
 <div class="fab-group">
   <button class="fab fab-secondary" onclick="copyMarkdown()">📋 Copy Markdown</button>
   <button class="fab" onclick="downloadZip()">💾 Download ZIP (<span id="fab-zip-count">0</span>)</button>
 </div>
 
 <div id="toast" class="toast"></div>
-
-<!-- Hover-zoom popup (single instance reused) -->
-<div id="zoom-popup">
-  <img id="zoom-img" alt="" />
-  <div class="caption" id="zoom-caption"></div>
-</div>
+<div id="zoom-popup"><img id="zoom-img" alt="" /><div class="caption" id="zoom-caption"></div></div>
 
 <script>
 // =========================
-// DATA (auto-generated from menu-data.md)
+// DATA — ดึงจากเมนูภาพจริง
 // =========================
 const ITEMS = [
-  // Coffee (16)
-  { cat:"coffee", id:"caramel-latte-iced", name_th:"คาราเมลลาเต้", name_en:"Caramel Latte (Iced)", price:100, type:"cold" },
-  { cat:"coffee", id:"es-yen",             name_th:"Es-yen", name_en:"Es-Yen (Thai Cold Coffee)", price:95, type:"cold" },
-  { cat:"coffee", id:"americano-iced",     name_th:"อเมริกาโน่", name_en:"Americano (Iced)", price:80, type:"cold" },
-  { cat:"coffee", id:"latte-iced",         name_th:"ลาเต้", name_en:"Latte (Iced)", price:90, type:"cold" },
-  { cat:"coffee", id:"mocha-iced",         name_th:"มอคค่า", name_en:"Mocha (Iced)", price:null, type:"cold" },
-  { cat:"coffee", id:"cappuccino-iced",    name_th:"คาปูชิโน่", name_en:"Cappuccino (Iced)", price:null, type:"cold" },
-  { cat:"coffee", id:"espresso",           name_th:"เอสเปรสโซ่", name_en:"Espresso", price:null, type:"hot" },
-  { cat:"coffee", id:"latte-hot",          name_th:"ลาเต้ร้อน", name_en:"Hot Latte", price:null, type:"hot" },
-  { cat:"coffee", id:"cappuccino-hot",     name_th:"คาปูชิโน่ร้อน", name_en:"Hot Cappuccino", price:null, type:"hot" },
-  { cat:"coffee", id:"caramel-latte-hot",  name_th:"คาราเมลลาเต้ร้อน", name_en:"Hot Caramel Latte", price:null, type:"hot" },
-  { cat:"coffee", id:"mocha-hot",          name_th:"มอคค่าร้อน", name_en:"Hot Mocha", price:null, type:"hot" },
-  { cat:"coffee", id:"americano-hot",      name_th:"อเมริกาโน่ร้อน", name_en:"Hot Americano", price:null, type:"hot" },
-  { cat:"coffee", id:"irish-coffee",       name_th:"ไอริช", name_en:"Irish Coffee", price:null, type:"cold" },
-  { cat:"coffee", id:"affogato",           name_th:"แอฟโฟกาโต้", name_en:"Affogato", price:null, type:"cold" },
-  { cat:"coffee", id:"lemon-espresso",     name_th:"มะนาวเอสเปรสโซ่", name_en:"Lemon Espresso", price:null, type:"cold" },
-  { cat:"coffee", id:"black-orange",       name_th:"Black Orange", name_en:"Black Orange", price:null, type:"cold" },
+  // ☕ Coffee
+  { no:10, cat:"coffee", id:"espresso",      name_th:"เอสเพรสโซ",                name_en:"Espresso",     prices:{ hot:70, iced:75 } },
+  { no:11, cat:"coffee", id:"ess-yen",       name_th:"เอสเพรสโซ (ไทยสไตล์)",      name_en:"ESS-YEN",      prices:{ iced:95 } },
+  { no:12, cat:"coffee", id:"americano",     name_th:"อเมริกาโน่",                name_en:"Americano",    prices:{ hot:70, iced:80 } },
+  { no:13, cat:"coffee", id:"latte",         name_th:"ลาเต้",                     name_en:"Latte",        prices:{ hot:80, iced:90 } },
+  { no:14, cat:"coffee", id:"cappuccino",    name_th:"คาปูชิโน่",                 name_en:"Cappucino",    prices:{ hot:80, iced:90 } },
+  { no:15, cat:"coffee", id:"mocha",         name_th:"มอคค่า",                    name_en:"Mocha",        prices:{ hot:80, iced:90 } },
+  { no:16, cat:"coffee", id:"caramel-latte", name_th:"คาราเมลลาเต้",              name_en:"Caramel Latte",prices:{ hot:90, iced:100 } },
 
-  // Non-Coffee (12)
-  { cat:"noncoffee", id:"dark-chocolate-iced", name_th:"ดาร์กช็อกโกแลต", name_en:"Dark Chocolate (Iced)", price:120, type:"cold" },
-  { cat:"noncoffee", id:"choco-mint-iced",     name_th:"ช็อกมินต์", name_en:"Chocolate Mint (Iced)", price:100, type:"cold" },
-  { cat:"noncoffee", id:"dark-chocolate-hot",  name_th:"ดาร์กช็อกร้อน", name_en:"Hot Dark Chocolate", price:null, type:"hot" },
-  { cat:"noncoffee", id:"choco-mint-hot",      name_th:"ช็อกมินต์ร้อน", name_en:"Hot Chocolate Mint", price:null, type:"hot" },
-  { cat:"noncoffee", id:"fresh-milk",          name_th:"นมสด", name_en:"Fresh Milk", price:85, type:"cold" },
-  { cat:"noncoffee", id:"pink-milk",           name_th:"นมชมพู", name_en:"Pink Milk", price:null, type:"cold" },
-  { cat:"noncoffee", id:"strawberry-milk",     name_th:"นมสตรอเบอร์รี่", name_en:"Strawberry Milk", price:null, type:"cold" },
-  { cat:"noncoffee", id:"lemon-soda",          name_th:"เลม่อนโซดา", name_en:"Lemon Soda", price:null, type:"cold" },
-  { cat:"noncoffee", id:"honey-lemon",         name_th:"น้ำผึ้งมะนาว", name_en:"Honey Lemon", price:null, type:"cold" },
-  { cat:"noncoffee", id:"butterfly-pea-blended", name_th:"ดอกอัญชันปั่น", name_en:"Butterfly Pea (Blended)", price:null, type:"blended" },
-  { cat:"noncoffee", id:"cinnamon-apple-peach", name_th:"ชิมาเนเปิ้ลพีช", name_en:"Cinnamon Apple Peach", price:null, type:"cold" },
-  { cat:"noncoffee", id:"lila-lemon-blended",  name_th:"ลีลามะนาวปั่น", name_en:"LiLa Lemon (Blended)", price:null, type:"blended" },
+  // 🍃 Tea
+  { no:17, cat:"tea", id:"horlick-milk-tea",      name_th:"ชานมฮอร์ลิคส์",        name_en:"Horlick Milk Tea",     prices:{ single:110 } },
+  { no:18, cat:"tea", id:"honey-milk-tea",        name_th:"ชานมน้ำผึ้ง",          name_en:"Honey Milk Tea",       prices:{ single:115 } },
+  { no:19, cat:"tea", id:"thai-tea-honey-lemon",  name_th:"ชาไทยน้ำผึ้งมะนาว",   name_en:"Thai Tea Honey Lemon", prices:{ single:115 } },
 
-  // Matcha & Tea (8)
-  { cat:"matcha", id:"matcha-iced",       name_th:"ชามัตฉะ", name_en:"Matcha (Iced)", price:140, type:"cold" },
-  { cat:"matcha", id:"matcha-yuzu",       name_th:"มัตฉะยุซุ", name_en:"Matcha Yuzu", price:140, type:"cold" },
-  { cat:"matcha", id:"matcha-cola",       name_th:"มัตฉะโคล่า", name_en:"Matcha Cola", price:null, type:"cold" },
-  { cat:"matcha", id:"matcha-latte",      name_th:"มัตฉะลาเต้", name_en:"Matcha Latte", price:null, type:"cold" },
-  { cat:"matcha", id:"cha-tong",          name_th:"ชาตอง", name_en:"Cha Tong", price:null, type:"cold" },
-  { cat:"matcha", id:"yuzu-tea",          name_th:"ชายุซุ", name_en:"Yuzu Tea", price:null, type:"cold" },
-  { cat:"matcha", id:"hot-ginger-lemon",  name_th:"ขิงมะนาวร้อน", name_en:"Hot Ginger Lemon", price:null, type:"hot" },
-  { cat:"matcha", id:"extra-shot",        name_th:"เพิ่มช็อต", name_en:"Extra Shot", price:null, type:"n/a" },
+  // 🍵 Matcha
+  { no:20, cat:"matcha", id:"puru-matcha",            name_th:"เพียวมัทฉะ",           name_en:"Puru Matcha",             prices:{ single:120 } },
+  { no:21, cat:"matcha", id:"puru-matcha-coconut",    name_th:"มัทฉะ โคโคนัท",        name_en:"Puru Matcha Coconut",     prices:{ single:140 } },
+  { no:22, cat:"matcha", id:"matcha-latte",           name_th:"มัทฉะ ลาเต้",          name_en:"Matcha Latte",            prices:{ single:140 } },
+  { no:23, cat:"matcha", id:"cloud-matcha-coconut",   name_th:"คลาวด์มัทฉะ โคโคนัท", name_en:"Cloud Matcha Coconut",    prices:{ single:160 } },
+  { no:24, cat:"matcha", id:"strawberry-matcha-latte",name_th:"มัทฉะ สตรอว์เบอรี่",   name_en:"Strawberry Matcha Latte", prices:{ single:160 } },
+  { no:25, cat:"matcha", id:"mango-matcha-latte",     name_th:"มัทฉะ แมงโก้",         name_en:"Mango Matcha Latte",      prices:{ single:160 } },
+  { no:26, cat:"matcha", id:"matcha-espresso",        name_th:"มัทฉะ เอสเพรสโซ",      name_en:"Matcha Espresso",         prices:{ single:175 } },
 
-  // Signature (2)
-  { cat:"signature", id:"thai-tea-iced",  name_th:"ชาไทยเย็น", name_en:"Thai Tea (Iced)", price:null, type:"cold" },
-  { cat:"signature", id:"lila-orange",    name_th:"ลีลาส้มซ่า", name_en:"LiLa Orange Soda", price:null, type:"cold" },
+  // 🍫 Non-Coffee
+  { no:27, cat:"noncoffee", id:"signature-cocoa",  name_th:"ซิกเนเจอร์โกโก้",    name_en:"Signature Cocoa",   prices:{ hot:90, iced:100, frappe:130 } },
+  { no:28, cat:"noncoffee", id:"caramel-cocoa",    name_th:"คาราเมลโกโก้",       name_en:"Caramel Cocoa",     prices:{ iced:115 } },
+  { no:29, cat:"noncoffee", id:"strawberry-cocoa", name_th:"สตรอว์เบอรี่โกโก้",   name_en:"Strawberry Cocoa",  prices:{ iced:130 } },
+  { no:30, cat:"noncoffee", id:"fresh-milk",       name_th:"นมสด",               name_en:"Fresh Milk",        prices:{ iced:75 } },
+  { no:31, cat:"noncoffee", id:"caramel-milk",     name_th:"นมสดคาราเมล",        name_en:"Caramel Milk",      prices:{ iced:90 } },
+  { no:32, cat:"noncoffee", id:"strawberry-milk",  name_th:"สตรอว์เบอรี่นมสด",    name_en:"Strawberry Milk",   prices:{ iced:120 } },
+  { no:33, cat:"noncoffee", id:"pink-milk",        name_th:"นมชมพูเย็น",         name_en:"Pink Milk",         prices:{ iced:85, frappe:120 } },
 
-  // Soft Drinks (3)
-  { cat:"soft", id:"water",         name_th:"น้ำดื่ม", name_en:"Drinking Water", price:null, type:"n/a" },
-  { cat:"soft", id:"orange-juice",  name_th:"น้ำส้ม", name_en:"Orange Juice", price:null, type:"cold" },
-  { cat:"soft", id:"coconut-water", name_th:"น้ำมะพร้าว", name_en:"Coconut Water", price:null, type:"cold" },
-
-  // Bakery (8)
-  { cat:"bakery", id:"croissant",        name_th:"ครัวซองต์", name_en:"Croissant", price:100, type:"n/a" },
-  { cat:"bakery", id:"croissant-cream",  name_th:"ครัวซองต์ไส้ครีม", name_en:"Croissant w/ Cream", price:110, type:"n/a" },
-  { cat:"bakery", id:"croissant-tuna",   name_th:"ครัวซองต์ทูน่า", name_en:"Tuna Croissant", price:115, type:"n/a" },
-  { cat:"bakery", id:"chocolate-cake",   name_th:"เค้กช็อกโกแลต", name_en:"Chocolate Cake", price:null, type:"n/a" },
-  { cat:"bakery", id:"strawberry-cake",  name_th:"เค้กสตรอเบอร์รี่", name_en:"Strawberry Cake", price:null, type:"n/a" },
-  { cat:"bakery", id:"sandwich",         name_th:"แซนวิช", name_en:"Sandwich", price:null, type:"n/a" },
-  { cat:"bakery", id:"cookies",          name_th:"คุกกี้", name_en:"Cookies", price:null, type:"n/a" },
-  { cat:"bakery", id:"pie",              name_th:"พาย", name_en:"Pie", price:null, type:"n/a" },
-
-  // Snacks (5)
-  { cat:"snack", id:"fried-mackerel",   name_th:"ปลาทูทอด", name_en:"Fried Mackerel", price:null, type:"n/a" },
-  { cat:"snack", id:"fried-chicken",    name_th:"ไก่ทอด", name_en:"Fried Chicken", price:null, type:"n/a" },
-  { cat:"snack", id:"dim-sum",          name_th:"ขนมจีบ", name_en:"Dim Sum", price:null, type:"n/a" },
-  { cat:"snack", id:"spring-roll",      name_th:"ปอเปี๊ยะ", name_en:"Spring Roll", price:null, type:"n/a" },
-  { cat:"snack", id:"fried-fish-cake",  name_th:"ทอดมัน", name_en:"Thai Fish Cake", price:null, type:"n/a" },
-
-  // Thai Mains (7)
-  { cat:"thaifood", id:"namprik-jorn-shrimp",   name_th:"น้ำพริกโจรกุ้งสด + ปลาทูทอด", name_en:"Nam Prik Jorn w/ Shrimp & Fried Mackerel", price:195, type:"n/a" },
-  { cat:"thaifood", id:"spicy-pork-rib-curry",  name_th:"แกงพริกกระดูกหมู", name_en:"Spicy Pork Rib Curry", price:125, type:"n/a" },
-  { cat:"thaifood", id:"tofu-pork-soup",        name_th:"ต้มจืดเต้าหู้หมูสับ", name_en:"Tofu & Minced Pork Soup", price:90, type:"n/a" },
-  { cat:"thaifood", id:"pork-omelette-rice",    name_th:"ไข่เจียวหมูสับ (กับข้าว)", name_en:"Pork Omelette w/ Rice", price:85, type:"n/a" },
-  { cat:"thaifood", id:"fluffy-omelette-rice",  name_th:"ไข่เจียวฟู (กับข้าว)", name_en:"Fluffy Omelette w/ Rice", price:70, type:"n/a" },
-  { cat:"thaifood", id:"sour-curry-seabass",    name_th:"แกงส้มปลากะพง", name_en:"Sour Curry w/ Sea Bass", price:250, type:"n/a" },
-  { cat:"thaifood", id:"bailiang-egg",          name_th:"ใบเหลียงผัดไข่", name_en:"Stir-fried Bai Liang w/ Egg", price:100, type:"n/a" },
-
-  // Inter (3)
-  { cat:"inter", id:"spaghetti-classic",        name_th:"สปาเก็ตตี้คลาสสิก", name_en:"Classic Spaghetti", price:175, type:"n/a" },
-  { cat:"inter", id:"spaghetti-seafood-spicy",  name_th:"สปาเก็ตตี้ขี้เมาทะเล", name_en:"Spicy Seafood Spaghetti", price:179, type:"n/a" },
-  { cat:"inter", id:"spaghetti-braised-beef",   name_th:"สปาเก็ตตี้เนื้อตุ๋น", name_en:"Braised Beef Spaghetti", price:null, type:"n/a" },
-
-  // Other (7)
-  { cat:"other", id:"mango",              name_th:"มะม่วง", name_en:"Mango", price:55, type:"n/a" },
-  { cat:"other", id:"orange-lemon-fresh", name_th:"ส้ม/มะนาวสด", name_en:"Fresh Orange/Lemon", price:35, type:"n/a" },
-  { cat:"other", id:"rice-porridge",      name_th:"ข้าวต้ม", name_en:"Rice Porridge", price:15, type:"n/a" },
-  { cat:"other", id:"boiled-egg",         name_th:"ไข่ต้ม", name_en:"Boiled Egg", price:null, type:"n/a" },
-  { cat:"other", id:"poke",               name_th:"โปเก", name_en:"Poke", price:null, type:"n/a" },
-  { cat:"other", id:"khanom-jeen",        name_th:"ขนมจีน", name_en:"Khanom Jeen", price:null, type:"n/a" },
-  { cat:"other", id:"somtum-chaole",      name_th:"ส้มตำชาวเล", name_en:"Seafood Som Tum", price:null, type:"n/a" },
-
-  // Thai Dessert (15)
-  { cat:"thaidessert", id:"set-1",              name_th:"SET 1 ขนมรวม", name_en:"Thai Dessert Set #1", price:null, type:"n/a" },
-  { cat:"thaidessert", id:"set-2",              name_th:"SET 2 ขนมรวม", name_en:"Thai Dessert Set #2", price:240, type:"n/a" },
-  { cat:"thaidessert", id:"set-3-kosanak",      name_th:"SET 3 ขนมรวม + โกสนัค", name_en:"Set #3 + Khanom Kosanak", price:250, type:"n/a" },
-  { cat:"thaidessert", id:"box-4-small",        name_th:"ขนม 4 หลุม (เล็ก)", name_en:"4-Box Set (Small)", price:null, type:"n/a" },
-  { cat:"thaidessert", id:"box-4-large",        name_th:"ขนม 4 หลุม (ใหญ่)", name_en:"4-Box Set (Large)", price:null, type:"n/a" },
-  { cat:"thaidessert", id:"mongkol-set",        name_th:"ขนมมงคล (รวมเซ็ต)", name_en:"Auspicious Sweets Set", price:null, type:"n/a" },
-  { cat:"thaidessert", id:"mixed-set-small",    name_th:"รวมเซ็ต (เล็ก)", name_en:"Mixed Set (Small)", price:null, type:"n/a" },
-  { cat:"thaidessert", id:"mixed-set-large",    name_th:"รวมเซ็ต (ใหญ่)", name_en:"Mixed Set (Large)", price:null, type:"n/a" },
-  { cat:"thaidessert", id:"prig-small",         name_th:"พริก (เล็ก)", name_en:"Prik (Small)", price:null, type:"n/a" },
-  { cat:"thaidessert", id:"prig-large",         name_th:"พริก (ใหญ่)", name_en:"Prik (Large)", price:null, type:"n/a" },
-  { cat:"thaidessert", id:"look-choop",         name_th:"ลูกชุบ", name_en:"Look Choop", price:null, type:"n/a" },
-  { cat:"thaidessert", id:"khanom-jeeb-sweet",  name_th:"ขนมจีบน้ำพริกหวาน", name_en:"Sweet Dim Sum", price:null, type:"n/a" },
-  { cat:"thaidessert", id:"khanom-jeeb-spicy",  name_th:"ขนมจีบน้ำพริกเผ็ด", name_en:"Spicy Dim Sum", price:null, type:"n/a" },
-  { cat:"thaidessert", id:"kao-tom-mud-fresh",  name_th:"ข้าวต้มมัด (สด)", name_en:"Kao Tom Mud (Fresh)", price:null, type:"n/a" },
-  { cat:"thaidessert", id:"kao-tom-mud-cold",   name_th:"ข้าวต้มมัด (เย็น)", name_en:"Kao Tom Mud (Chilled)", price:75, type:"n/a" },
+  // 🥤 Italian Soda
+  { no:38, cat:"italian-soda", id:"strawberry-soda",  name_th:"สตรอว์เบอรี่โซดา",  name_en:"Strawberry Soda",    prices:{ single:95 } },
+  { no:39, cat:"italian-soda", id:"blue-curacao-soda",name_th:"บลูโซดา",          name_en:"Blue Curacao Soda",  prices:{ single:95 } },
+  { no:40, cat:"italian-soda", id:"honey-lemon-soda", name_th:"น้ำผึ้งเลมอนโซดา", name_en:"Honey Lemon Soda",   prices:{ single:120 } },
+  { no:41, cat:"italian-soda", id:"red-lemon-soda",   name_th:"แดงมะนาวโซดา",     name_en:"Red Lemon Soda",     prices:{ single:85 } },
 ];
 
 const CATEGORIES = {
-  coffee:      { label:"☕ Coffee", order:1 },
-  noncoffee:   { label:"🥤 Non-Coffee", order:2 },
-  matcha:      { label:"🍵 Matcha & Tea", order:3 },
-  signature:   { label:"🌟 Signature", order:4 },
-  soft:        { label:"🥛 Soft Drinks", order:5 },
-  bakery:      { label:"🥐 เบเกอรี่", order:6 },
-  snack:       { label:"🍟 อาหารทานเล่น", order:7 },
-  thaifood:    { label:"🍛 กับข้าว", order:8 },
-  inter:       { label:"🍝 อาหาร Inter", order:9 },
-  other:       { label:"🍽️ อื่นๆ", order:10 },
-  thaidessert: { label:"🍡 ขนมไทย (Sets)", order:11 },
+  coffee:        { label:"☕ Coffee",         order:1 },
+  tea:           { label:"🍃 Tea",            order:2 },
+  matcha:        { label:"🍵 Matcha",         order:3 },
+  noncoffee:     { label:"🍫 Non-Coffee",     order:4 },
+  "italian-soda":{ label:"🥤 Italian Soda",   order:5 },
 };
 
-// Map menu_id → image file slug (when name differs)
-const SLUG_ALIASES = {
-  "espresso": "espresso-hot",
-  "butterfly-pea-blended": "butterfly-pea-soda",
-  "matcha-latte": "matcha-latte-iced",
-  "water": "sparkling-water",
-  "lila-lemon-blended": "lila-lemon-soda",
-};
-
-// Images in assets/menu/ that don't correspond to any menu_id above
-// (will appear in "orphan photos" section for re-assignment)
-const ORPHAN_PHOTOS = [
-  "butterfly-pea-orange",
-  "rainbow-layered",
-  "red-mocktail",
-  "watermelon-mocktail",
-  "passion-peach",
-  "lychee-mocktail",
-  "berry-smoothie",
-  "biscoff-latte",
-  "butterfly-pea-latte",
-  "almond-caramel-latte",
-  "dirty-chocolate",
-  "dirty-matcha",
-  "matcha-tonic",
-  "matcha-strawberry",
-  "matcha-latte-cream",
-  "matcha-shot",
-  "flat-white-hot",
-  "latte-iced-floral",
-  "es-yen-honey",
-];
+const PRICE_TYPES = ["hot","iced","frappe","single"];
+const PRICE_LABELS = { hot:"HOT", iced:"ICED", frappe:"FRAPPE", single:"PRICE" };
 
 // =========================
-// STATE (localStorage)
+// STATE
 // =========================
-const STORAGE_KEY = "lila-verify-v2";
+const STORAGE_KEY = "lila-verify-v3";
 let state = {};
 try { state = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch(e) {}
-state.items = state.items || {};       // { menu_id: { status, correct, comment, uploadedDataUrl, orphanFile } }
-state.newItems = state.newItems || []; // user-added: [{ cat, name_th, name_en, price, uploadedDataUrl }]
+state.items = state.items || {};       // { id: { status, correctName, priceCorrections:{hot,iced,frappe,single}, description, comment, uploadedDataUrl, deleted } }
+state.newItems = state.newItems || []; // [{ cat, name_th, name_en, description, prices:{}, uploadedDataUrl }]
 
 function save() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
@@ -311,11 +180,6 @@ function save() {
 // =========================
 // IMAGE HELPERS
 // =========================
-function getPhotoUrl(menuId) {
-  const slug = SLUG_ALIASES[menuId] || menuId;
-  return `../assets/menu/lila-cafe-${slug}.jpg`;
-}
-
 async function resizeImage(file, maxW = 1200, quality = 0.75) {
   const img = await new Promise((res, rej) => {
     const i = new Image();
@@ -344,8 +208,7 @@ async function handleUpload(menuId, file) {
   try {
     const blob = await resizeImage(file);
     const dataUrl = await blobToDataURL(blob);
-    if (!state.items[menuId]) state.items[menuId] = {};
-    state.items[menuId].uploadedDataUrl = dataUrl;
+    (state.items[menuId] ||= {}).uploadedDataUrl = dataUrl;
     state.items[menuId].uploadedAt = new Date().toISOString();
     save();
     render();
@@ -358,8 +221,7 @@ async function handleUpload(menuId, file) {
 async function handleNewItemUpload(idx, file) {
   try {
     const blob = await resizeImage(file);
-    const dataUrl = await blobToDataURL(blob);
-    state.newItems[idx].uploadedDataUrl = dataUrl;
+    state.newItems[idx].uploadedDataUrl = await blobToDataURL(blob);
     save();
     render();
   } catch (e) {
@@ -367,105 +229,62 @@ async function handleNewItemUpload(idx, file) {
   }
 }
 
+function clearUpload(menuId) {
+  if (state.items[menuId]) {
+    delete state.items[menuId].uploadedDataUrl;
+    save(); render();
+  }
+}
+
 // =========================
 // STATE MUTATIONS
 // =========================
 function setStatus(menuId, status) {
-  if (!state.items[menuId]) state.items[menuId] = {};
-  state.items[menuId].status = status;
-  save();
-  render();
+  (state.items[menuId] ||= {}).status = status;
+  save(); render();
 }
-function setCorrect(menuId, v) { (state.items[menuId] ||= {}).correct = v; save(); }
-function setPrice(menuId, v)   { (state.items[menuId] ||= {}).priceCorrection = v; save(); }
+function setName(menuId, v)        { (state.items[menuId] ||= {}).correctName = v; save(); }
+function setDescription(menuId, v) { (state.items[menuId] ||= {}).description = v; save(); }
+function setComment(menuId, v)     { (state.items[menuId] ||= {}).comment = v; save(); }
+function setPrice(menuId, type, v) {
+  const it = (state.items[menuId] ||= {});
+  it.priceCorrections = it.priceCorrections || {};
+  if (v === "" || v === null) delete it.priceCorrections[type];
+  else it.priceCorrections[type] = Number(v);
+  save();
+}
 
 function deleteItem(menuId, name) {
   if (!confirm(`ลบเมนู "${name}" ออกจากรายการ?\n\n(ส่งสัญญาณให้ Claude เอาออกจาก menu-data.md + หน้าเว็บ)`)) return;
   (state.items[menuId] ||= {}).deleted = true;
-  save();
-  render();
+  save(); render();
 }
 function undeleteItem(menuId) {
-  if (state.items[menuId]) {
-    delete state.items[menuId].deleted;
-    save();
-    render();
-  }
+  if (state.items[menuId]) { delete state.items[menuId].deleted; save(); render(); }
 }
-function setComment(menuId, v) { (state.items[menuId] ||= {}).comment = v; save(); }
 
 function addNewItem(cat) {
-  state.newItems.push({ cat, name_th:"", name_en:"", price:"", uploadedDataUrl:null });
-  save();
-  render();
+  state.newItems.push({ cat, name_th:"", name_en:"", description:"", prices:{}, uploadedDataUrl:null });
+  save(); render();
 }
 function delNewItem(idx) {
-  if (confirm("ลบเมนูใหม่นี้?")) {
-    state.newItems.splice(idx, 1);
-    save();
-    render();
-  }
+  if (confirm("ลบเมนูใหม่นี้?")) { state.newItems.splice(idx, 1); save(); render(); }
 }
 function updateNewItem(idx, field, value) {
   state.newItems[idx][field] = value;
   save();
 }
-
-function assignOrphan(orphanFile, menuId) {
-  if (!menuId) return;
-  if (!state.items[menuId]) state.items[menuId] = {};
-  state.items[menuId].orphanAssignment = orphanFile; // tells Claude: use this orphan file for this menu
-  state.items[menuId].status = "fix"; // mark as needing fix (so it shows in export)
-  if (!state.items[menuId].comment) {
-    state.items[menuId].comment = `รูปคือ orphan: ${orphanFile}`;
-  }
+function updateNewItemPrice(idx, type, value) {
+  state.newItems[idx].prices = state.newItems[idx].prices || {};
+  if (value === "" || value === null) delete state.newItems[idx].prices[type];
+  else state.newItems[idx].prices[type] = Number(value);
   save();
-  render();
-  showToast(`Assigned ${orphanFile} → ${menuId}`);
 }
 
 // =========================
 // RENDERING
 // =========================
 function render() {
-  renderOrphans();
-  renderGrid();
-  renderCounters();
-}
-
-function renderOrphans() {
-  const grid = document.getElementById("orphan-grid");
-  const allMenuIds = [...ITEMS.map(i => i.id), ...state.newItems.map((_,idx) => `__new${idx}`)];
-  grid.innerHTML = "";
-  let count = 0;
-  for (const slug of ORPHAN_PHOTOS) {
-    // Skip if already assigned
-    const assigned = Object.entries(state.items).find(([_, v]) => v.orphanAssignment === slug);
-    const isAssigned = !!assigned;
-
-    const card = document.createElement("div");
-    card.className = "bg-slate-50 rounded-xl overflow-hidden border " + (isAssigned ? "opacity-50 border-green-400" : "border-slate-200");
-    card.innerHTML = `
-      <img src="../assets/menu/lila-cafe-${slug}.jpg" class="w-full aspect-square object-cover"
-        onerror="this.style.display='none'" />
-      <div class="p-2 space-y-1">
-        <code class="text-[10px] text-slate-600 block truncate">${slug}</code>
-        ${isAssigned
-          ? `<div class="text-xs text-green-700">✓ assigned → ${assigned[0]}</div>`
-          : `<select class="w-full text-xs px-1 py-1 border rounded" onchange="assignOrphan('${slug}', this.value)">
-              <option value="">— เป็นเมนูอะไร? —</option>
-              ${ITEMS.map(i => `<option value="${i.id}">${i.name_th} (${i.id})</option>`).join("")}
-            </select>`
-        }
-      </div>
-    `;
-    grid.appendChild(card);
-    count++;
-  }
-  document.getElementById("cnt-orphan").textContent = count;
-}
-
-function renderGrid() {
   const grid = document.getElementById("grid");
   grid.innerHTML = "";
   const cats = Object.keys(CATEGORIES).sort((a,b) => CATEGORIES[a].order - CATEGORIES[b].order);
@@ -484,82 +303,109 @@ function renderGrid() {
       </div>
     `;
     const wrap = document.createElement("div");
-    wrap.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4";
+    wrap.className = "grid grid-cols-1 md:grid-cols-2 gap-4";
     catItems.forEach(item => wrap.appendChild(renderItemCard(item)));
     catNewItems.forEach(item => wrap.appendChild(renderNewItemCard(item)));
     section.appendChild(wrap);
     grid.appendChild(section);
   }
+
+  renderCounters();
+}
+
+function priceLine(prices, corrections) {
+  return PRICE_TYPES.filter(t => prices[t] != null || (corrections && corrections[t] != null)).map(t => {
+    const orig = prices[t];
+    const corr = corrections?.[t];
+    const showCorr = corr != null && corr !== orig;
+    const cls = `price-${t}`;
+    return `<span class="price-pill ${cls}">
+      ${t === 'single' ? '' : PRICE_LABELS[t] + ' '}
+      ${showCorr ? `<s>฿${orig ?? '?'}</s> <b>฿${corr}</b>` : `฿${orig ?? '?'}`}
+    </span>`;
+  }).join("");
 }
 
 function renderItemCard(item) {
   const s = state.items[item.id] || {};
   const status = s.status || "pending";
   const uploaded = !!s.uploadedDataUrl;
-  const assigned = !!s.orphanAssignment;
   const deleted = !!s.deleted;
 
   const card = document.createElement("div");
   card.className = `card bg-white rounded-xl overflow-hidden border border-slate-200 ${deleted ? 'status-deleted' : 'status-' + status}`;
-
-  // Image source priority: uploaded > orphan assignment > default slug
-  const imgSrc = uploaded
-    ? s.uploadedDataUrl
-    : (assigned ? `../assets/menu/lila-cafe-${s.orphanAssignment}.jpg` : getPhotoUrl(item.id));
+  const desc = s.description || "";
+  const displayName = s.correctName || item.name_th;
 
   card.innerHTML = `
     <div class="flex gap-3 p-3">
-      <div class="photo-frame w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden bg-slate-100">
-        <img src="${imgSrc}" class="w-full h-full object-cover"
-          onerror="this.parentElement.innerHTML='<div class=\\'no-photo h-full\\'><div>📷</div><div>no photo</div></div>'" />
-        ${uploaded ? '<span class="badge-new">NEW</span>' : ''}
+      <div class="photo-frame w-28 h-28 flex-shrink-0 rounded-lg overflow-hidden bg-slate-100">
+        ${uploaded
+          ? `<img src="${s.uploadedDataUrl}" alt="${displayName}" class="w-full h-full object-cover" /><span class="badge-new">NEW</span>`
+          : `<div class="no-photo"><div style="font-size:24px">📷</div><div>no photo</div><div class="text-[10px] text-slate-400">upload ↓</div></div>`}
       </div>
       <div class="flex-1 min-w-0">
-        <div class="item-name font-medium text-sm">${item.name_th}</div>
-        <div class="text-xs text-slate-500 mt-0.5">${item.name_en}</div>
-        <div class="text-xs text-slate-400 mt-0.5">${item.price ? `฿${item.price}` : 'ราคา ?'} · ${item.type}</div>
+        <div class="flex items-start gap-2">
+          <span class="menu-no">${item.no}</span>
+          <div class="flex-1 min-w-0">
+            <div class="item-name font-medium text-sm leading-tight">${displayName}</div>
+            <div class="text-xs text-slate-500 mt-0.5">${item.name_en}</div>
+          </div>
+        </div>
+        <div class="mt-2">${priceLine(item.prices, s.priceCorrections)}</div>
+        ${desc ? `<div class="text-xs text-slate-700 mt-1.5 italic border-l-2 border-amber-300 pl-2">${desc}</div>` : ''}
         <code class="text-[10px] text-slate-400 block mt-1 truncate">${item.id}</code>
       </div>
     </div>
     <div class="bg-slate-50 p-2 space-y-2 border-t">
       ${deleted ? `
         <div class="flex items-center justify-between gap-2">
-          <div class="text-xs text-slate-600">🗑️ <b>เมนูถูกลบ</b> — จะถูกเอาออกจาก menu-data.md</div>
+          <div class="text-xs text-slate-600">🗑️ <b>เมนูถูกลบ</b></div>
           <button class="btn-undel" onclick="undeleteItem('${item.id}')">↩️ คืน</button>
         </div>
       ` : `
-      <div class="flex gap-1.5">
-        <button class="btn-state ${status==='ok'?'active active-ok':''}" onclick="setStatus('${item.id}','ok')">✓ ตรง</button>
-        <button class="btn-state ${status==='fix'?'active active-fix':''}" onclick="setStatus('${item.id}','fix')">✗ ผิด</button>
-        <button class="btn-state ${status==='unsure'?'active active-unsure':''}" onclick="setStatus('${item.id}','unsure')">? ไม่แน่ใจ</button>
-      </div>
-      <div class="flex gap-1.5 items-center">
-        <label class="btn-upload ${uploaded ? 'btn-upload-replace' : ''}">
-          📷 ${uploaded ? 'Replace' : 'Upload'}
-          <input type="file" accept="image/*" class="hidden" onchange="handleUpload('${item.id}', this.files[0])" />
-        </label>
-        ${uploaded ? `<button class="text-xs px-2 py-1 text-red-600 hover:bg-red-50 rounded" onclick="clearUpload('${item.id}')">ลบรูป</button>` : ''}
-        <button class="btn-del ml-auto" onclick="deleteItem('${item.id}', '${(item.name_th||'').replace(/'/g,'')}')">🗑️ ลบเมนู</button>
-      </div>`}
-      ${!deleted && status === 'fix' ? `
-        <input type="text" class="w-full px-2 py-1.5 text-sm border border-slate-300 rounded"
-          placeholder="✏️ ชื่อจริง (TH) — ปล่อยว่างถ้าชื่อถูกแล้ว"
-          value="${(s.correct||'').replace(/"/g,'&quot;')}"
-          oninput="setCorrect('${item.id}', this.value)" />
-      ` : ''}
-      ${!deleted && (status === 'fix' || status === 'unsure') ? `
-        <div class="flex items-center gap-2">
-          <span class="text-xs text-slate-500 whitespace-nowrap">💰 ราคาจริง:</span>
-          <input type="number" inputmode="numeric" class="flex-1 px-2 py-1.5 text-sm border border-slate-300 rounded"
-            placeholder="${item.price ? `ปัจจุบัน ฿${item.price}` : 'ใส่ราคา (THB)'}"
-            value="${s.priceCorrection ?? ''}"
-            oninput="setPrice('${item.id}', this.value)" />
-          <span class="text-xs text-slate-400">฿</span>
-        </div>
         <textarea class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded" rows="2"
-          placeholder="💬 comment"
-          oninput="setComment('${item.id}', this.value)">${s.comment||''}</textarea>
-      ` : ''}
+          placeholder="📝 คำอธิบาย (บรรทัด 2 บนเว็บจริง)"
+          oninput="setDescription('${item.id}', this.value)">${desc}</textarea>
+        <div class="flex gap-1.5">
+          <button class="btn-state ${status==='ok'?'active active-ok':''}" onclick="setStatus('${item.id}','ok')">✓ ตรง</button>
+          <button class="btn-state ${status==='fix'?'active active-fix':''}" onclick="setStatus('${item.id}','fix')">✗ ผิด</button>
+          <button class="btn-state ${status==='unsure'?'active active-unsure':''}" onclick="setStatus('${item.id}','unsure')">? ไม่แน่ใจ</button>
+        </div>
+        <div class="flex gap-1.5 items-center">
+          <label class="btn-upload ${uploaded ? 'btn-upload-replace' : ''}">
+            📷 ${uploaded ? 'Replace' : 'Upload'}
+            <input type="file" accept="image/*" class="hidden" onchange="handleUpload('${item.id}', this.files[0])" />
+          </label>
+          ${uploaded ? `<button class="text-xs px-2 py-1 text-red-600 hover:bg-red-50 rounded" onclick="clearUpload('${item.id}')">ลบรูป</button>` : ''}
+          <button class="btn-del ml-auto" onclick="deleteItem('${item.id}', '${item.name_th.replace(/'/g,'')}')">🗑️ ลบเมนู</button>
+        </div>
+        ${status === 'fix' ? `
+          <input type="text" class="w-full px-2 py-1.5 text-sm border border-slate-300 rounded"
+            placeholder="✏️ ชื่อจริง (TH) — ปล่อยว่างถ้าชื่อถูกแล้ว"
+            value="${(s.correctName||'').replace(/"/g,'&quot;')}"
+            oninput="setName('${item.id}', this.value)" />
+        ` : ''}
+        ${(status === 'fix' || status === 'unsure') ? `
+          <div class="bg-white p-2 rounded border border-slate-200">
+            <div class="text-[10px] text-slate-500 mb-1">💰 ราคาจริง (ปล่อยว่างถ้าราคาเดิมถูก):</div>
+            <div class="flex gap-2 flex-wrap">
+              ${PRICE_TYPES.filter(t => item.prices[t] != null || (s.priceCorrections && s.priceCorrections[t] != null)).map(t => `
+                <label class="flex items-center gap-1 text-xs">
+                  <span class="font-medium" style="color:${t==='hot'?'#991b1b':t==='iced'?'#1e40af':t==='frappe'?'#6b21a8':'#334155'}">${PRICE_LABELS[t]}</span>
+                  <input type="number" inputmode="numeric" class="w-16 px-1.5 py-1 text-sm border border-slate-300 rounded"
+                    placeholder="${item.prices[t] ?? '?'}"
+                    value="${s.priceCorrections?.[t] ?? ''}"
+                    oninput="setPrice('${item.id}','${t}', this.value)" />
+                </label>
+              `).join('')}
+            </div>
+          </div>
+          <textarea class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded" rows="2"
+            placeholder="💬 comment"
+            oninput="setComment('${item.id}', this.value)">${s.comment||''}</textarea>
+        ` : ''}
+      `}
     </div>
   `;
   return card;
@@ -567,42 +413,48 @@ function renderItemCard(item) {
 
 function renderNewItemCard(item) {
   const idx = item._idx;
+  const prices = item.prices || {};
   const card = document.createElement("div");
   card.className = "card bg-purple-50 rounded-xl overflow-hidden border-2 border-purple-300";
   card.innerHTML = `
     <div class="flex gap-3 p-3">
-      <div class="photo-frame w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden bg-slate-100">
+      <div class="photo-frame w-28 h-28 flex-shrink-0 rounded-lg overflow-hidden bg-slate-100">
         ${item.uploadedDataUrl
           ? `<img src="${item.uploadedDataUrl}" class="w-full h-full object-cover" /><span class="badge-new">NEW</span>`
-          : `<div class="no-photo h-full"><div>📷</div><div>no photo</div></div>`}
+          : `<div class="no-photo"><div style="font-size:24px">📷</div><div>no photo</div></div>`}
       </div>
       <div class="flex-1 min-w-0 space-y-1.5">
         <div class="text-[10px] text-purple-700 font-semibold">➕ NEW ITEM</div>
-        <input type="text" class="w-full px-2 py-1 text-sm border border-purple-300 rounded" placeholder="ชื่อไทย *" value="${item.name_th||''}" oninput="updateNewItem(${idx}, 'name_th', this.value)" />
-        <input type="text" class="w-full px-2 py-1 text-xs border border-purple-300 rounded" placeholder="ชื่อ EN" value="${item.name_en||''}" oninput="updateNewItem(${idx}, 'name_en', this.value)" />
-        <div class="flex gap-1">
-          <input type="number" class="w-20 px-2 py-1 text-xs border border-purple-300 rounded" placeholder="ราคา" value="${item.price||''}" oninput="updateNewItem(${idx}, 'price', this.value)" />
-          <button onclick="delNewItem(${idx})" class="text-xs px-2 text-red-600 hover:bg-red-50 rounded">ลบเมนู</button>
-        </div>
+        <input type="text" class="w-full px-2 py-1 text-sm border border-purple-300 rounded" placeholder="ชื่อไทย *"
+          value="${item.name_th||''}" oninput="updateNewItem(${idx},'name_th',this.value)" />
+        <input type="text" class="w-full px-2 py-1 text-xs border border-purple-300 rounded" placeholder="ชื่อ EN"
+          value="${item.name_en||''}" oninput="updateNewItem(${idx},'name_en',this.value)" />
+        <textarea class="w-full px-2 py-1 text-xs border border-purple-300 rounded" rows="2" placeholder="📝 คำอธิบาย"
+          oninput="updateNewItem(${idx},'description',this.value)">${item.description||''}</textarea>
       </div>
     </div>
-    <div class="bg-purple-100 p-2 border-t border-purple-200">
-      <label class="btn-upload">
-        📷 ${item.uploadedDataUrl ? 'Replace' : 'Upload'}
-        <input type="file" accept="image/*" class="hidden" onchange="handleNewItemUpload(${idx}, this.files[0])" />
-      </label>
+    <div class="bg-purple-100 p-2 space-y-2 border-t border-purple-200">
+      <div class="flex gap-2 flex-wrap">
+        ${PRICE_TYPES.map(t => `
+          <label class="flex items-center gap-1 text-xs">
+            <span class="font-medium" style="color:${t==='hot'?'#991b1b':t==='iced'?'#1e40af':t==='frappe'?'#6b21a8':'#334155'}">${PRICE_LABELS[t]}</span>
+            <input type="number" inputmode="numeric" class="w-16 px-1.5 py-1 text-sm border border-purple-300 rounded"
+              placeholder="-"
+              value="${prices[t] ?? ''}"
+              oninput="updateNewItemPrice(${idx},'${t}',this.value)" />
+          </label>
+        `).join('')}
+      </div>
+      <div class="flex gap-2 items-center">
+        <label class="btn-upload">
+          📷 ${item.uploadedDataUrl ? 'Replace' : 'Upload'}
+          <input type="file" accept="image/*" class="hidden" onchange="handleNewItemUpload(${idx}, this.files[0])" />
+        </label>
+        <button onclick="delNewItem(${idx})" class="btn-del ml-auto">🗑️ ลบ</button>
+      </div>
     </div>
   `;
   return card;
-}
-
-function clearUpload(menuId) {
-  if (state.items[menuId]) {
-    delete state.items[menuId].uploadedDataUrl;
-    delete state.items[menuId].uploadedAt;
-    save();
-    render();
-  }
 }
 
 function renderCounters() {
@@ -616,44 +468,54 @@ function renderCounters() {
     if (s.uploadedDataUrl) c.upload++;
   }
   const cNew = state.newItems.length;
-  document.getElementById("cnt-ok").textContent = c.ok;
-  document.getElementById("cnt-fix").textContent = c.fix;
-  document.getElementById("cnt-unsure").textContent = c.unsure;
-  document.getElementById("cnt-upload").textContent = c.upload;
-  document.getElementById("cnt-new").textContent = cNew;
-  document.getElementById("cnt-deleted").textContent = c.deleted;
-  document.getElementById("progress").value = c.ok + c.fix + c.unsure + c.deleted;
-  document.getElementById("fab-zip-count").textContent = c.upload + cNew + c.fix + c.unsure + c.deleted;
+  for (const id of ['ok','fix','unsure','upload','deleted']) {
+    document.getElementById('cnt-'+id).textContent = c[id];
+  }
+  document.getElementById('cnt-new').textContent = cNew;
+  document.getElementById('progress').max = ITEMS.length;
+  document.getElementById('progress').value = c.ok + c.fix + c.unsure + c.deleted;
+  document.getElementById('fab-zip-count').textContent = c.upload + cNew + c.fix + c.unsure + c.deleted;
 }
 
 // =========================
 // EXPORT
 // =========================
 function buildMarkdown() {
-  let md = `# 📋 LiLa Cafe — Menu Verification Review\n\n`;
+  let md = `# 📋 LiLa Cafe — Menu Verification Review (v3)\n\n`;
   md += `**Date:** ${new Date().toLocaleString('th-TH')}\n\n`;
-
-  let c = { ok:0, fix:0, unsure:0, upload:0 };
+  let c = { ok:0, fix:0, unsure:0, upload:0, deleted:0 };
   for (const item of ITEMS) {
     const s = state.items[item.id]||{};
+    if (s.deleted) { c.deleted++; continue; }
     if (s.status === 'ok') c.ok++;
     else if (s.status === 'fix') c.fix++;
     else if (s.status === 'unsure') c.unsure++;
     if (s.uploadedDataUrl) c.upload++;
   }
-  const cDel = ITEMS.filter(i => (state.items[i.id]||{}).deleted).length;
-  md += `**สรุป:** ✓ ${c.ok} | ✗ ${c.fix} | ? ${c.unsure} | 📷 uploaded ${c.upload} | ➕ ใหม่ ${state.newItems.length} | 🗑️ ลบ ${cDel}\n\n`;
+  md += `**สรุป:** ✓ ${c.ok} | ✗ ${c.fix} | ? ${c.unsure} | 📷 ${c.upload} | ➕ ใหม่ ${state.newItems.length} | 🗑️ ลบ ${c.deleted}\n\n`;
+
+  // Descriptions added (always include, since this is the main task)
+  const withDesc = ITEMS.filter(i => (state.items[i.id]||{}).description?.trim());
+  if (withDesc.length) {
+    md += `## 📝 คำอธิบายเมนู (${withDesc.length})\n\n`;
+    for (const it of withDesc) {
+      md += `- **${it.no}. ${it.name_th}** — ${state.items[it.id].description.trim()}\n`;
+    }
+    md += `\n`;
+  }
 
   // Fixes
-  const fixes = ITEMS.filter(i => (state.items[i.id]||{}).status === 'fix');
+  const fixes = ITEMS.filter(i => (state.items[i.id]||{}).status === 'fix' && !(state.items[i.id]||{}).deleted);
   if (fixes.length) {
     md += `## ✗ ผิด — ต้องแก้ (${fixes.length})\n\n`;
     for (const it of fixes) {
       const s = state.items[it.id];
-      md += `- **${it.id}** (ตอนนี้: "${it.name_th}"${it.price ? ` · ฿${it.price}` : ''})`;
-      if (s.correct) md += ` → ชื่อจริง: **"${s.correct}"**`;
-      if (s.priceCorrection !== undefined && s.priceCorrection !== '') md += ` · 💰 ราคา: **฿${s.priceCorrection}**`;
-      if (s.orphanAssignment) md += `\n  📷 ใช้ orphan: \`${s.orphanAssignment}\``;
+      md += `- **${it.no}. ${it.id}** (ตอนนี้: "${it.name_th}")`;
+      if (s.correctName) md += ` → ชื่อจริง: **"${s.correctName}"**`;
+      if (s.priceCorrections) {
+        const pc = Object.entries(s.priceCorrections).map(([t,v]) => `${PRICE_LABELS[t]} ฿${v}`).join(' / ');
+        if (pc) md += `\n  💰 ราคา: ${pc}`;
+      }
       if (s.uploadedDataUrl) md += `\n  📷 มีรูปใหม่ใน ZIP: \`lila-cafe-${it.id}.jpg\``;
       if (s.comment) md += `\n  💬 ${s.comment}`;
       md += `\n\n`;
@@ -661,38 +523,39 @@ function buildMarkdown() {
   }
 
   // Unsures
-  const unsures = ITEMS.filter(i => (state.items[i.id]||{}).status === 'unsure');
+  const unsures = ITEMS.filter(i => (state.items[i.id]||{}).status === 'unsure' && !(state.items[i.id]||{}).deleted);
   if (unsures.length) {
     md += `## ? ไม่แน่ใจ (${unsures.length})\n\n`;
     for (const it of unsures) {
       const s = state.items[it.id];
-      md += `- **${it.id}** ("${it.name_th}"${it.price ? ` · ฿${it.price}` : ''})`;
-      if (s.priceCorrection !== undefined && s.priceCorrection !== '') md += ` · 💰 ราคา: **฿${s.priceCorrection}**`;
+      md += `- **${it.no}. ${it.id}** ("${it.name_th}")`;
+      if (s.priceCorrections) {
+        const pc = Object.entries(s.priceCorrections).map(([t,v]) => `${PRICE_LABELS[t]} ฿${v}`).join(' / ');
+        if (pc) md += `\n  💰 ราคา: ${pc}`;
+      }
       if (s.comment) md += `\n  💬 ${s.comment}`;
       md += `\n\n`;
     }
   }
 
-  // Uploads (separately tracked)
-  const uploadsOnly = ITEMS.filter(i => {
+  // Photos uploaded (and not also flagged fix)
+  const photos = ITEMS.filter(i => {
     const s = state.items[i.id]||{};
-    return s.uploadedDataUrl && s.status !== 'fix';
+    return s.uploadedDataUrl && s.status !== 'fix' && !s.deleted;
   });
-  if (uploadsOnly.length) {
-    md += `## 📷 รูปใหม่ที่ upload (${uploadsOnly.length})\n\n`;
-    for (const it of uploadsOnly) {
-      md += `- **${it.id}** ("${it.name_th}") — \`lila-cafe-${it.id}.jpg\`\n`;
-    }
+  if (photos.length) {
+    md += `## 📷 รูปใหม่ที่ upload (${photos.length})\n\n`;
+    for (const it of photos) md += `- **${it.no}. ${it.id}** — \`lila-cafe-${it.id}.jpg\`\n`;
     md += `\n`;
   }
 
-  // Deleted items
+  // Deleted
   const deleted = ITEMS.filter(i => (state.items[i.id]||{}).deleted);
   if (deleted.length) {
     md += `## 🗑️ ลบเมนู — ไม่มีในร้านแล้ว (${deleted.length})\n\n`;
     for (const it of deleted) {
+      md += `- **${it.no}. ${it.id}** ("${it.name_th}")`;
       const s = state.items[it.id];
-      md += `- **${it.id}** ("${it.name_th}"${it.price ? ` · ฿${it.price}` : ''})`;
       if (s.comment) md += `\n  💬 ${s.comment}`;
       md += `\n\n`;
     }
@@ -703,38 +566,31 @@ function buildMarkdown() {
     md += `## ➕ เมนูใหม่ที่เพิ่ม (${state.newItems.length})\n\n`;
     for (let i = 0; i < state.newItems.length; i++) {
       const it = state.newItems[i];
-      md += `- หมวด **${it.cat}** · ${it.name_th || '(ไม่ระบุชื่อ)'} ${it.name_en ? `/ ${it.name_en}` : ''} ${it.price ? `· ฿${it.price}` : ''}`;
-      if (it.uploadedDataUrl) md += `\n  📷 มีรูปใน ZIP: \`new-${i}.jpg\``;
+      md += `- หมวด **${it.cat}** · ${it.name_th || '(ไม่ระบุชื่อ)'}${it.name_en ? ` / ${it.name_en}` : ''}`;
+      const pc = Object.entries(it.prices||{}).map(([t,v]) => `${PRICE_LABELS[t]} ฿${v}`).join(' / ');
+      if (pc) md += `\n  💰 ${pc}`;
+      if (it.description) md += `\n  📝 ${it.description}`;
+      if (it.uploadedDataUrl) md += `\n  📷 \`new-${i}.jpg\``;
       md += `\n\n`;
     }
   }
 
-  md += `\n_(สร้างจาก verify.html v2 — ดู ZIP แนบสำหรับรูปและ JSON data)_\n`;
+  md += `\n_(สร้างจาก verify.html v3 — ดู ZIP แนบสำหรับรูปและ JSON data)_\n`;
   return md;
 }
 
 function copyMarkdown() {
   const md = buildMarkdown();
-  navigator.clipboard.writeText(md).then(() => {
-    showToast("✓ Copied markdown ไป clipboard — paste ในแชทได้เลย");
-  }).catch(() => {
-    alert(md);
-  });
+  navigator.clipboard.writeText(md).then(() => showToast("✓ Copied markdown — paste ในแชทได้เลย"))
+    .catch(() => alert(md));
 }
 
 async function downloadZip() {
   const zip = new JSZip();
   zip.file("review.md", buildMarkdown());
-  zip.file("review.json", JSON.stringify({
-    date: new Date().toISOString(),
-    state: state,
-    aliases: SLUG_ALIASES,
-  }, null, 2));
-
+  zip.file("review.json", JSON.stringify({ date: new Date().toISOString(), state }, null, 2));
   const imgs = zip.folder("images");
   let imgCount = 0;
-
-  // Uploaded photos for existing items
   for (const item of ITEMS) {
     const s = state.items[item.id];
     if (s?.uploadedDataUrl) {
@@ -743,7 +599,6 @@ async function downloadZip() {
       imgCount++;
     }
   }
-  // Uploaded photos for new items
   for (let i = 0; i < state.newItems.length; i++) {
     const it = state.newItems[i];
     if (it.uploadedDataUrl) {
@@ -752,12 +607,11 @@ async function downloadZip() {
       imgCount++;
     }
   }
-
   const content = await zip.generateAsync({type:"blob"});
   const url = URL.createObjectURL(content);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `lila-cafe-verify-${new Date().toISOString().slice(0,10)}.zip`;
+  a.download = `lila-cafe-verify-v3-${new Date().toISOString().slice(0,10)}.zip`;
   a.click();
   URL.revokeObjectURL(url);
   showToast(`✓ Downloaded ZIP (${imgCount} รูป + review.md + review.json)`);
@@ -770,76 +624,38 @@ async function downloadZip() {
   const popup = document.getElementById("zoom-popup");
   const zoomImg = document.getElementById("zoom-img");
   const zoomCap = document.getElementById("zoom-caption");
-  const POP_W = 480, MARGIN = 16;
-  let activeTarget = null;
-  let isTouch = false;
-
+  let activeTarget = null, isTouch = false;
   function positionPopup(evt) {
     const ww = window.innerWidth, wh = window.innerHeight;
-    // popup may be taller — measure after image loaded
-    const ph = popup.offsetHeight || 540;
-    const pw = popup.offsetWidth || (POP_W + 16);
-    // Prefer right side of cursor; fall back to left if no room
+    const ph = popup.offsetHeight || 540, pw = popup.offsetWidth || 496;
     let x = evt.clientX + 24;
-    if (x + pw > ww - MARGIN) x = evt.clientX - pw - 24;
-    if (x < MARGIN) x = MARGIN;
+    if (x + pw > ww - 16) x = evt.clientX - pw - 24;
+    if (x < 16) x = 16;
     let y = evt.clientY - ph / 2;
-    if (y + ph > wh - MARGIN) y = wh - ph - MARGIN;
-    if (y < MARGIN) y = MARGIN;
-    popup.style.left = x + "px";
-    popup.style.top  = y + "px";
+    if (y + ph > wh - 16) y = wh - ph - 16;
+    if (y < 16) y = 16;
+    popup.style.left = x + "px"; popup.style.top = y + "px";
   }
-
   function show(img, evt) {
-    if (!img || !img.src) return;
+    if (!img?.src) return;
     activeTarget = img;
-    zoomImg.src = img.src;
-    zoomImg.alt = img.alt || "";
-    zoomCap.textContent = img.alt || img.src.split("/").pop();
-    popup.style.display = "block";
-    positionPopup(evt);
+    zoomImg.src = img.src; zoomImg.alt = img.alt || "";
+    zoomCap.textContent = img.alt || "";
+    popup.style.display = "block"; positionPopup(evt);
   }
-  function hide() {
-    popup.style.display = "none";
-    activeTarget = null;
-  }
-
-  // Delegate at body level so dynamically rendered cards work
-  document.body.addEventListener("mouseover", (e) => {
-    const img = e.target.closest(".photo-frame img, #orphan-grid img");
-    if (img && !isTouch) show(img, e);
-  });
-  document.body.addEventListener("mousemove", (e) => {
-    if (activeTarget && popup.style.display === "block") positionPopup(e);
-  });
-  document.body.addEventListener("mouseout", (e) => {
-    const img = e.target.closest(".photo-frame img, #orphan-grid img");
-    if (img) hide();
-  });
-
-  // Touch fallback — tap to toggle
-  document.body.addEventListener("touchstart", (e) => {
+  function hide() { popup.style.display = "none"; activeTarget = null; }
+  document.body.addEventListener("mouseover", e => { const i = e.target.closest(".photo-frame img"); if (i && !isTouch) show(i,e); });
+  document.body.addEventListener("mousemove", e => { if (activeTarget && popup.style.display==="block") positionPopup(e); });
+  document.body.addEventListener("mouseout", e => { if (e.target.closest(".photo-frame img")) hide(); });
+  document.body.addEventListener("touchstart", e => {
     isTouch = true;
-    const img = e.target.closest(".photo-frame img, #orphan-grid img");
-    if (img) {
-      e.preventDefault();
-      if (activeTarget === img) { hide(); }
-      else {
-        const r = img.getBoundingClientRect();
-        show(img, { clientX: r.left + r.width/2, clientY: r.top + r.height/2 });
-      }
-    } else {
-      hide();
-    }
-  }, { passive: false });
-
-  // Click anywhere else hides
-  document.body.addEventListener("click", (e) => {
-    if (!e.target.closest(".photo-frame img, #orphan-grid img")) hide();
-  });
-
-  // ESC to close
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape") hide(); });
+    const i = e.target.closest(".photo-frame img");
+    if (i) { e.preventDefault();
+      if (activeTarget === i) hide();
+      else { const r = i.getBoundingClientRect(); show(i, { clientX:r.left+r.width/2, clientY:r.top+r.height/2 }); }
+    } else hide();
+  }, { passive:false });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") hide(); });
 })();
 
 function showToast(msg, isError = false) {
