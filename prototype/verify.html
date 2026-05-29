@@ -15,6 +15,13 @@
   .card.status-fix { background:#fee2e2; box-shadow: 0 0 0 2px #ef4444 inset; }
   .card.status-unsure { background:#fef9c3; box-shadow: 0 0 0 2px #eab308 inset; }
   .card.status-nophoto { background:#f1f5f9; box-shadow: 0 0 0 2px #94a3b8 inset; }
+  .card.status-deleted { background:#fafafa; opacity:.55; box-shadow: 0 0 0 2px #94a3b8 inset; }
+  .card.status-deleted .item-name { text-decoration: line-through; color: #94a3b8; }
+  .card.status-deleted img { filter: grayscale(1); }
+  .btn-del { font-size:11px; padding:5px 10px; background:#fee2e2; color:#991b1b; border-radius:6px; border:none; cursor:pointer; transition:all .2s; }
+  .btn-del:hover { background:#fecaca; }
+  .btn-undel { font-size:11px; padding:5px 10px; background:#dcfce7; color:#166534; border-radius:6px; border:none; cursor:pointer; transition:all .2s; }
+  .btn-undel:hover { background:#bbf7d0; }
   .btn-state { font-size: 12px; padding: 4px 8px; border-radius: 6px; transition: all .2s; cursor: pointer; border: none; flex:1; }
   .btn-state.active-ok { background:#22c55e; color:white; }
   .btn-state.active-fix { background:#ef4444; color:white; }
@@ -75,6 +82,7 @@
           <span class="px-2 py-1 rounded bg-yellow-100 text-yellow-800">? <span id="cnt-unsure">0</span></span>
           <span class="px-2 py-1 rounded bg-blue-100 text-blue-800">📷 upload <span id="cnt-upload">0</span></span>
           <span class="px-2 py-1 rounded bg-purple-100 text-purple-800">➕ ใหม่ <span id="cnt-new">0</span></span>
+          <span class="px-2 py-1 rounded bg-slate-200 text-slate-700">🗑️ ลบ <span id="cnt-deleted">0</span></span>
         </div>
         <progress id="progress" max="86" value="0" class="w-72 h-2"></progress>
       </div>
@@ -370,6 +378,20 @@ function setStatus(menuId, status) {
 }
 function setCorrect(menuId, v) { (state.items[menuId] ||= {}).correct = v; save(); }
 function setPrice(menuId, v)   { (state.items[menuId] ||= {}).priceCorrection = v; save(); }
+
+function deleteItem(menuId, name) {
+  if (!confirm(`ลบเมนู "${name}" ออกจากรายการ?\n\n(ส่งสัญญาณให้ Claude เอาออกจาก menu-data.md + หน้าเว็บ)`)) return;
+  (state.items[menuId] ||= {}).deleted = true;
+  save();
+  render();
+}
+function undeleteItem(menuId) {
+  if (state.items[menuId]) {
+    delete state.items[menuId].deleted;
+    save();
+    render();
+  }
+}
 function setComment(menuId, v) { (state.items[menuId] ||= {}).comment = v; save(); }
 
 function addNewItem(cat) {
@@ -475,9 +497,10 @@ function renderItemCard(item) {
   const status = s.status || "pending";
   const uploaded = !!s.uploadedDataUrl;
   const assigned = !!s.orphanAssignment;
+  const deleted = !!s.deleted;
 
   const card = document.createElement("div");
-  card.className = `card bg-white rounded-xl overflow-hidden border border-slate-200 status-${status}`;
+  card.className = `card bg-white rounded-xl overflow-hidden border border-slate-200 ${deleted ? 'status-deleted' : 'status-' + status}`;
 
   // Image source priority: uploaded > orphan assignment > default slug
   const imgSrc = uploaded
@@ -492,32 +515,39 @@ function renderItemCard(item) {
         ${uploaded ? '<span class="badge-new">NEW</span>' : ''}
       </div>
       <div class="flex-1 min-w-0">
-        <div class="font-medium text-sm">${item.name_th}</div>
+        <div class="item-name font-medium text-sm">${item.name_th}</div>
         <div class="text-xs text-slate-500 mt-0.5">${item.name_en}</div>
         <div class="text-xs text-slate-400 mt-0.5">${item.price ? `฿${item.price}` : 'ราคา ?'} · ${item.type}</div>
         <code class="text-[10px] text-slate-400 block mt-1 truncate">${item.id}</code>
       </div>
     </div>
     <div class="bg-slate-50 p-2 space-y-2 border-t">
+      ${deleted ? `
+        <div class="flex items-center justify-between gap-2">
+          <div class="text-xs text-slate-600">🗑️ <b>เมนูถูกลบ</b> — จะถูกเอาออกจาก menu-data.md</div>
+          <button class="btn-undel" onclick="undeleteItem('${item.id}')">↩️ คืน</button>
+        </div>
+      ` : `
       <div class="flex gap-1.5">
         <button class="btn-state ${status==='ok'?'active active-ok':''}" onclick="setStatus('${item.id}','ok')">✓ ตรง</button>
         <button class="btn-state ${status==='fix'?'active active-fix':''}" onclick="setStatus('${item.id}','fix')">✗ ผิด</button>
         <button class="btn-state ${status==='unsure'?'active active-unsure':''}" onclick="setStatus('${item.id}','unsure')">? ไม่แน่ใจ</button>
       </div>
-      <div class="flex gap-1.5">
+      <div class="flex gap-1.5 items-center">
         <label class="btn-upload ${uploaded ? 'btn-upload-replace' : ''}">
           📷 ${uploaded ? 'Replace' : 'Upload'}
           <input type="file" accept="image/*" class="hidden" onchange="handleUpload('${item.id}', this.files[0])" />
         </label>
-        ${uploaded ? `<button class="text-xs px-2 py-1 text-red-600 hover:bg-red-50 rounded" onclick="clearUpload('${item.id}')">ลบ</button>` : ''}
-      </div>
-      ${status === 'fix' ? `
+        ${uploaded ? `<button class="text-xs px-2 py-1 text-red-600 hover:bg-red-50 rounded" onclick="clearUpload('${item.id}')">ลบรูป</button>` : ''}
+        <button class="btn-del ml-auto" onclick="deleteItem('${item.id}', '${(item.name_th||'').replace(/'/g,'')}')">🗑️ ลบเมนู</button>
+      </div>`}
+      ${!deleted && status === 'fix' ? `
         <input type="text" class="w-full px-2 py-1.5 text-sm border border-slate-300 rounded"
           placeholder="✏️ ชื่อจริง (TH) — ปล่อยว่างถ้าชื่อถูกแล้ว"
           value="${(s.correct||'').replace(/"/g,'&quot;')}"
           oninput="setCorrect('${item.id}', this.value)" />
       ` : ''}
-      ${(status === 'fix' || status === 'unsure') ? `
+      ${!deleted && (status === 'fix' || status === 'unsure') ? `
         <div class="flex items-center gap-2">
           <span class="text-xs text-slate-500 whitespace-nowrap">💰 ราคาจริง:</span>
           <input type="number" inputmode="numeric" class="flex-1 px-2 py-1.5 text-sm border border-slate-300 rounded"
@@ -576,9 +606,10 @@ function clearUpload(menuId) {
 }
 
 function renderCounters() {
-  let c = { ok:0, fix:0, unsure:0, upload:0 };
+  let c = { ok:0, fix:0, unsure:0, upload:0, deleted:0 };
   for (const item of ITEMS) {
     const s = state.items[item.id]||{};
+    if (s.deleted) { c.deleted++; continue; }
     if (s.status === 'ok') c.ok++;
     else if (s.status === 'fix') c.fix++;
     else if (s.status === 'unsure') c.unsure++;
@@ -590,8 +621,9 @@ function renderCounters() {
   document.getElementById("cnt-unsure").textContent = c.unsure;
   document.getElementById("cnt-upload").textContent = c.upload;
   document.getElementById("cnt-new").textContent = cNew;
-  document.getElementById("progress").value = c.ok + c.fix + c.unsure;
-  document.getElementById("fab-zip-count").textContent = c.upload + cNew + Object.values(state.items).filter(v => v.status === 'fix' || v.status === 'unsure').length;
+  document.getElementById("cnt-deleted").textContent = c.deleted;
+  document.getElementById("progress").value = c.ok + c.fix + c.unsure + c.deleted;
+  document.getElementById("fab-zip-count").textContent = c.upload + cNew + c.fix + c.unsure + c.deleted;
 }
 
 // =========================
@@ -609,7 +641,8 @@ function buildMarkdown() {
     else if (s.status === 'unsure') c.unsure++;
     if (s.uploadedDataUrl) c.upload++;
   }
-  md += `**สรุป:** ✓ ${c.ok} | ✗ ${c.fix} | ? ${c.unsure} | 📷 uploaded ${c.upload} | ➕ ใหม่ ${state.newItems.length}\n\n`;
+  const cDel = ITEMS.filter(i => (state.items[i.id]||{}).deleted).length;
+  md += `**สรุป:** ✓ ${c.ok} | ✗ ${c.fix} | ? ${c.unsure} | 📷 uploaded ${c.upload} | ➕ ใหม่ ${state.newItems.length} | 🗑️ ลบ ${cDel}\n\n`;
 
   // Fixes
   const fixes = ITEMS.filter(i => (state.items[i.id]||{}).status === 'fix');
@@ -651,6 +684,18 @@ function buildMarkdown() {
       md += `- **${it.id}** ("${it.name_th}") — \`lila-cafe-${it.id}.jpg\`\n`;
     }
     md += `\n`;
+  }
+
+  // Deleted items
+  const deleted = ITEMS.filter(i => (state.items[i.id]||{}).deleted);
+  if (deleted.length) {
+    md += `## 🗑️ ลบเมนู — ไม่มีในร้านแล้ว (${deleted.length})\n\n`;
+    for (const it of deleted) {
+      const s = state.items[it.id];
+      md += `- **${it.id}** ("${it.name_th}"${it.price ? ` · ฿${it.price}` : ''})`;
+      if (s.comment) md += `\n  💬 ${s.comment}`;
+      md += `\n\n`;
+    }
   }
 
   // New items
