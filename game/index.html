@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<title>LiLa Cafe Rush — Crowd Runner Prototype</title>
+<meta name="description" content="LiLa Cafe Rush: เกมวิ่งนำขบวนลูกค้า เก็บกอง ผ่านประตูตัวเลข ทุบกำแพง — เดโมเกมแนว crowd runner ของ LiLa Cafe" />
+<style>
+  :root{
+    --bg:#F5EFE4; --ink:#2A2520; --accent:#A0522D; --accent2:#C8865A;
+    --good:#4CAF6E; --bad:#D9534F; --road:#6E6256; --road2:#7C7064;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;height:100%;background:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden;}
+  #wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#1c1813;}
+  canvas{display:block;background:var(--bg);touch-action:none;box-shadow:0 0 40px rgba(0,0,0,.6);}
+
+  .overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    color:#fff;text-align:center;padding:24px;background:rgba(20,16,12,.72);backdrop-filter:blur(3px);z-index:5;}
+  .overlay.hidden{display:none;}
+  .card{background:var(--bg);color:var(--ink);border-radius:20px;padding:28px 26px;max-width:340px;width:100%;
+    box-shadow:0 18px 50px rgba(0,0,0,.5);}
+  .card h1{margin:0 0 6px;font-size:26px;color:var(--accent);letter-spacing:.5px;}
+  .card .sub{margin:0 0 16px;font-size:13px;opacity:.7;line-height:1.5;}
+  .card .big{font-size:46px;font-weight:800;margin:6px 0;}
+  .stat{display:flex;justify-content:space-between;font-size:15px;padding:6px 2px;border-bottom:1px dashed #d8cdba;}
+  .stat:last-of-type{border-bottom:none;margin-bottom:8px;}
+  .btn{display:inline-block;margin-top:14px;background:var(--accent);color:#fff;border:none;border-radius:999px;
+    padding:14px 34px;font-size:17px;font-weight:700;cursor:pointer;transition:transform .08s,filter .15s;}
+  .btn:active{transform:scale(.96);}
+  .btn:hover{filter:brightness(1.07);}
+  .hint{font-size:12.5px;opacity:.65;margin-top:14px;line-height:1.6;}
+  .badge{display:inline-block;background:var(--accent2);color:#fff;font-size:11px;font-weight:700;
+    padding:3px 10px;border-radius:999px;letter-spacing:1px;margin-bottom:10px;}
+  .tag{font-size:34px;}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="c"></canvas>
+
+  <!-- Start screen -->
+  <div id="start" class="overlay">
+    <div class="card">
+      <span class="badge">PROTOTYPE</span>
+      <h1>LiLa Cafe Rush</h1>
+      <p class="sub">นำขบวนลูกค้าวิ่งไปร้าน! ลากซ้าย–ขวาเลือกผ่าน<b>ประตูตัวเลข</b> เก็บกองให้เยอะที่สุด แล้วทุบ<b>กำแพงคิว</b>ให้ทะลุ</p>
+      <div class="tag">☕👥👥👥</div>
+      <button class="btn" id="btnStart">เริ่มเล่น</button>
+      <p class="hint">🖱️ ลากเมาส์ / นิ้ว ซ้าย-ขวา เพื่อบังคับ<br>หรือใช้ปุ่ม ← → บนคีย์บอร์ด</p>
+    </div>
+  </div>
+
+  <!-- End screen -->
+  <div id="end" class="overlay hidden">
+    <div class="card">
+      <span class="badge" id="endBadge">JOB DONE</span>
+      <h1 id="endTitle">ถึงร้านแล้ว!</h1>
+      <div class="big" id="endCrowd">0</div>
+      <p class="sub" style="margin-top:-4px">ลูกค้าที่พาเข้าร้าน</p>
+      <div class="stat"><span>คะแนนรอบนี้</span><b id="endScore">0</b></div>
+      <div class="stat"><span>ระยะทาง</span><b id="endDist">0 ม.</b></div>
+      <div class="stat"><span>สถิติสูงสุด</span><b id="endBest">0</b></div>
+      <button class="btn" id="btnRetry">เล่นอีกครั้ง</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+"use strict";
+
+// ---------- Setup / responsive canvas ----------
+const cv = document.getElementById('c');
+const ctx = cv.getContext('2d');
+const startEl = document.getElementById('start');
+const endEl = document.getElementById('end');
+
+// Logical play-field size (portrait). We scale to fit screen.
+const W = 420, H = 740;
+let scale = 1, offX = 0, offY = 0;
+
+function resize(){
+  const ww = window.innerWidth, wh = window.innerHeight;
+  scale = Math.min(ww / W, wh / H);
+  const dispW = Math.round(W * scale), dispH = Math.round(H * scale);
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  cv.width = dispW * dpr; cv.height = dispH * dpr;
+  cv.style.width = dispW + 'px'; cv.style.height = dispH + 'px';
+  ctx.setTransform(dpr * scale, 0, 0, dpr * scale, 0, 0);
+  // record offset of canvas on screen for pointer mapping
+  const rect = cv.getBoundingClientRect();
+  offX = rect.left; offY = rect.top;
+}
+window.addEventListener('resize', resize);
+
+// ---------- Input ----------
+const ROAD_X = 40, ROAD_W = W - 80;           // playable horizontal band
+let targetX = W / 2;                          // where the leader wants to be
+let dragging = false;
+
+function pointerX(clientX){
+  const rect = cv.getBoundingClientRect();
+  let x = (clientX - rect.left) / scale;
+  return Math.max(ROAD_X + 20, Math.min(ROAD_X + ROAD_W - 20, x));
+}
+cv.addEventListener('pointerdown', e => { dragging = true; targetX = pointerX(e.clientX); });
+cv.addEventListener('pointermove', e => { if(dragging) targetX = pointerX(e.clientX); });
+window.addEventListener('pointerup', () => dragging = false);
+const keys = {};
+window.addEventListener('keydown', e => { keys[e.key] = true; });
+window.addEventListener('keyup', e => { keys[e.key] = false; });
+
+// ---------- Game state ----------
+const State = { START:0, PLAY:1, END:2 };
+let state = State.START;
+
+let crowd, leadX, scrollY, speed, dist, score, spawnY, level;
+let gates = [], enemies = [], walls = [], coffees = [], particles = [], floats = [];
+let shake = 0, finished = false, finishY = 0;
+
+const TRACK_LEN = 4200;   // distance to the cafe (finish)
+
+function reset(){
+  crowd = 8;
+  leadX = W/2; targetX = W/2;
+  scrollY = 0; speed = 200; dist = 0; score = 0; level = 0;
+  gates = []; enemies = []; walls = []; coffees = []; particles = []; floats = [];
+  shake = 0; finished = false; finishY = 0;
+  spawnY = -300;
+  buildTrack();
+}
+
+// Pre-generate the track content (worldY increases downward into the distance;
+// we render with worldY - scrollY, content scrolls toward the player at bottom).
+function buildTrack(){
+  let y = 500;
+  const ops = [
+    ['x',2],['x',2],['x',3],['+',15],['+',25],['+',10],['-',8],['-',12],['x',2]
+  ];
+  while(y < TRACK_LEN - 400){
+    const r = Math.random();
+    if(r < 0.42){
+      // a pair of number gates (choose one)
+      const left = randOp(), right = randOp();
+      gates.push(makeGate(y, ROAD_X + ROAD_W*0.28, left));
+      gates.push(makeGate(y, ROAD_X + ROAD_W*0.72, right));
+      y += 360 + Math.random()*120;
+    } else if(r < 0.72){
+      // enemy crowd (subtracts on contact, blocks)
+      const hp = 8 + Math.floor(Math.random()* (18 + level*6));
+      enemies.push({y, x: ROAD_X + 30 + Math.random()*(ROAD_W-60), hp, hp0:hp, w:70, dead:false, hitT:0});
+      y += 300 + Math.random()*120;
+    } else {
+      // coffee pickups (bonus units), a little arc of them
+      const cx = ROAD_X + 30 + Math.random()*(ROAD_W-60);
+      for(let i=0;i<5;i++) coffees.push({y:y+i*34, x:cx + Math.sin(i)*40, got:false});
+      y += 260 + Math.random()*120;
+    }
+    level = Math.floor(y/900);
+  }
+  // Final boss wall = the big queue at the cafe
+  finishY = TRACK_LEN;
+  walls.push({y: TRACK_LEN - 180, hp: 120 + Math.floor(Math.random()*80), hp0:0, boss:true, broken:false, hitT:0});
+  walls[walls.length-1].hp0 = walls[walls.length-1].hp;
+}
+
+function randOp(){
+  const t = Math.random();
+  if(t < 0.5) return ['x', Math.random()<0.7?2:3];
+  if(t < 0.8) return ['+', [10,15,20,25][Math.floor(Math.random()*4)]];
+  return ['-', [5,8,12][Math.floor(Math.random()*3)]];
+}
+function makeGate(y,x,op){ return {y,x,op,used:false,w:ROAD_W*0.42}; }
+
+// ---------- Helpers ----------
+function applyOp(op){
+  const [t,v] = op;
+  let before = crowd;
+  if(t==='x') crowd = Math.round(crowd * v);
+  else if(t==='+') crowd += v;
+  else crowd = Math.max(0, crowd - v);
+  crowd = Math.min(crowd, 99999);
+  const diff = crowd - before;
+  floats.push({x:leadX, y:H-180, t:0, txt:(diff>=0?'+':'')+diff, good:diff>=0});
+  shake = Math.min(shake + (t==='x'?8:4), 16);
+}
+function spawnBurst(x,y,color,n){
+  for(let i=0;i<n;i++){
+    const a = Math.random()*Math.PI*2, sp = 60+Math.random()*180;
+    particles.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-60,life:0,max:.5+Math.random()*.4,color,r:2+Math.random()*3});
+  }
+}
+
+// ---------- Update ----------
+let last = performance.now();
+function loop(now){
+  const dt = Math.min((now - last)/1000, 0.05); last = now;
+  if(state === State.PLAY) update(dt);
+  render();
+  requestAnimationFrame(loop);
+}
+
+function update(dt){
+  // keyboard steering
+  if(keys['ArrowLeft']||keys['a']) targetX -= 320*dt;
+  if(keys['ArrowRight']||keys['d']) targetX += 320*dt;
+  targetX = Math.max(ROAD_X + 20, Math.min(ROAD_X + ROAD_W - 20, targetX));
+  leadX += (targetX - leadX) * Math.min(1, dt*12);
+
+  // speed scales gently with crowd; cap it
+  speed = 200 + Math.min(crowd, 300)*0.25;
+  scrollY += speed * dt;
+  dist = scrollY;
+  score = Math.floor(scrollY/10) + crowd*3;
+
+  const py = H - 160;                     // player's screen Y (the leader line)
+  const reach = 26 + Math.min(60, Math.sqrt(crowd)*7); // crowd footprint radius
+
+  // ----- Gates -----
+  for(const g of gates){
+    if(g.used) continue;
+    const sy = g.y - scrollY;
+    if(sy > py-30 && sy < py+30){
+      // pass through if leader within gate's horizontal half
+      const onLeft = g.x < W/2;
+      const within = onLeft ? (leadX < W/2) : (leadX >= W/2);
+      if(within && Math.abs(g.x - leadX) < g.w/2 + reach){
+        g.used = true;
+        // mark the sibling on the same row as used too (you only take one)
+        for(const o of gates){ if(!o.used && Math.abs(o.y-g.y)<4) o.used = true; }
+        applyOp(g.op);
+        spawnBurst(leadX, py, g.op[0]==='-'?'#D9534F':'#4CAF6E', 18);
+      }
+    }
+  }
+
+  // ----- Coffee pickups -----
+  for(const cf of coffees){
+    if(cf.got) continue;
+    const sy = cf.y - scrollY;
+    if(sy > py-26 && sy < py+26 && Math.abs(cf.x-leadX) < reach+16){
+      cf.got = true; crowd += 1; score += 5;
+      spawnBurst(cf.x, py, '#C8865A', 6);
+    }
+  }
+
+  // ----- Enemies (battle on contact) -----
+  for(const e of enemies){
+    if(e.dead) continue;
+    const sy = e.y - scrollY;
+    if(sy > py-40 && sy < py+34 && Math.abs(e.x-leadX) < e.w/2 + reach){
+      // trade units: both sides lose; resolve fast
+      const dmg = Math.ceil(crowd*dt*4)+1;
+      const loss = Math.ceil(e.hp*dt*4)+1;
+      e.hp -= dmg; crowd -= loss; e.hitT = .12;
+      if(crowd <= 0){ crowd = 0; }
+      if(e.hp <= 0){ e.dead = true; spawnBurst(e.x, sy, '#D9534F', 22); shake=Math.min(shake+10,18); score+=20; }
+    }
+    if(e.hitT>0) e.hitT -= dt;
+  }
+
+  // ----- Final wall / cafe queue -----
+  for(const w of walls){
+    if(w.broken) continue;
+    const sy = w.y - scrollY;
+    if(sy > py-60 && sy < py+40){
+      const dmg = Math.ceil(crowd*dt*6)+1;
+      const loss = Math.ceil(w.hp*dt*1.5)+1;
+      w.hp -= dmg; crowd -= loss; w.hitT=.12;
+      if(crowd<=0) crowd=0;
+      if(w.hp <= 0){ w.broken=true; spawnBurst(W/2, sy, '#A0522D', 60); shake=Math.min(shake+20,26); score+=200; }
+    }
+    if(w.hitT>0) w.hitT-=dt;
+  }
+
+  // floats & particles
+  for(const f of floats){ f.t += dt; f.y -= 40*dt; }
+  floats = floats.filter(f=>f.t<1);
+  for(const p of particles){ p.life+=dt; p.x+=p.vx*dt; p.y+=p.vy*dt; p.vy+=320*dt; }
+  particles = particles.filter(p=>p.life<p.max);
+  if(shake>0) shake = Math.max(0, shake - dt*40);
+
+  // ----- Win / lose -----
+  if(crowd <= 0 && !finished){ endGame(false); }
+  if(scrollY >= finishY - (H-160) + 40 && !finished){
+    // reached cafe; success if any crowd survived the wall
+    const wall = walls[0];
+    if(wall.broken || crowd>0){ endGame(true); }
+  }
+}
+
+// ---------- Render ----------
+function render(){
+  ctx.save();
+  let sx=0, sy=0;
+  if(shake>0){ sx=(Math.random()-.5)*shake; sy=(Math.random()-.5)*shake; }
+  ctx.clearRect(-20,-20,W+40,H+40);
+  ctx.translate(sx,sy);
+
+  drawRoad();
+
+  const py = H - 160;
+  const reach = 26 + Math.min(60, Math.sqrt(Math.max(crowd,1))*7);
+
+  // coffees
+  for(const cf of coffees){ if(cf.got) continue; const y=cf.y-scrollY; if(y<-30||y>H+30)continue; drawCoffee(cf.x,y); }
+
+  // enemies
+  for(const e of enemies){ if(e.dead) continue; const y=e.y-scrollY; if(y<-60||y>H+60)continue; drawEnemy(e,y); }
+
+  // gates
+  for(const g of gates){ const y=g.y-scrollY; if(y<-80||y>H+40)continue; if(!g.used) drawGate(g,y); }
+
+  // final wall
+  for(const w of walls){ const y=w.y-scrollY; if(w.broken||y<-120||y>H+60)continue; drawWall(w,y); }
+
+  // player crowd
+  drawCrowd(leadX, py, reach);
+
+  // particles
+  for(const p of particles){
+    ctx.globalAlpha = Math.max(0,1-p.life/p.max); ctx.fillStyle=p.color;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,7); ctx.fill();
+  }
+  ctx.globalAlpha=1;
+
+  // floating numbers
+  for(const f of floats){
+    ctx.globalAlpha=Math.max(0,1-f.t); ctx.font='800 26px system-ui'; ctx.textAlign='center';
+    ctx.fillStyle=f.good?'#2e8a52':'#c0392b';
+    ctx.lineWidth=4; ctx.strokeStyle='rgba(255,255,255,.85)';
+    ctx.strokeText(f.txt,f.x,f.y); ctx.fillText(f.txt,f.x,f.y);
+  }
+  ctx.globalAlpha=1;
+
+  ctx.restore();
+  drawHUD();
+}
+
+function drawRoad(){
+  // grass / sidewalk
+  ctx.fillStyle='#E7DCC6'; ctx.fillRect(0,0,W,H);
+  // road
+  ctx.fillStyle='#6E6256';
+  ctx.fillRect(ROAD_X,0,ROAD_W,H);
+  // center + lane dashes scrolling
+  ctx.strokeStyle='rgba(255,255,255,.35)'; ctx.lineWidth=4; ctx.setLineDash([26,26]);
+  ctx.lineDashOffset = -(scrollY % 52);
+  ctx.beginPath(); ctx.moveTo(W/2,0); ctx.lineTo(W/2,H); ctx.stroke();
+  ctx.setLineDash([]);
+  // edges
+  ctx.fillStyle='#5a4f44'; ctx.fillRect(ROAD_X-6,0,6,H); ctx.fillRect(ROAD_X+ROAD_W,0,6,H);
+  // distance-to-cafe banner near finish
+  const fy = finishY - 180 - scrollY;
+  if(fy>-200 && fy<H){
+    ctx.fillStyle='#A0522D'; ctx.fillRect(ROAD_X, fy-26, ROAD_W, 8);
+    ctx.font='800 16px system-ui'; ctx.textAlign='center'; ctx.fillStyle='#fff';
+  }
+}
+
+function drawCrowd(x,y,reach){
+  const n = Math.min(crowd, 60); // draw up to N dots representing the crowd
+  // body cluster
+  for(let i=0;i<n;i++){
+    const ang = (i*2.399963); const rr = reach * Math.sqrt(i/Math.max(n,1));
+    const px = x + Math.cos(ang)*rr, py = y + Math.sin(ang)*rr*0.5;
+    drawUnit(px,py, i===0);
+  }
+  // leader marker
+  drawUnit(x,y,true);
+}
+function drawUnit(x,y,lead){
+  ctx.fillStyle = lead ? '#A0522D' : '#C8865A';
+  ctx.beginPath(); ctx.arc(x,y,7,0,7); ctx.fill();
+  ctx.fillStyle = lead ? '#7a3d20' : '#a86a42';
+  ctx.fillRect(x-5,y+3,10,9); // little body
+  ctx.fillStyle = lead ? '#A0522D' : '#C8865A';
+  ctx.beginPath(); ctx.arc(x,y-4,4.5,0,7); ctx.fill();
+}
+
+function drawGate(g,y){
+  const half=g.w/2;
+  const isNeg = g.op[0]==='-';
+  const col = isNeg ? 'rgba(217,83,79,.85)' : 'rgba(76,175,110,.9)';
+  ctx.fillStyle = col;
+  ctx.fillRect(g.x-half, y-46, g.w, 56);
+  // posts
+  ctx.fillStyle='rgba(0,0,0,.18)'; ctx.fillRect(g.x-half,y-58,8,72); ctx.fillRect(g.x+half-8,y-58,8,72);
+  // label
+  const label = (g.op[0]==='x'?'×':g.op[0]) + g.op[1];
+  ctx.font='800 30px system-ui'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.lineWidth=4; ctx.strokeStyle='rgba(0,0,0,.25)';
+  ctx.strokeText(label, g.x, y-18); ctx.fillStyle='#fff'; ctx.fillText(label, g.x, y-18);
+  ctx.textBaseline='alphabetic';
+}
+
+function drawEnemy(e,y){
+  const flash = e.hitT>0;
+  ctx.fillStyle = flash ? '#fff' : '#8a4b48';
+  // a clump
+  const n = Math.min(e.hp,30);
+  for(let i=0;i<n;i++){
+    const ang=i*2.399963, rr=(e.w/2-6)*Math.sqrt(i/Math.max(n,1));
+    ctx.beginPath(); ctx.arc(e.x+Math.cos(ang)*rr, y+Math.sin(ang)*rr*0.5, 6, 0,7); ctx.fill();
+  }
+  // hp badge
+  ctx.font='800 22px system-ui'; ctx.textAlign='center';
+  ctx.lineWidth=4; ctx.strokeStyle='rgba(255,255,255,.9)';
+  ctx.strokeText(e.hp, e.x, y-32); ctx.fillStyle='#c0392b'; ctx.fillText(e.hp, e.x, y-32);
+}
+
+function drawWall(w,y){
+  ctx.fillStyle = w.hitT>0 ? '#cfa' : '#A0522D';
+  ctx.fillRect(ROAD_X+6, y-70, ROAD_W-12, 80);
+  ctx.fillStyle='rgba(0,0,0,.15)';
+  for(let bx=ROAD_X+6;bx<ROAD_X+ROAD_W-12;bx+=44){ ctx.fillRect(bx, y-70, 2, 80); }
+  ctx.font='800 40px system-ui'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.lineWidth=5; ctx.strokeStyle='rgba(0,0,0,.3)';
+  ctx.strokeText(w.hp, W/2, y-30); ctx.fillStyle='#fff'; ctx.fillText(w.hp, W/2, y-30);
+  ctx.textBaseline='alphabetic';
+  ctx.font='700 13px system-ui'; ctx.fillStyle='#fff';
+  ctx.fillText('☕ คิวหน้าร้าน LiLa', W/2, y+2);
+}
+
+function drawCoffee(x,y){
+  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(x,y,9,0,7); ctx.fill();
+  ctx.fillStyle='#6b3f1d'; ctx.beginPath(); ctx.arc(x,y,5.5,0,7); ctx.fill();
+  ctx.strokeStyle='#C8865A'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(x+9,y,4,-1,1); ctx.stroke();
+}
+
+function drawHUD(){
+  // crowd counter top-center
+  ctx.font='800 40px system-ui'; ctx.textAlign='center';
+  ctx.lineWidth=6; ctx.strokeStyle='rgba(255,255,255,.9)';
+  ctx.strokeText(crowd, W/2, 56); ctx.fillStyle='#A0522D'; ctx.fillText(crowd, W/2, 56);
+  ctx.font='700 12px system-ui'; ctx.fillStyle='rgba(42,37,32,.7)';
+  ctx.fillText('👥 ขบวนลูกค้า', W/2, 72);
+  // score
+  ctx.textAlign='left'; ctx.font='700 16px system-ui'; ctx.fillStyle='#2A2520';
+  ctx.fillText('คะแนน '+score, 14, 28);
+  // distance progress bar
+  const prog = Math.min(1, scrollY/(finishY-(H-160)));
+  ctx.fillStyle='rgba(0,0,0,.12)'; ctx.fillRect(14, H-22, W-28, 8);
+  ctx.fillStyle='#A0522D'; ctx.fillRect(14, H-22, (W-28)*prog, 8);
+  ctx.font='700 11px system-ui'; ctx.textAlign='right'; ctx.fillStyle='#2A2520';
+  ctx.fillText('🏁 ร้าน LiLa', W-14, H-28);
+}
+
+// ---------- Flow ----------
+function startGame(){ reset(); state=State.PLAY; startEl.classList.add('hidden'); endEl.classList.add('hidden'); }
+function endGame(win){
+  finished = true; state = State.END;
+  const best = Math.max(score, +(localStorage.getItem('lila_rush_best')||0));
+  localStorage.setItem('lila_rush_best', best);
+  document.getElementById('endBadge').textContent = win ? 'SUCCESS' : 'GAME OVER';
+  document.getElementById('endTitle').textContent = win ? 'ถึงร้านแล้ว! 🎉' : 'ขบวนหมด! 😵';
+  document.getElementById('endTitle').style.color = win ? 'var(--accent)' : 'var(--bad)';
+  document.getElementById('endCrowd').textContent = crowd;
+  document.getElementById('endScore').textContent = score;
+  document.getElementById('endDist').textContent = Math.floor(dist/10) + ' ม.';
+  document.getElementById('endBest').textContent = best;
+  endEl.classList.remove('hidden');
+}
+document.getElementById('btnStart').addEventListener('click', startGame);
+document.getElementById('btnRetry').addEventListener('click', startGame);
+
+// ---------- Boot ----------
+resize();
+reset();            // build a track so the start screen has something behind it
+requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

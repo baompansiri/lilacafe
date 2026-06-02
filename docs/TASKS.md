@@ -169,3 +169,4 @@ Status: `todo` | `in-progress` | `blocked` | `done`
 | 2026-05-28 | SEO rename: `LILA-NNN` → `lila-cafe-{slug}.jpg` ทั้ง 40 ไฟล์ (git mv + bulk refs update) |
 | 2026-05-28 | Re-map Coffee #1-4 หลัง POS images ละเอียดมาใหม่: swap LILA-043↔053, 044↔049 ให้ตรง |
 | 2026-05-28 | verify.html v2: full 86-item list + upload-replace + orphan assign + add-new + ZIP export (JSZip + Canvas resize) |
+| 2026-06-02 | New Requirement: Mini-game "LiLa Cafe Rush" — สร้าง game/index.html (crowd runner prototype). G1 done; G2 i18n / G3 GA4 / G4 polish / G5 web-integration = todo |

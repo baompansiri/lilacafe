@@ -137,3 +137,20 @@
 | Date | Version | Change |
 |---|---|---|
 | 2026-05-28 | 0.1 | Initial plan |
+| 2026-06-02 | 0.2 | เพิ่ม Phase G — Mini-game "LiLa Cafe Rush" (crowd runner) |
+
+---
+
+## Phase G — Mini-game "LiLa Cafe Rush" (crowd runner)
+
+**Branch:** `claude/web-game-dev-rCFZH`
+
+| Step | งาน | สถานะ |
+|---|---|---|
+| G1 | Prototype playable: Canvas 2D, ระบบกองทัพ (gate ×/+/−, enemy HP, coffee pickup, boss wall, score, localStorage best), หน้า start/end | ✅ done |
+| G2 | i18n TH+EN (รวม string + toggle) | todo |
+| G3 | GA4 event tracking (start/end/win/lose/score) | todo |
+| G4 | Polish: sprite/art ร้านกาแฟจริง, sfx/เสียง, juice (ขบวนวิ่งเป็น formation) | todo |
+| G5 | ผูกเข้าเว็บหลัก (ปุ่ม "เล่นเกม" จากหน้า home) + share score | todo |
+
+**สถาปัตยกรรม:** single-file `game/index.html` (HTML+CSS+JS, ไม่มี build step) — render ด้วย logical canvas 420×740 สเกลพอดีจอ, pointer + keyboard input, fixed-timestep game loop ผ่าน rAF

@@ -233,3 +233,26 @@
 | 2026-05-28 | 0.7 | Rename category "พาสต้า" → "อาหาร Inter" + เพิ่มเข้า menu filter | Improvement |
 | 2026-05-28 | 0.8 | Prototype expanded: เพิ่ม menu.html (10 หมวด) + facility.html (5 มุม), ทุกปุ่ม home คลิกได้ | New Requirement |
 | 2026-05-28 | 0.9 | Visual polish: เพิ่ม glossy theme layer (sheen, frosted glass, ambient glow) คงสีเดิม | Improvement |
+| 2026-06-02 | 1.0 | **Mini-game prototype** — `game/index.html` เกมแนว crowd runner ("LiLa Cafe Rush") ธีมร้านกาแฟ เพื่อใช้โปรโมต/engagement | **New Requirement** |
+
+---
+
+## 10. New Requirement — Mini-game "LiLa Cafe Rush" (v1.0)
+
+**What & Why:** มินิเกมแนว *crowd runner / number-gate* (อ้างอิงเกมตลาดอย่าง Count Masters / Titan Rush) สำหรับใช้เป็น engagement hook / โปรโมตร้านบนเว็บและโซเชียล ผู้เล่นนำขบวน "ลูกค้า" วิ่งไปร้าน LiLa
+
+**Core loop (ระบบกองทัพ):**
+- วิ่งอัตโนมัติไปข้างหน้า ผู้เล่นลากซ้าย–ขวา (touch/mouse/keyboard) บังคับหัวขบวน
+- **ประตูตัวเลข** เป็นคู่ ให้เลือกผ่านข้างเดียว: `×2/×3` (คูณกอง), `+10..+25` (เพิ่ม), `−5..−12` (ลด)
+- **coffee pickup** เก็บเพิ่มกองทีละ 1
+- **ศัตรู (กองคู่แข่ง)** มีเลข HP ปะทะแล้วแลกกำลังกัน
+- **กำแพงคิวหน้าร้าน** (บอสจบด่าน) มี HP สูง ต้องมีกองมากพอจะทุบทะลุ
+- จบเกม: ถึงร้าน (สำเร็จ) หรือกองหมด (แพ้) — เก็บ high score ใน localStorage
+
+**Scope รอบนี้ (prototype):** Canvas 2D single-file, mobile-first portrait, เล่นจบรอบได้, มีหน้า start/end + สถิติสูงสุด
+
+**Implementation skills — เหตุผลที่ยังไม่ครบใน prototype นี้** (ตาม CLAUDE.md §3):
+- i18n: UI เป็น TH ก่อน (string รวมศูนย์ในไฟล์เดียว ปรับเป็น EN ได้ภายหลัง) — **เลื่อนไป v1.1**
+- SEO/AEO: เป็น interactive game ไม่ใช่ content page — มี meta title/description พื้นฐานพอ
+- Security (OWASP): ไม่มี backend/input ที่ persist นอกจาก localStorage (เก็บ best score เป็นตัวเลข) — ความเสี่ยงต่ำ
+- GA4: **เลื่อนไป v1.1** (จะ track event: game_start, game_end, win/lose, score)
