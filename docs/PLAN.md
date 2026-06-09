@@ -137,3 +137,4 @@
 | Date | Version | Change |
 |---|---|---|
 | 2026-05-28 | 0.1 | Initial plan |
+| 2026-06-09 | 0.2 | Improvement: facility.html ใช้รูปจริงจากร้าน (14 รูป owner-supplied) แทน Unsplash placeholder + เพิ่ม Gallery section พร้อม lightbox — ยังเหลือ gap รูปภายใน/เคาน์เตอร์กาแฟ + โต๊ะทำงานจริง (ยังใช้รูปสถาปัตยกรรมแทน) |

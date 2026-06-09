@@ -1,6 +1,6 @@
 # Task Tracking — LiLa Cafe Website
 
-**Last updated:** 2026-05-28 (v2)
+**Last updated:** 2026-06-09 (v3)
 
 Status: `todo` | `in-progress` | `blocked` | `done`
 
@@ -169,3 +169,15 @@ Status: `todo` | `in-progress` | `blocked` | `done`
 | 2026-05-28 | SEO rename: `LILA-NNN` → `lila-cafe-{slug}.jpg` ทั้ง 40 ไฟล์ (git mv + bulk refs update) |
 | 2026-05-28 | Re-map Coffee #1-4 หลัง POS images ละเอียดมาใหม่: swap LILA-043↔053, 044↔049 ให้ตรง |
 | 2026-05-28 | verify.html v2: full 86-item list + upload-replace + orphan assign + add-new + ZIP export (JSZip + Canvas resize) |
+| 2026-06-09 | facility.html: แทนรูป placeholder Unsplash ทั้ง 5 มุมด้วยรูปจริงจากร้าน (14 รูป → assets/facility/) + เพิ่ม section "แกลเลอรี่ร้าน" masonry grid + lightbox (keyboard/swipe/backdrop-close, ซ่อน sticky header ตอนเปิด) |
+| 2026-06-09 | Fix dev server: เปลี่ยน launch.json จาก `serve` → `http-server` (serve `.html` ตรงๆ ไม่ตัดนามสกุล) แก้ปัญหา link relative `facility.html` กลายเป็น 404 `/facility` จาก clean-URL ของ serve — link ใน HTML ไม่ต้องแก้ |
+| 2026-06-10 | Rename โฟลเดอร์ `prototype/` → `lilacafe/` (git mv) + แก้ root index.html redirect/canonical → URL ใหม่ /lilacafe/* (ล้าง cached 301 เดิมไปในตัว → แก้ "link เมนูเสีย") |
+| 2026-06-10 | index.html hero: แทนรูป Unsplash placeholder 2 รูปด้วยรูปจริง — รูปใหญ่ = ทางเข้าร้าน (entrance), รูปเล็ก = ตุ๊กตาช้าง (elephant-plush) |
+| 2026-06-10 | เพิ่ม Flipbook "เมนูฉบับเต็ม" ในหน้า home (StPageFlip CDN) จากโปสเตอร์เมนูจริง 4 หน้า → assets/menu-book/ + fallback grid ถ้า lib โหลดไม่ได้ |
+| 2026-06-10 | แก้เรตติ้ง 4.5 → 4.8 (hero + reviews section) |
+| 2026-06-10 | Logo: crop ช้างจากโปสเตอร์เมนู + ทำพื้นหลังโปร่งใส (Pillow) → assets/brand/lila-cafe-mark.png แทน emoji 🐘 ใน nav ทั้ง 3 หน้า |
+| 2026-06-10 | ลบ footer note "Prototype version — placeholder" ออกทั้ง 3 หน้า |
+| 2026-06-10 | index.html section "มุมในร้าน" (5 การ์ด): แทนรูป Unsplash ด้วยรูปจริง (coffee=made-with-heart, work=arch-corridor, garden=koi-pond, kids=playground, family=elephant-plush) → หน้า home ไม่เหลือ Unsplash แล้ว |
+| 2026-06-10 | ลบ note draft/placeholder 4 จุดออกจากหน้า home (story draft, preview price, flipbook hint, review seed) + เก็บกวาด JS bookHint refs |
+| 2026-06-10 | **รื้อ menu.html เป็น data-driven** (lilacafe/menu-data.js): 11 หมวด 93 รายการ ราคาจริงจากโปสเตอร์/FoodStory, map รูปจริง 26 รูป, ที่เหลือ 67 รายการเป็น skeleton (shimmer + ไอคอนกล้อง + "ยังไม่มีรูป"). หมวด: Coffee/Non-Coffee/Matcha&Tea/Signature/Soft&Soda/จานเดียว/กับข้าว/ขนมจีน/ทอด/พาสต้า/ขนมไทย. ข้าม เบเกอรี่+อื่นๆ (ยังไม่มีราคา/ข้อมูลครบ) |
+| 2026-06-10 | หน้าแรก section "Signature & Favorites" sync จาก menu-data.js (include บน index.html): แสดงเฉพาะ 26 เมนูที่มีรูป + filter chips ใช้งานได้จริง (เฉพาะหมวดที่มีรูป) + ลิงก์ "ดูเมนูทั้งหมด" → menu.html. ตัด hardcoded cards + การ์ด ฿— ทิ้ง |
