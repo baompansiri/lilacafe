@@ -170,7 +170,7 @@ const MENU = [
 
   function cardHTML(it) {
     const media = it.img
-      ? '<img src="../assets/menu/lila-cafe-' + it.img + '.jpg" alt="' + it.th +
+      ? '<img src="assets/menu/lila-cafe-' + it.img + '.jpg" alt="' + it.th +
         '" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy" />'
       : '<div class="skeleton w-full h-full">' + CAMERA_SVG + '<span>ยังไม่มีรูป</span></div>';
 
