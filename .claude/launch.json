@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "lila-cafe",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["-y", "http-server", ".", "-p", "4173", "-c-1", "--no-dotfiles"],
+      "port": 4173
+    }
+  ]
+}

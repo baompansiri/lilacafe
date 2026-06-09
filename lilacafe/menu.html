@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>เมนู | LiLa Cafe — ลีลา คาเฟ่</title>
+<meta name="description" content="เมนูครบทุกหมวด — กาแฟ ชา ขนมไทย กับข้าว เบเกอรี่ และเครื่องดื่ม Signature ที่ลีลา คาเฟ่" />
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<script>
+  tailwind.config = {
+    theme: { extend: {
+      colors: {
+        cream: { 50:'#FBF7EF', 100:'#F5EFE4', 200:'#EDE3D2', 300:'#E0D2B8' },
+        sage:  { 400:'#8FA08F', 500:'#7A8D7A', 600:'#6B8174', 700:'#556B5C', 800:'#3F5246' },
+        teak:  { 400:'#C8A077', 500:'#B8895A', 600:'#A06B3F', 700:'#7E5530' },
+        terracotta: { 500:'#B86A3D', 600:'#A0522D', 700:'#854422' },
+        ink:   { 900:'#2A2520', 700:'#4A4138', 500:'#6B6055' },
+      },
+      fontFamily: {
+        serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+        sans:  ['"IBM Plex Sans Thai"', 'system-ui', 'sans-serif'],
+      },
+    }},
+  }
+</script>
+
+<style>
+  html { scroll-behavior: smooth; }
+  body { font-family: 'IBM Plex Sans Thai', system-ui, sans-serif; background:#F5EFE4; color:#2A2520; }
+  h1,h2,h3,.font-serif { font-family:'Cormorant Garamond', Georgia, serif; }
+  .thai-heading { font-family:'IBM Plex Sans Thai', system-ui, sans-serif; font-weight:500; }
+  .arch-image { border-top-left-radius:9999px; border-top-right-radius:9999px; overflow:hidden; }
+  .cat-anchor { scroll-margin-top: 140px; }
+
+  /* Skeleton placeholder for items without a photo */
+  .skeleton {
+    position: relative;
+    background: linear-gradient(135deg, #EDE3D2 0%, #F5EFE4 100%);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 6px; color: #B8895A;
+  }
+  .skeleton::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(100deg, transparent 20%, rgba(255,255,255,0.55) 50%, transparent 80%);
+    transform: translateX(-100%);
+    animation: skeleton-shimmer 1.8s ease-in-out infinite;
+  }
+  @keyframes skeleton-shimmer { to { transform: translateX(100%); } }
+  .skeleton svg { width: 30%; max-width: 56px; height: auto; opacity: 0.5; }
+  .skeleton span { font-size: 11px; letter-spacing: 0.04em; opacity: 0.7; z-index: 1; }
+
+  /* === GLOSSY THEME LAYER === */
+  body {
+    background:
+      radial-gradient(circle at 12% 8%, rgba(184, 137, 90, 0.10), transparent 42%),
+      radial-gradient(circle at 88% 92%, rgba(122, 141, 122, 0.10), transparent 42%),
+      linear-gradient(180deg, #FBF7EF 0%, #F5EFE4 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+  a, button { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+  .rounded-full {
+    background-image: linear-gradient(180deg,
+      rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.04) 45%, rgba(0,0,0,0.06) 100%);
+  }
+  .bg-terracotta-600, .bg-terracotta-700 {
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.28), inset 0 -1px 0 rgba(0,0,0,0.15),
+      0 6px 18px rgba(160,82,45,0.22), 0 2px 6px rgba(42,37,32,0.10);
+  }
+  .bg-terracotta-600:hover, .bg-terracotta-700:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15),
+      0 12px 30px rgba(160,82,45,0.30), 0 4px 10px rgba(42,37,32,0.12);
+  }
+  .bg-sage-700, .bg-sage-800 {
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.22), inset 0 -1px 0 rgba(0,0,0,0.15),
+      0 6px 18px rgba(85,107,92,0.22), 0 2px 6px rgba(42,37,32,0.10);
+  }
+  .bg-sage-700:hover, .bg-sage-800:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -1px 0 rgba(0,0,0,0.15),
+      0 12px 30px rgba(85,107,92,0.28), 0 4px 10px rgba(42,37,32,0.12);
+  }
+  .bg-cream-50, .bg-cream-100, .bg-cream-200 {
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 2px 8px rgba(42,37,32,0.05);
+  }
+  .rounded-2xl, .rounded-3xl {
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.5),
+      0 10px 32px rgba(42,37,32,0.08), 0 4px 10px rgba(42,37,32,0.04);
+  }
+  .arch-image { position: relative; isolation: isolate; }
+  .arch-image::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg,
+      rgba(255,255,255,0.32) 0%, rgba(255,255,255,0.10) 22%, transparent 50%);
+    pointer-events: none;
+    border-top-left-radius: 9999px; border-top-right-radius: 9999px;
+    z-index: 2;
+  }
+  header {
+    background: linear-gradient(180deg, rgba(245, 239, 228, 0.82), rgba(245, 239, 228, 0.68)) !important;
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 4px 24px rgba(42,37,32,0.06);
+  }
+  .sticky.top-16 {
+    background: linear-gradient(180deg, rgba(251, 247, 239, 0.9), rgba(245, 239, 228, 0.82)) !important;
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+  }
+  iframe { box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 12px 36px rgba(42,37,32,0.12); }
+  footer {
+    background: radial-gradient(ellipse at top, rgba(160,82,45,0.12), transparent 50%), #2A2520 !important;
+  }
+</style>
+</head>
+<body class="antialiased">
+
+<!-- NAV -->
+<header class="sticky top-0 z-50 bg-cream-100/90 backdrop-blur border-b border-cream-300/50">
+  <nav class="max-w-7xl mx-auto px-5 lg:px-8 h-16 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2">
+      <div class="w-9 h-9 rounded-full bg-cream-200 flex items-center justify-center overflow-hidden"><img src="../assets/brand/lila-cafe-mark.png" alt="โลโก้ช้าง ลีลา คาเฟ่" class="w-7 h-7 object-contain" /></div>
+      <div class="leading-tight">
+        <div class="font-serif text-xl font-semibold tracking-wide text-terracotta-700">LILA CAFE</div>
+        <div class="text-[10px] tracking-[0.25em] text-ink-500 uppercase">Thai Dessert & Drink</div>
+      </div>
+    </a>
+    <ul class="hidden md:flex items-center gap-7 text-sm text-ink-700">
+      <li><a href="menu.html" class="text-terracotta-600 font-medium">เมนู</a></li>
+      <li><a href="facility.html" class="hover:text-terracotta-600 transition">มุมในร้าน</a></li>
+      <li><a href="index.html#reviews" class="hover:text-terracotta-600 transition">รีวิว</a></li>
+      <li><a href="index.html#visit" class="hover:text-terracotta-600 transition">มาที่ร้าน</a></li>
+    </ul>
+    <a href="tel:0840531494" class="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-sage-700 text-cream-50 text-sm hover:bg-sage-800 transition"><span>📞</span> 084 053 1494</a>
+    <a href="index.html#visit" class="md:hidden text-sm px-3 py-1.5 rounded-full bg-sage-700 text-cream-50">มาที่ร้าน</a>
+  </nav>
+</header>
+
+<!-- PAGE HEADER -->
+<section class="bg-cream-200 py-16 lg:py-20">
+  <div class="max-w-5xl mx-auto px-5 lg:px-8 text-center">
+    <p class="text-sm tracking-[0.3em] text-sage-700 uppercase mb-3">— Our Menu —</p>
+    <h1 class="font-serif text-5xl lg:text-6xl text-ink-900 mb-4">เมนูทั้งหมด</h1>
+    <p class="text-ink-700 max-w-2xl mx-auto">ขนมไทย กาแฟสด เครื่องดื่มซิกเนเจอร์ กับข้าวฝีมือบ้าน และเบเกอรี่ใหม่ๆ ทุกวัน</p>
+  </div>
+</section>
+
+<!-- CATEGORY NAV (sticky) -->
+<div class="sticky top-16 z-40 bg-cream-100/95 backdrop-blur border-b border-cream-300/50">
+  <div class="max-w-7xl mx-auto px-5 lg:px-8 py-3 overflow-x-auto">
+    <div id="catNav" class="flex gap-2 text-sm whitespace-nowrap"></div>
+  </div>
+</div>
+
+<main id="menuRoot" class="max-w-7xl mx-auto px-5 lg:px-8 py-12 lg:py-16 space-y-16"></main>
+
+<!-- FOOTER -->
+<footer class="bg-ink-900 text-cream-200 py-12 mt-12">
+  <div class="max-w-7xl mx-auto px-5 lg:px-8 grid md:grid-cols-3 gap-8">
+    <div>
+      <div class="font-serif text-2xl text-cream-50">LILA CAFE</div>
+      <p class="text-xs tracking-[0.25em] uppercase text-cream-300/70 mt-1">Thai Dessert & Drink</p>
+      <p class="text-sm text-cream-300 mt-4 leading-relaxed">คาเฟ่ขนมไทย เครื่องดื่ม กับข้าวไทย พร้อมหลายมุมให้คุณเลือกใช้เวลา</p>
+    </div>
+    <div>
+      <div class="text-cream-50 font-medium mb-3">ลิงก์</div>
+      <ul class="space-y-2 text-sm text-cream-300">
+        <li><a href="menu.html" class="hover:text-cream-50">เมนู</a></li>
+        <li><a href="facility.html" class="hover:text-cream-50">มุมในร้าน</a></li>
+        <li><a href="index.html#reviews" class="hover:text-cream-50">รีวิว</a></li>
+        <li><a href="index.html#visit" class="hover:text-cream-50">มาที่ร้าน</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="text-cream-50 font-medium mb-3">ติดต่อ</div>
+      <ul class="space-y-2 text-sm text-cream-300">
+        <li>📞 084 053 1494</li>
+        <li>📍 29 ถ. 01, สายไหม กรุงเทพฯ</li>
+        <li>🕐 จ-ศ 7:30-18:30 · ส-อา 8:30-19:30</li>
+      </ul>
+    </div>
+  </div>
+  <div class="max-w-7xl mx-auto px-5 lg:px-8 mt-10 pt-6 border-t border-cream-300/10 text-xs text-cream-300/60 flex flex-col md:flex-row gap-2 md:justify-between">
+    <div>© 2026 LiLa Cafe. All rights reserved.</div>
+  </div>
+</footer>
+
+<script src="menu-data.js"></script>
+
+</body>
+</html>
