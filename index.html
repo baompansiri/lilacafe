@@ -1,17 +1,735 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <title>LiLa Cafe — Redirecting…</title>
-  <meta http-equiv="refresh" content="0; url=./lilacafe/index.html" />
-  <link rel="canonical" href="./lilacafe/index.html" />
-  <style>
-    body { font-family: system-ui, -apple-system, sans-serif; background:#F5EFE4; color:#2A2520; min-height:100vh; display:flex; align-items:center; justify-content:center; margin:0; }
-    a { color:#A0522D; }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LiLa Cafe — ลีลา คาเฟ่ | Thai Dessert & Drink</title>
+<meta name="description" content="ลีลา คาเฟ่ ร้านขนมไทยและเครื่องดื่ม บรรยากาศอบอุ่น มีมุมจิบกาแฟ มุมทำงาน สวน และสนามเด็กเล่น ที่สายไหม กรุงเทพฯ" />
+
+<!-- Tailwind via CDN (prototype only) -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Google Fonts: Serif for heading + Thai-friendly sans -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          cream: {
+            50: '#FBF7EF',
+            100: '#F5EFE4',
+            200: '#EDE3D2',
+            300: '#E0D2B8',
+          },
+          sage: {
+            400: '#8FA08F',
+            500: '#7A8D7A',
+            600: '#6B8174',
+            700: '#556B5C',
+            800: '#3F5246',
+          },
+          teak: {
+            400: '#C8A077',
+            500: '#B8895A',
+            600: '#A06B3F',
+            700: '#7E5530',
+          },
+          terracotta: {
+            500: '#B86A3D',
+            600: '#A0522D',
+            700: '#854422',
+          },
+          ink: {
+            900: '#2A2520',
+            700: '#4A4138',
+            500: '#6B6055',
+          },
+        },
+        fontFamily: {
+          serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+          sans: ['"IBM Plex Sans Thai"', 'system-ui', 'sans-serif'],
+        },
+      },
+    },
+  }
+</script>
+
+<style>
+  html { scroll-behavior: smooth; }
+  body { font-family: 'IBM Plex Sans Thai', system-ui, sans-serif; background: #F5EFE4; color: #2A2520; }
+
+  /* Arched (Mediterranean / Thai modern) shape — สะท้อนสถาปัตยกรรมร้านจริง */
+  .arch-top {
+    border-top-left-radius: 50% 30%;
+    border-top-right-radius: 50% 30%;
+  }
+  .arch-full {
+    border-radius: 50% 50% 12px 12px / 30% 30% 12px 12px;
+  }
+  .arch-image {
+    border-top-left-radius: 9999px;
+    border-top-right-radius: 9999px;
+    overflow: hidden;
+  }
+
+  /* Subtle texture overlay */
+  .grain::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(160,107,63,0.04) 1px, transparent 1px);
+    background-size: 6px 6px;
+    pointer-events: none;
+  }
+
+  /* Heading serif elegance */
+  h1, h2, h3, .font-serif { font-family: 'Cormorant Garamond', Georgia, serif; }
+  .thai-heading { font-family: 'IBM Plex Sans Thai', system-ui, sans-serif; font-weight: 500; }
+
+  /* Subtle fade-in on scroll (CSS only) */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .fade-up { animation: fadeUp 0.8s ease-out both; }
+
+  /* =========================================
+     GLOSSY THEME LAYER (keeps original colors)
+     ========================================= */
+
+  /* Ambient body glow */
+  body {
+    background:
+      radial-gradient(circle at 12% 8%, rgba(184, 137, 90, 0.10), transparent 42%),
+      radial-gradient(circle at 88% 92%, rgba(122, 141, 122, 0.10), transparent 42%),
+      linear-gradient(180deg, #FBF7EF 0%, #F5EFE4 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+
+  /* Universal smooth motion */
+  a, button { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+
+  /* Pills / round buttons — sheen overlay */
+  .rounded-full {
+    background-image: linear-gradient(180deg,
+      rgba(255,255,255,0.22) 0%,
+      rgba(255,255,255,0.04) 45%,
+      rgba(0,0,0,0.06) 100%);
+  }
+
+  /* Terracotta CTAs glow */
+  .bg-terracotta-600, .bg-terracotta-700 {
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.28),
+      inset 0 -1px 0 rgba(0,0,0,0.15),
+      0 6px 18px rgba(160,82,45,0.22),
+      0 2px 6px rgba(42,37,32,0.10);
+  }
+  .bg-terracotta-600:hover, .bg-terracotta-700:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.35),
+      inset 0 -1px 0 rgba(0,0,0,0.15),
+      0 12px 30px rgba(160,82,45,0.30),
+      0 4px 10px rgba(42,37,32,0.12);
+  }
+
+  /* Sage CTAs glow */
+  .bg-sage-700, .bg-sage-800 {
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.22),
+      inset 0 -1px 0 rgba(0,0,0,0.15),
+      0 6px 18px rgba(85,107,92,0.22),
+      0 2px 6px rgba(42,37,32,0.10);
+  }
+  .bg-sage-700:hover, .bg-sage-800:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.3),
+      inset 0 -1px 0 rgba(0,0,0,0.15),
+      0 12px 30px rgba(85,107,92,0.28),
+      0 4px 10px rgba(42,37,32,0.12);
+  }
+
+  /* Cream pills get gentle lift */
+  .bg-cream-50, .bg-cream-100, .bg-cream-200 {
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.6),
+      0 2px 8px rgba(42,37,32,0.05);
+  }
+
+  /* Cards: glassy depth */
+  .rounded-2xl, .rounded-3xl {
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.5),
+      0 10px 32px rgba(42,37,32,0.08),
+      0 4px 10px rgba(42,37,32,0.04);
+  }
+
+  /* Arched images — glossy top reflection */
+  .arch-image { position: relative; isolation: isolate; }
+  .arch-image::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg,
+      rgba(255,255,255,0.32) 0%,
+      rgba(255,255,255,0.10) 22%,
+      transparent 50%);
+    pointer-events: none;
+    border-top-left-radius: 9999px;
+    border-top-right-radius: 9999px;
+    z-index: 2;
+  }
+
+  /* Frosted header */
+  header {
+    background: linear-gradient(180deg, rgba(245, 239, 228, 0.82), rgba(245, 239, 228, 0.68)) !important;
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.6),
+      0 4px 24px rgba(42,37,32,0.06);
+  }
+
+  /* Sticky category bar (menu/facility pages) */
+  .sticky.top-16 {
+    background: linear-gradient(180deg, rgba(251, 247, 239, 0.9), rgba(245, 239, 228, 0.82)) !important;
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+  }
+
+  /* Map iframe — soft halo */
+  iframe {
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.5),
+      0 12px 36px rgba(42,37,32,0.12);
+  }
+
+  /* Footer ambient glow */
+  footer {
+    background:
+      radial-gradient(ellipse at top, rgba(160,82,45,0.12), transparent 50%),
+      #2A2520 !important;
+  }
+</style>
 </head>
-<body>
-  <p>กำลังพาไปที่ <a href="./lilacafe/index.html">LiLa Cafe</a>…</p>
-  <script>location.replace('./lilacafe/index.html');</script>
+<body class="antialiased">
+
+<!-- =========================
+     NAV
+========================= -->
+<header class="sticky top-0 z-50 bg-cream-100/90 backdrop-blur border-b border-cream-300/50">
+  <nav class="max-w-7xl mx-auto px-5 lg:px-8 h-16 flex items-center justify-between">
+    <a href="#top" class="flex items-center gap-2">
+      <!-- Brand mark (elephant logo) -->
+      <div class="w-9 h-9 rounded-full bg-cream-200 flex items-center justify-center overflow-hidden">
+        <img src="assets/brand/lila-cafe-mark.png" alt="โลโก้ช้าง ลีลา คาเฟ่" class="w-7 h-7 object-contain" />
+      </div>
+      <div class="leading-tight">
+        <div class="font-serif text-xl font-semibold tracking-wide text-terracotta-700">LILA CAFE</div>
+        <div class="text-[10px] tracking-[0.25em] text-ink-500 uppercase">Thai Dessert & Drink</div>
+      </div>
+    </a>
+    <ul class="hidden md:flex items-center gap-7 text-sm text-ink-700">
+      <li><a href="menu.html" class="hover:text-terracotta-600 transition">เมนู</a></li>
+      <li><a href="facility.html" class="hover:text-terracotta-600 transition">มุมในร้าน</a></li>
+      <li><a href="#reviews" class="hover:text-terracotta-600 transition">รีวิว</a></li>
+      <li><a href="#visit" class="hover:text-terracotta-600 transition">มาที่ร้าน</a></li>
+    </ul>
+    <a href="tel:0840531494" class="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-sage-700 text-cream-50 text-sm hover:bg-sage-800 transition">
+      <span>📞</span> 084 053 1494
+    </a>
+    <a href="#visit" class="md:hidden text-sm px-3 py-1.5 rounded-full bg-sage-700 text-cream-50">มาที่ร้าน</a>
+  </nav>
+</header>
+
+<!-- =========================
+     HERO
+========================= -->
+<section id="top" class="relative overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-b from-cream-100 via-cream-50 to-cream-100"></div>
+  <div class="relative max-w-7xl mx-auto px-5 lg:px-8 pt-12 pb-20 lg:pt-20 lg:pb-32 grid lg:grid-cols-2 gap-12 items-center">
+    <div class="fade-up">
+      <p class="text-sm tracking-[0.3em] text-sage-700 uppercase mb-4">— LiLa Cafe • Sai Mai, Bangkok —</p>
+      <h1 class="font-serif text-5xl lg:text-7xl leading-[1.05] text-ink-900 mb-6">
+        ขนมไทย<br/>
+        <span class="italic text-terracotta-600">บรรยากาศไทย</span><br/>
+        ทุกลีลาของวัน
+      </h1>
+      <p class="text-lg text-ink-700 max-w-lg mb-8 leading-relaxed">
+        คาเฟ่ อาหาร ขนมไทยและเครื่องดื่ม ที่จัดสรรหลายมุมให้คุณเลือก จิบกาแฟ ทำงาน นั่งสวน หรือพาเด็กๆ มาเล่น ในสถาปัตยกรรมไทยร่วมสมัยที่อบอุ่นและสว่าง
+      </p>
+      <div class="flex flex-wrap gap-3">
+        <a href="menu.html" class="px-6 py-3 rounded-full bg-terracotta-600 text-cream-50 hover:bg-terracotta-700 transition shadow-sm">
+          ดูเมนู
+        </a>
+        <a href="https://maps.app.goo.gl/vQiVWGbnxttsCBJk8" target="_blank" rel="noopener" class="px-6 py-3 rounded-full bg-cream-200 text-ink-900 hover:bg-cream-300 transition">
+          🗺️ นำทางมาที่ร้าน
+        </a>
+      </div>
+      <div class="mt-10 flex items-center gap-8 text-sm text-ink-500">
+        <div><span class="text-sage-700 font-semibold">★ 4.8</span> · รีวิวลูกค้า</div>
+        <div>เปิดทุกวัน · ฿1–200 / คน</div>
+      </div>
+    </div>
+
+    <!-- Hero image with arched frame -->
+    <div class="relative">
+      <div class="arch-image bg-cream-200 aspect-[3/4] max-w-md mx-auto shadow-lg">
+        <img src="assets/facility/lila-cafe-entrance.jpg"
+             alt="ทางเข้าลีลา คาเฟ่ — ประตูกระจกโค้งสไตล์ไทยร่วมสมัยท่ามกลางสวนดอกไม้"
+             class="w-full h-full object-cover" />
+      </div>
+      <!-- Decorative small arch -->
+      <div class="hidden lg:block absolute -bottom-6 -left-6 arch-image bg-sage-600 aspect-[3/4] w-40 shadow-lg">
+        <img src="assets/facility/lila-cafe-elephant-plush.jpg"
+             alt="ตุ๊กตาช้างสัญลักษณ์ของลีลา คาเฟ่"
+             class="w-full h-full object-cover" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================
+     ABOUT / STORY
+========================= -->
+<section class="bg-cream-200 py-20">
+  <div class="max-w-4xl mx-auto px-5 lg:px-8 text-center">
+    <p class="text-sm tracking-[0.3em] text-sage-700 uppercase mb-4">— เกี่ยวกับเรา —</p>
+    <h2 class="font-serif text-4xl lg:text-5xl text-ink-900 mb-6">"ลีลา" คือจังหวะของแต่ละวัน</h2>
+    <p class="text-lg text-ink-700 leading-relaxed">
+      ที่ลีลา คาเฟ่ เราเชื่อว่าทุกคนมีจังหวะของตัวเอง —
+      บางคนต้องการมุมเงียบเพื่อทำงาน บางคนต้องการสวนสำหรับพักผ่อน
+      บางคนต้องการพื้นที่ให้เด็กๆ ได้วิ่งเล่น
+      เราจึงสร้างทุกมุมไว้ในที่เดียว เพื่อให้คุณได้ใช้ "ลีลา" ของคุณอย่างเต็มที่
+      ไปกับขนมไทยและเครื่องดื่มในแบบของเรา
+    </p>
+  </div>
+</section>
+
+<!-- =========================
+     MENU HIGHLIGHT
+========================= -->
+<section id="menu" class="py-20">
+  <div class="max-w-7xl mx-auto px-5 lg:px-8">
+    <div class="flex items-end justify-between mb-12">
+      <div>
+        <p class="text-sm tracking-[0.3em] text-sage-700 uppercase mb-3">— เมนูแนะนำ —</p>
+        <h2 class="font-serif text-4xl lg:text-5xl text-ink-900">Signature & Favorites</h2>
+      </div>
+      <a href="menu.html" class="hidden md:inline text-terracotta-600 hover:text-terracotta-700 text-sm">ดูเมนูทั้งหมด →</a>
+    </div>
+
+    <!-- Filter chips + grid (data-driven from menu-data.js — photo'd items only) -->
+    <div id="homeMenuFilter" class="flex flex-wrap gap-2 mb-10 text-sm"></div>
+
+    <div id="homeMenuGrid" class="grid grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-8"></div>
+  </div>
+</section>
+
+<!-- =========================
+     FULL MENU — FLIPBOOK
+========================= -->
+<section id="menubook" class="py-20 bg-cream-200">
+  <div class="max-w-5xl mx-auto px-5 lg:px-8">
+    <div class="text-center mb-10">
+      <p class="text-sm tracking-[0.3em] text-sage-700 uppercase mb-3">— Full Menu —</p>
+      <h2 class="font-serif text-4xl lg:text-5xl text-ink-900 mb-3">เมนูฉบับเต็ม</h2>
+      <p class="text-ink-700">พลิกดูเมนูทั้งเล่ม — เครื่องดื่ม ขนมไทย อาหารจานเดียว ขนมจีน และเมนูทอด</p>
+    </div>
+
+    <div class="flex flex-col items-center">
+      <!-- Flipbook -->
+      <div id="flipbook" class="select-none touch-pan-y"></div>
+
+      <!-- Fallback grid (shown only if flipbook lib fails to load) -->
+      <div id="bookFallback" class="hidden grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-3xl">
+        <img src="assets/menu-book/lila-cafe-menu-1-drinks.jpg" alt="เมนูเครื่องดื่ม ลีลา คาเฟ่" class="w-full rounded-lg shadow-md" loading="lazy" />
+        <img src="assets/menu-book/lila-cafe-menu-2-dessert.jpg" alt="เมนูขนมไทย ลีลา คาเฟ่" class="w-full rounded-lg shadow-md" loading="lazy" />
+        <img src="assets/menu-book/lila-cafe-menu-3-dishes.jpg" alt="เมนูอาหารจานเดียว ลีลา คาเฟ่" class="w-full rounded-lg shadow-md" loading="lazy" />
+        <img src="assets/menu-book/lila-cafe-menu-4-noodles-fried.jpg" alt="เมนูขนมจีนและเมนูทอด ลีลา คาเฟ่" class="w-full rounded-lg shadow-md" loading="lazy" />
+      </div>
+
+      <!-- Controls -->
+      <div id="bookControls" class="hidden items-center gap-5 mt-7">
+        <button id="bookPrev" class="w-11 h-11 rounded-full bg-cream-50 text-ink-900 text-2xl flex items-center justify-center shadow hover:bg-white transition" aria-label="หน้าก่อนหน้า">‹</button>
+        <span id="bookPage" class="text-sm text-ink-600 tabular-nums min-w-[3rem] text-center">1 / 4</span>
+        <button id="bookNext" class="w-11 h-11 rounded-full bg-cream-50 text-ink-900 text-2xl flex items-center justify-center shadow hover:bg-white transition" aria-label="หน้าถัดไป">›</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================
+     FACILITY
+========================= -->
+<section id="facility" class="py-20 bg-sage-700 text-cream-50 relative overflow-hidden">
+  <!-- Decorative arches -->
+  <div class="absolute -top-10 -right-10 w-64 h-64 rounded-full bg-sage-600/40 blur-3xl"></div>
+  <div class="absolute -bottom-10 -left-10 w-64 h-64 rounded-full bg-teak-600/30 blur-3xl"></div>
+
+  <div class="relative max-w-7xl mx-auto px-5 lg:px-8">
+    <div class="text-center mb-14">
+      <p class="text-sm tracking-[0.3em] text-cream-200 uppercase mb-3">— Facilities —</p>
+      <h2 class="font-serif text-4xl lg:text-5xl">มุมในร้านสำหรับทุกลีลา</h2>
+      <p class="mt-4 text-cream-200/90 max-w-2xl mx-auto">ออกแบบไว้สำหรับทุก occasion — มาคนเดียว มาทำงาน มาเป็นกลุ่ม หรือพาครอบครัวพร้อมเด็กๆ</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
+      <a href="facility.html#coffee" class="bg-cream-100 text-ink-900 rounded-2xl overflow-hidden shadow-lg hover:-translate-y-1 transition block">
+        <div class="arch-image aspect-[4/5] bg-cream-200">
+          <img src="assets/facility/lila-cafe-made-with-heart.jpg" alt="มุมจิบกาแฟที่ลีลา คาเฟ่" class="w-full h-full object-cover" loading="lazy" />
+        </div>
+        <div class="p-5">
+          <div class="text-3xl mb-2">☕</div>
+          <h3 class="thai-heading text-xl mb-2">มุมจิบกาแฟ</h3>
+          <p class="text-sm text-ink-500">เคาน์เตอร์บาริสต้าและที่นั่งสบายๆ สำหรับคนรักกาแฟ</p>
+        </div>
+      </a>
+
+      <a href="facility.html#work" class="bg-cream-100 text-ink-900 rounded-2xl overflow-hidden shadow-lg hover:-translate-y-1 transition block">
+        <div class="arch-image aspect-[4/5] bg-cream-200">
+          <img src="assets/facility/lila-cafe-arch-corridor.jpg" alt="มุมห้องทำงาน co-working ที่ลีลา คาเฟ่" class="w-full h-full object-cover" loading="lazy" />
+        </div>
+        <div class="p-5">
+          <div class="text-3xl mb-2">💻</div>
+          <h3 class="thai-heading text-xl mb-2">มุมห้องทำงาน</h3>
+          <p class="text-sm text-ink-500">WiFi ฟรี ปลั๊กไฟพร้อม นั่งทำงานได้ทั้งวัน</p>
+        </div>
+      </a>
+
+      <a href="facility.html#garden" class="bg-cream-100 text-ink-900 rounded-2xl overflow-hidden shadow-lg hover:-translate-y-1 transition block">
+        <div class="arch-image aspect-[4/5] bg-cream-200">
+          <img src="assets/facility/lila-cafe-koi-pond.jpg" alt="มุมสวน บ่อปลาคาร์ฟที่ลีลา คาเฟ่" class="w-full h-full object-cover" loading="lazy" />
+        </div>
+        <div class="p-5">
+          <div class="text-3xl mb-2">🌿</div>
+          <h3 class="thai-heading text-xl mb-2">มุมสวน</h3>
+          <p class="text-sm text-ink-500">พื้นที่กลางแจ้งร่มรื่น เหมาะกับวันสบายๆ</p>
+        </div>
+      </a>
+
+      <a href="facility.html#kids" class="bg-cream-100 text-ink-900 rounded-2xl overflow-hidden shadow-lg hover:-translate-y-1 transition block">
+        <div class="arch-image aspect-[4/5] bg-cream-200">
+          <img src="assets/facility/lila-cafe-playground.jpg" alt="สนามเด็กเล่นที่ลีลา คาเฟ่" class="w-full h-full object-cover" loading="lazy" />
+        </div>
+        <div class="p-5">
+          <div class="text-3xl mb-2">🎠</div>
+          <h3 class="thai-heading text-xl mb-2">สนามเด็กเล่น</h3>
+          <p class="text-sm text-ink-500">พื้นที่ปลอดภัยสำหรับเด็กๆ ผู้ใหญ่นั่งจิบกาแฟสบายๆ</p>
+        </div>
+      </a>
+
+      <a href="facility.html#family" class="bg-cream-100 text-ink-900 rounded-2xl overflow-hidden shadow-lg hover:-translate-y-1 transition block">
+        <div class="arch-image aspect-[4/5] bg-cream-200">
+          <img src="assets/facility/lila-cafe-elephant-plush.jpg" alt="มุมครอบครัวที่ลีลา คาเฟ่" class="w-full h-full object-cover" loading="lazy" />
+        </div>
+        <div class="p-5">
+          <div class="text-3xl mb-2">👨‍👩‍👧</div>
+          <h3 class="thai-heading text-xl mb-2">มุมครอบครัว</h3>
+          <p class="text-sm text-ink-500">โต๊ะใหญ่ พื้นที่กว้าง เหมาะกับมื้อสบายๆ ของทั้งครอบครัว</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- =========================
+     REVIEWS
+========================= -->
+<section id="reviews" class="py-20 bg-cream-100">
+  <div class="max-w-6xl mx-auto px-5 lg:px-8">
+    <div class="text-center mb-14">
+      <p class="text-sm tracking-[0.3em] text-sage-700 uppercase mb-3">— Customer Reviews —</p>
+      <h2 class="font-serif text-4xl lg:text-5xl text-ink-900">เสียงจากลูกค้า</h2>
+      <div class="flex items-center justify-center gap-2 mt-4">
+        <span class="text-2xl text-terracotta-600">★★★★★</span>
+        <span class="text-ink-700 font-medium">4.8 / 5</span>
+        <span class="text-ink-500 text-sm">· จาก Google Reviews</span>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+      <article class="bg-cream-50 p-7 rounded-2xl shadow-sm relative">
+        <div class="text-5xl text-sage-600/30 absolute top-3 right-5 font-serif leading-none">"</div>
+        <div class="text-terracotta-500 mb-3">★★★★★</div>
+        <p class="text-ink-700 leading-relaxed mb-5">บรรยากาศดีมาก ขนมไทยอร่อย พาเด็กๆ มาเล่นได้ ผู้ใหญ่ก็นั่งสบาย ติดใจ จะกลับมาอีก</p>
+        <div class="flex items-center gap-3 border-t border-cream-200 pt-4">
+          <div class="w-10 h-10 rounded-full bg-sage-600 text-cream-50 flex items-center justify-center font-medium">ส</div>
+          <div>
+            <div class="text-sm font-medium text-ink-900">คุณสมศรี</div>
+            <div class="text-xs text-ink-500">Google Review</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="bg-cream-50 p-7 rounded-2xl shadow-sm relative">
+        <div class="text-5xl text-sage-600/30 absolute top-3 right-5 font-serif leading-none">"</div>
+        <div class="text-terracotta-500 mb-3">★★★★★</div>
+        <p class="text-ink-700 leading-relaxed mb-5">นั่งทำงานสบาย WiFi เร็ว กาแฟอร่อย มุมสวยทุกมุม ถ่ายรูปลง IG ได้เพียบ แนะนำเลย!</p>
+        <div class="flex items-center gap-3 border-t border-cream-200 pt-4">
+          <div class="w-10 h-10 rounded-full bg-teak-500 text-cream-50 flex items-center justify-center font-medium">N</div>
+          <div>
+            <div class="text-sm font-medium text-ink-900">Nadia</div>
+            <div class="text-xs text-ink-500">Google Review</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="bg-cream-50 p-7 rounded-2xl shadow-sm relative">
+        <div class="text-5xl text-sage-600/30 absolute top-3 right-5 font-serif leading-none">"</div>
+        <div class="text-terracotta-500 mb-3">★★★★☆</div>
+        <p class="text-ink-700 leading-relaxed mb-5">ขนมไทยเซ็ตน่ารักมาก ซื้อเป็นของฝากผู้ใหญ่ ของไหว้ก็ได้ จัดสวย ราคาน่ารัก</p>
+        <div class="flex items-center gap-3 border-t border-cream-200 pt-4">
+          <div class="w-10 h-10 rounded-full bg-terracotta-600 text-cream-50 flex items-center justify-center font-medium">ก</div>
+          <div>
+            <div class="text-sm font-medium text-ink-900">คุณกุ้ง</div>
+            <div class="text-xs text-ink-500">Google Review</div>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="text-center mt-10">
+      <a href="https://maps.app.goo.gl/vQiVWGbnxttsCBJk8" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-cream-200 text-ink-900 hover:bg-cream-300 transition">
+        ✍️ เขียนรีวิวบน Google
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- =========================
+     VISIT / CONTACT
+========================= -->
+<section id="visit" class="py-20">
+  <div class="max-w-7xl mx-auto px-5 lg:px-8">
+    <div class="text-center mb-14">
+      <p class="text-sm tracking-[0.3em] text-sage-700 uppercase mb-3">— Visit Us —</p>
+      <h2 class="font-serif text-4xl lg:text-5xl text-ink-900">มาเจอกันที่ลีลา คาเฟ่</h2>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-10 items-start">
+      <!-- Info card -->
+      <div class="bg-cream-200 rounded-3xl p-8 lg:p-10 space-y-6">
+        <div>
+          <div class="text-xs tracking-widest text-sage-700 uppercase mb-1">ที่อยู่</div>
+          <p class="text-ink-900 text-lg leading-relaxed">29 ถนน 01, แขวงออเงิน<br/>เขตสายไหม กรุงเทพฯ 10210</p>
+          <p class="text-xs text-ink-500 mt-1">Plus Code: VMPP+WW Bangkok</p>
+        </div>
+
+        <div>
+          <div class="text-xs tracking-widest text-sage-700 uppercase mb-2">เวลาเปิด-ปิด</div>
+          <table class="w-full text-ink-900">
+            <tbody class="divide-y divide-cream-300">
+              <tr><td class="py-1.5">จันทร์ – ศุกร์</td><td class="py-1.5 text-right">07:30 – 18:30</td></tr>
+              <tr><td class="py-1.5">เสาร์ – อาทิตย์</td><td class="py-1.5 text-right">08:30 – 19:30</td></tr>
+            </tbody>
+          </table>
+          <p class="text-xs text-ink-500 mt-2">* วันหยุดนักขัตฤกษ์อาจปรับเวลา</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 pt-2">
+          <a href="tel:0840531494" class="flex items-center gap-2 px-4 py-3 rounded-xl bg-cream-50 hover:bg-white transition">
+            <span class="text-xl">📞</span>
+            <div>
+              <div class="text-[10px] text-ink-500 uppercase tracking-widest">โทร</div>
+              <div class="text-sm font-medium text-ink-900">084 053 1494</div>
+            </div>
+          </a>
+          <a href="https://www.facebook.com/profile.php?id=61584007161540" target="_blank" rel="noopener" class="flex items-center gap-2 px-4 py-3 rounded-xl bg-cream-50 hover:bg-white transition">
+            <span class="text-xl">👍</span>
+            <div>
+              <div class="text-[10px] text-ink-500 uppercase tracking-widest">Facebook</div>
+              <div class="text-sm font-medium text-ink-900">LiLa Cafe</div>
+            </div>
+          </a>
+          <a href="https://maps.app.goo.gl/vQiVWGbnxttsCBJk8" target="_blank" rel="noopener" class="flex items-center gap-2 px-4 py-3 rounded-xl bg-cream-50 hover:bg-white transition">
+            <span class="text-xl">🗺️</span>
+            <div>
+              <div class="text-[10px] text-ink-500 uppercase tracking-widest">นำทาง</div>
+              <div class="text-sm font-medium text-ink-900">Google Maps</div>
+            </div>
+          </a>
+          <a href="https://hungryhub.com" target="_blank" rel="noopener" class="flex items-center gap-2 px-4 py-3 rounded-xl bg-terracotta-600 text-cream-50 hover:bg-terracotta-700 transition">
+            <span class="text-xl">📅</span>
+            <div>
+              <div class="text-[10px] text-cream-200 uppercase tracking-widest">จองโต๊ะ</div>
+              <div class="text-sm font-medium">Hungry Hub</div>
+            </div>
+          </a>
+        </div>
+
+        <div class="pt-4 border-t border-cream-300 text-sm text-ink-700">
+          <span class="font-medium">ราคาเฉลี่ย:</span> ฿1–200 / คน
+        </div>
+      </div>
+
+      <!-- Map embed -->
+      <div class="rounded-3xl overflow-hidden shadow-md aspect-[4/3] lg:aspect-auto lg:h-full min-h-[400px]">
+        <iframe
+          src="https://www.google.com/maps?q=13.9189,100.6531&hl=th&z=16&output=embed"
+          width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="LiLa Cafe location"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================
+     FOOTER
+========================= -->
+<footer class="bg-ink-900 text-cream-200 py-12">
+  <div class="max-w-7xl mx-auto px-5 lg:px-8 grid md:grid-cols-3 gap-8">
+    <div>
+      <div class="font-serif text-2xl text-cream-50">LILA CAFE</div>
+      <p class="text-xs tracking-[0.25em] uppercase text-cream-300/70 mt-1">Thai Dessert & Drink</p>
+      <p class="text-sm text-cream-300 mt-4 leading-relaxed">คาเฟ่ขนมไทย เครื่องดื่ม กับข้าวไทย พร้อมหลายมุมให้คุณเลือกใช้เวลา</p>
+    </div>
+    <div>
+      <div class="text-cream-50 font-medium mb-3">ลิงก์</div>
+      <ul class="space-y-2 text-sm text-cream-300">
+        <li><a href="menu.html" class="hover:text-cream-50">เมนู</a></li>
+        <li><a href="facility.html" class="hover:text-cream-50">มุมในร้าน</a></li>
+        <li><a href="#reviews" class="hover:text-cream-50">รีวิว</a></li>
+        <li><a href="#visit" class="hover:text-cream-50">มาที่ร้าน</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="text-cream-50 font-medium mb-3">ติดต่อ</div>
+      <ul class="space-y-2 text-sm text-cream-300">
+        <li>📞 084 053 1494</li>
+        <li>📍 29 ถ. 01, สายไหม กรุงเทพฯ</li>
+        <li>🕐 จ-ศ 7:30-18:30 · ส-อา 8:30-19:30</li>
+      </ul>
+    </div>
+  </div>
+  <div class="max-w-7xl mx-auto px-5 lg:px-8 mt-10 pt-6 border-t border-cream-300/10 text-xs text-cream-300/60 flex flex-col md:flex-row gap-2 md:justify-between">
+    <div>© 2026 LiLa Cafe. All rights reserved.</div>
+  </div>
+</footer>
+
+<!-- Flipbook (StPageFlip) -->
+<script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
+<script>
+(function () {
+  const sources = [
+    'assets/menu-book/lila-cafe-menu-1-drinks.jpg',
+    'assets/menu-book/lila-cafe-menu-2-dessert.jpg',
+    'assets/menu-book/lila-cafe-menu-3-dishes.jpg',
+    'assets/menu-book/lila-cafe-menu-4-noodles-fried.jpg',
+  ];
+  const el = document.getElementById('flipbook');
+  const controls = document.getElementById('bookControls');
+  const fallback = document.getElementById('bookFallback');
+  const pageLabel = document.getElementById('bookPage');
+  const total = sources.length;
+
+  function showFallback() {
+    if (el) el.style.display = 'none';
+    if (controls) { controls.classList.add('hidden'); controls.classList.remove('flex'); }
+    if (fallback) { fallback.classList.remove('hidden'); fallback.classList.add('grid'); }
+  }
+
+  function init() {
+    if (!window.St || !St.PageFlip) { showFallback(); return; }
+    try {
+      const ratio = 1522 / 1076; // poster height / width
+      const baseW = 420;
+      const pf = new St.PageFlip(el, {
+        width: baseW, height: Math.round(baseW * ratio),
+        size: 'stretch',
+        minWidth: 250, maxWidth: 520,
+        minHeight: Math.round(250 * ratio), maxHeight: Math.round(520 * ratio),
+        drawShadow: true, flippingTime: 700, usePortrait: true,
+        showCover: false, mobileScrollSupport: true, autoSize: true,
+      });
+      pf.loadFromImages(sources);
+
+      // StPageFlip can under-measure the parent on first paint; nudge it to
+      // recompute once layout + images have settled so it sizes correctly.
+      const kick = () => window.dispatchEvent(new Event('resize'));
+      setTimeout(kick, 150);
+      setTimeout(kick, 600);
+      setTimeout(kick, 1200);
+
+      controls.classList.remove('hidden'); controls.classList.add('flex');
+
+      const sync = () => {
+        const i = (typeof pf.getCurrentPageIndex === 'function') ? pf.getCurrentPageIndex() : 0;
+        pageLabel.textContent = (i + 1) + ' / ' + total;
+      };
+      pf.on('flip', sync);
+      pf.on('init', sync);
+      document.getElementById('bookPrev').addEventListener('click', () => pf.flipPrev());
+      document.getElementById('bookNext').addEventListener('click', () => pf.flipNext());
+    } catch (e) {
+      console.error('Flipbook init failed:', e);
+      showFallback();
+    }
+  }
+
+  if (window.St && St.PageFlip) init();
+  else window.addEventListener('load', () => setTimeout(init, 300));
+})();
+</script>
+
+<!-- Home menu highlight — synced from menu-data.js (items with photos) -->
+<script src="menu-data.js"></script>
+<script>
+(function () {
+  if (typeof MENU === 'undefined') return;
+  const grid = document.getElementById('homeMenuGrid');
+  const filter = document.getElementById('homeMenuFilter');
+  if (!grid || !filter) return;
+
+  const cats = MENU.filter(function (c) { return c.items.some(function (i) { return i.img; }); });
+  // Photo'd items grouped per category
+  const perCat = cats.map(function (c) {
+    return c.items.filter(function (i) { return i.img; })
+      .map(function (it) { return Object.assign({ catId: c.id, catName: c.name, catIcon: c.icon }, it); });
+  });
+  // Round-robin interleave so the default "ทั้งหมด" teaser is varied, not all one category
+  const withPhoto = [];
+  for (let row = 0, more = true; more; row++) {
+    more = false;
+    perCat.forEach(function (arr) { if (arr[row]) { withPhoto.push(arr[row]); more = true; } });
+  }
+  const LIMIT = 8; // 2 rows on desktop (4 cols)
+
+  function cardHTML(it, i) {
+    const hide = i >= 4 ? ' hidden lg:block' : ''; // keep exactly 2 rows on mobile (2 cols) too
+    return '<article class="group' + hide + '">' +
+        '<div class="arch-image bg-cream-200 aspect-square mb-4 shadow-sm">' +
+          '<img src="assets/menu/lila-cafe-' + it.img + '.jpg" alt="' + it.th + '" ' +
+          'class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy" />' +
+        '</div>' +
+        '<h3 class="thai-heading text-lg text-ink-900">' + it.th + '</h3>' +
+        '<p class="text-xs text-ink-500 mt-1">' + it.en + '</p>' +
+        '<p class="text-terracotta-600 font-medium mt-2">\u0e3f' + it.price + '</p>' +
+      '</article>';
+  }
+  function renderGrid(catId) {
+    const full = catId === 'all' ? withPhoto : withPhoto.filter(function (i) { return i.catId === catId; });
+    grid.innerHTML = full.slice(0, LIMIT).map(cardHTML).join('');
+  }
+  function renderChips(active) {
+    function chip(id, label) {
+      return '<button data-cat="' + id + '" class="chip px-4 py-2 rounded-full transition ' +
+        (id === active ? 'bg-sage-700 text-cream-50' : 'bg-cream-200 text-ink-700 hover:bg-cream-300') +
+        '">' + label + '</button>';
+    }
+    filter.innerHTML = chip('all', '\u0e17\u0e31\u0e49\u0e07\u0e2b\u0e21\u0e14') +
+      cats.map(function (c) { return chip(c.id, c.icon + ' ' + c.name); }).join('');
+    filter.querySelectorAll('.chip').forEach(function (b) {
+      b.addEventListener('click', function () { renderChips(b.dataset.cat); renderGrid(b.dataset.cat); });
+    });
+  }
+  renderChips('all');
+  renderGrid('all');
+})();
+</script>
+
 </body>
 </html>
