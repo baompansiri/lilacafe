@@ -212,6 +212,16 @@
       radial-gradient(ellipse at top, rgba(160,82,45,0.12), transparent 50%),
       #2A2520 !important;
   }
+
+  /* Respect reduced-motion preference (accessibility) */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 </style>
 </head>
 <body class="antialiased">
@@ -240,7 +250,7 @@
     <a href="tel:0840531494" class="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-sage-700 text-cream-50 text-sm hover:bg-sage-800 transition">
       <span>📞</span> 084 053 1494
     </a>
-    <a href="#visit" class="md:hidden text-sm px-3 py-1.5 rounded-full bg-sage-700 text-cream-50">มาที่ร้าน</a>
+    <a href="#visit" class="md:hidden text-sm px-4 rounded-full bg-sage-700 text-cream-50 inline-flex items-center min-h-[40px]">มาที่ร้าน</a>
   </nav>
 </header>
 
@@ -566,7 +576,7 @@
       </div>
 
       <!-- Map embed -->
-      <div class="rounded-3xl overflow-hidden shadow-md aspect-[4/3] lg:aspect-auto lg:h-full min-h-[400px]">
+      <div class="rounded-3xl overflow-hidden shadow-md w-full h-[300px] sm:h-[360px] lg:h-[460px]">
         <iframe
           src="https://www.google.com/maps?q=13.9189,100.6531&hl=th&z=16&output=embed"
           width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
@@ -716,7 +726,7 @@
   }
   function renderChips(active) {
     function chip(id, label) {
-      return '<button data-cat="' + id + '" class="chip px-4 py-2 rounded-full transition ' +
+      return '<button data-cat="' + id + '" class="chip px-4 py-2 rounded-full transition inline-flex items-center min-h-[44px] whitespace-nowrap ' +
         (id === active ? 'bg-sage-700 text-cream-50' : 'bg-cream-200 text-ink-700 hover:bg-cream-300') +
         '">' + label + '</button>';
     }

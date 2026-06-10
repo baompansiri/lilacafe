@@ -216,7 +216,7 @@ const MENU = [
     const cls = cat.highlight
       ? 'bg-terracotta-600 text-cream-50 hover:bg-terracotta-700'
       : 'bg-cream-200 hover:bg-sage-700 hover:text-cream-50';
-    return '<a href="#' + cat.id + '" class="px-4 py-2 rounded-full transition ' + cls + '">' +
+    return '<a href="#' + cat.id + '" class="px-4 py-2 rounded-full transition inline-flex items-center min-h-[44px] whitespace-nowrap ' + cls + '">' +
       cat.icon + ' ' + cat.name + '</a>';
   }
 
