@@ -104,6 +104,16 @@
   footer {
     background: radial-gradient(ellipse at top, rgba(160,82,45,0.12), transparent 50%), #2A2520 !important;
   }
+
+  /* Respect reduced-motion preference (accessibility) */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 </style>
 </head>
 <body class="antialiased">
@@ -125,7 +135,7 @@
       <li><a href="index.html#visit" class="hover:text-terracotta-600 transition">มาที่ร้าน</a></li>
     </ul>
     <a href="tel:0840531494" class="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-sage-700 text-cream-50 text-sm hover:bg-sage-800 transition"><span>📞</span> 084 053 1494</a>
-    <a href="index.html#visit" class="md:hidden text-sm px-3 py-1.5 rounded-full bg-sage-700 text-cream-50">มาที่ร้าน</a>
+    <a href="index.html#visit" class="md:hidden text-sm px-4 rounded-full bg-sage-700 text-cream-50 inline-flex items-center min-h-[40px]">มาที่ร้าน</a>
   </nav>
 </header>
 
@@ -144,12 +154,12 @@
 <div class="sticky top-16 z-40 bg-cream-100/95 backdrop-blur border-b border-cream-300/50">
   <div class="max-w-7xl mx-auto px-5 lg:px-8 py-3 overflow-x-auto">
     <div class="flex gap-2 text-sm whitespace-nowrap">
-      <a href="#coffee" class="px-4 py-2 rounded-full bg-cream-200 hover:bg-sage-700 hover:text-cream-50 transition">☕ มุมจิบกาแฟ</a>
-      <a href="#work" class="px-4 py-2 rounded-full bg-cream-200 hover:bg-sage-700 hover:text-cream-50 transition">💻 มุมห้องทำงาน</a>
-      <a href="#garden" class="px-4 py-2 rounded-full bg-cream-200 hover:bg-sage-700 hover:text-cream-50 transition">🌿 มุมสวน</a>
-      <a href="#kids" class="px-4 py-2 rounded-full bg-cream-200 hover:bg-sage-700 hover:text-cream-50 transition">🎠 สนามเด็กเล่น</a>
-      <a href="#family" class="px-4 py-2 rounded-full bg-cream-200 hover:bg-sage-700 hover:text-cream-50 transition">👨‍👩‍👧 มุมครอบครัว</a>
-      <a href="#gallery" class="px-4 py-2 rounded-full bg-cream-200 hover:bg-sage-700 hover:text-cream-50 transition">📸 แกลเลอรี่</a>
+      <a href="#coffee" class="px-4 py-2 rounded-full bg-cream-200 hover:bg-sage-700 hover:text-cream-50 transition inline-flex items-center min-h-[44px] whitespace-nowrap">☕ มุมจิบกาแฟ</a>
+      <a href="#work" class="px-4 py-2 rounded-full bg-cream-200 hover:bg-sage-700 hover:text-cream-50 transition inline-flex items-center min-h-[44px] whitespace-nowrap">💻 มุมห้องทำงาน</a>
+      <a href="#garden" class="px-4 py-2 rounded-full bg-cream-200 hover:bg-sage-700 hover:text-cream-50 transition inline-flex items-center min-h-[44px] whitespace-nowrap">🌿 มุมสวน</a>
+      <a href="#kids" class="px-4 py-2 rounded-full bg-cream-200 hover:bg-sage-700 hover:text-cream-50 transition inline-flex items-center min-h-[44px] whitespace-nowrap">🎠 สนามเด็กเล่น</a>
+      <a href="#family" class="px-4 py-2 rounded-full bg-cream-200 hover:bg-sage-700 hover:text-cream-50 transition inline-flex items-center min-h-[44px] whitespace-nowrap">👨‍👩‍👧 มุมครอบครัว</a>
+      <a href="#gallery" class="px-4 py-2 rounded-full bg-cream-200 hover:bg-sage-700 hover:text-cream-50 transition inline-flex items-center min-h-[44px] whitespace-nowrap">📸 แกลเลอรี่</a>
     </div>
   </div>
 </div>
